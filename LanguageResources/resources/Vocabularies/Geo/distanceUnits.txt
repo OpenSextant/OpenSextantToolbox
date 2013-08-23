@@ -1,0 +1,28 @@
+block
+blocks
+feet
+ft
+kilometer
+kilometers
+klick
+klicks
+km
+km.
+m
+m.
+meter
+meters
+metre
+metres
+mile
+miles
+mm
+mm.
+nautical mile
+nautical miles
+nm
+nm.
+millimeter
+millimeters
+inch
+inches

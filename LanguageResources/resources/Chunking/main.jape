@@ -1,0 +1,14 @@
+/*
+ The phases to extract chunks from arbitrary texts
+*/
+
+MultiPhase:	Chunking
+Phases: 
+./Pieces/POSRepair	
+./Pieces/EntityFlagging
+./Pieces/NounPhrasePieces
+//./Pieces/VerbPhrasePieces
+./Phrases/NounPhrases
+//./Phrases/VerbPhrases
+./Misc/ChunkingCleanup
+

@@ -1,0 +1,6 @@
+attitude
+attitudes
+emotion
+emotions
+sentiment
+sentiments

@@ -1,0 +1,34 @@
+<project name="LanguageResources" basedir="." default="build" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<!-- include properties -->
+	<property file="build.properties" />
+	
+	<property name="prebuilt.gaz.loc" value="http://opensextant.org/downloads/gazdata" />
+	<property name="prebuilt.gaz.name" value="gazdata-20130811.zip" />
+
+	<property name="gaz_basename" value="MergedGazetteer" />
+
+	<target name="clean" depends="" />
+
+	<target name="setProxy">
+	    <setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
+	</target>
+	
+	<!-- fetch the prebuilt gazetteer data set from opensextant.org -->
+	<target name="fetch.prebuilt.gaz" depends = "setProxy">
+		<mkdir dir="${basedir}/resources/geoGazetteer" />
+		<echo> Retrieving prebuilt gazetteer from opensextant.org</echo>
+		<get src="${prebuilt.gaz.loc}/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
+	</target>
+
+	<!-- unzip the prebuilt gazetteer data set -->
+	<target name="unzip.prebuilt.gaz">
+		<unzip src="${basedir}/resources/geoGazetteer/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
+	</target>
+
+
+	<target name="build" depends="unzip.prebuilt.gaz">
+	</target>
+
+
+</project>

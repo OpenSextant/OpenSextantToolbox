@@ -1,0 +1,37 @@
+ammunition
+ammunitions
+armament
+armaments
+artillery
+artillery piece
+artillery pieces
+artillery round
+artillery rounds
+bullet
+bullets
+cannon
+cannons
+howitzer
+howitzers
+knife
+knives
+laser blinder
+laser blinders
+missile
+missiles
+molotov cocktail
+molotov cocktails
+pepper spray
+pepper sprays
+tear gas
+weapon
+weapon stockpile
+weapon stockpiles
+weapon stocks
+weaponry
+weapons
+weapons stockpile
+weapons stockpiles
+weapons stocks
+weapons system
+weapons systems

@@ -1,0 +1,259 @@
+/* 
+Patterns for things that look like identifiers i.e. sequence of letters and numbers
+ */
+
+Imports: {
+import static gate.Utils.*;
+}
+
+
+Phase:	Identifiers
+Input:	Token SpaceToken Lookup
+Options: control = appelt
+
+
+Macro: START_GAP_TOKEN
+(	
+	{SpaceToken}|{Token.string ==~ "[|:;(),\"]"}
+)
+
+
+Macro: END_GAP_TOKEN
+(	
+	{SpaceToken}|{Token.string ==~ "[|:;(),s\"]"}
+)
+
+
+Macro: NUM_TOKEN
+(	
+	{Token.string ==~ "[0-9]+"}
+)
+
+Macro: NUM_TOKEN_ROMAN
+(	
+	{Token.string ==~ "[IV]+"}
+)
+
+
+Macro: LEAD_CHAR_TOKEN
+(	
+	({Token.string ==~ "[A-Z][A-Za-z]{0,2}(-)?", Token notWithin Lookup  })| ({Token.string ==~ "[A-Z][A-Za-z]{0,2}" , Token notWithin Lookup  }({Token.string ==~ "[-.]" , Token notWithin Lookup  })?    )
+)
+
+Macro: CHAR_TOKEN
+(	
+	{Token.string ==~ "[A-Z][A-Za-z]{0,4}" , Token notWithin Lookup  }
+)
+
+Macro: CHAR_TOKEN_UPPER
+(	
+	{Token.string ==~ "[A-Z]{1,5}-", Token notWithin Lookup  }
+)
+
+
+Macro: PUNCT_TOKEN
+(	
+	{Token.string ==~ "[-\\./]"}
+)
+
+Macro: TYPE_WORDS
+(	
+	{Token.string ==~ "type|Type|TYPE|mk|Mk|MK|mark|Mark|Mark|model|Model|MODEL"}
+)
+
+// don't tag as identifier if in vocab
+Rule: DontTagVocab
+(	
+	{Lookup}
+):whole
+-->
+{
+
+}
+
+
+// type-4
+Rule: typeNumber
+(	
+	(TYPE_WORDS ({Token.string ==~ "-"})? NUM_TOKEN ):id
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier",tempFeatures);
+}
+
+// Mk-III
+Rule: typeNumberRoman
+(	
+	({Token.string ==~ "(type-|Type-|TYPE-|mk-|Mk-|MK-)[IV]+"} ):id
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier",tempFeatures);
+}
+
+
+
+// simple XYZ-123, M1234
+Rule: simpleID
+(	
+	START_GAP_TOKEN (LEAD_CHAR_TOKEN NUM_TOKEN):id END_GAP_TOKEN
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier",tempFeatures);
+}
+
+// simple BOSCO-7
+Rule: nameNumberID
+(	
+	(CHAR_TOKEN_UPPER NUM_TOKEN):id 
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier",tempFeatures);
+}
+
+
+// simple with modifier XYZ-123a, ZZ1234B
+Rule: simpleIDMod
+(	
+	START_GAP_TOKEN (LEAD_CHAR_TOKEN NUM_TOKEN CHAR_TOKEN):id END_GAP_TOKEN
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier",tempFeatures);	
+}
+
+// simple with multi nums XYZ-123/45, ZZ1234.4
+Rule: simpleIDMultiNum
+(	
+	START_GAP_TOKEN (LEAD_CHAR_TOKEN NUM_TOKEN (PUNCT_TOKEN NUM_TOKEN)+):id END_GAP_TOKEN
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier",tempFeatures);	
+}
+
+
+
+// Compound e.g. XYZ-123ABC-5
+Rule: compundID
+(	
+	START_GAP_TOKEN (LEAD_CHAR_TOKEN NUM_TOKEN (PUNCT_TOKEN (NUM_TOKEN | CHAR_TOKEN))+):id END_GAP_TOKEN
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier",tempFeatures);
+}
+
+// all consonants
+Rule: Abbrev
+(	
+   ({Token.string ==~ "[B-D,F-H,J-N,P-T,V-X,Z]{2,5}|[b-d,f-h,j-n,p-t,v-x,z]{2,5}" }):id 
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	// tempFeatures.put("hierarchy","Information.identifier.abbreviation");
+	 
+	outputAS.add(idStartNode, idEndNode, "Abbreviation",tempFeatures);
+}
+
+
+/*
+// Catchall
+Rule: catchallID
+(	
+	 START_GAP_TOKEN (LEAD_CHAR_TOKEN (LEAD_CHAR_TOKEN |CHAR_TOKEN | NUM_TOKEN | PUNCT_TOKEN )*  (LEAD_CHAR_TOKEN |CHAR_TOKEN | NUM_TOKEN )+):id  END_GAP_TOKEN
+):whole
+-->
+{
+	gate.AnnotationSet idSet = (gate.AnnotationSet)bindings.get("id");
+	Node idStartNode = idSet.firstNode(); 
+	Node idEndNode   = idSet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,idSet));
+	 tempFeatures.put("hierarchy","Information.identifier");
+	 
+	outputAS.add(idStartNode, idEndNode, "Identifier_CATCHALL",tempFeatures);
+}
+*/

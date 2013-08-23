@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	You under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
+	language governing permissions and limitations under the License. -->
+
+
+<!-- NOTE:this schema is for both matching and querying using the OpenSextant  code -->
+<!-- if you only need to do matching (and maybe "name" only gazetteer queries)  try substituting "schema.xml" -->
+<!-- which requires substantially less disk space -->
+<schema name="gazetteer" version="1.5">
+
+	<!--"Primary Key" field -->
+	<uniqueKey>id</uniqueKey>
+
+	<fields>
+		<!-- record/document id, created by gazetteer ETL process -->
+		<field name="id" type="int" stored="true" indexed="true" required="true" />
+
+		<!-- Place ID from source gazetteer -->
+		<field name="place_id" type="string" stored="true" indexed="false" required="true" />
+
+		<!-- place name -->
+		<field name="name" type="name_idx" stored="true" required="true" />
+
+        <field name="name4matching" type="name4matchingType" stored="false"/>
+        <copyField source="name" dest="name4matching" />
+
+		<!-- geo = XY coordinate in the form 'lat,lon'. Created by update-script.js 
+			during loading -->
+		<field name="geo" type="geo" stored="true" indexed="false" />
+		<field name="lat" type="ignored" />
+		<field name="lon" type="ignored" />
+
+		<!-- Geonames style Feature Class - A, P, L, H, V, S, T, R -->
+		<field name="feat_class" type="string" stored="true" indexed="true" />
+
+		<!-- Geonames style Feature Code - ADM1, PPL, etc -->
+		<field name="feat_code" type="string" stored="true" indexed="true" />
+
+		<!-- Three flavors of country code: cc is ISO country code -->
+		<field name="cc" type="string" stored="true" indexed="true" />
+		<field name="FIPS_cc" type="ignored" />
+		<field name="ISO3_cc" type="ignored" />
+
+		<!-- administrative structure (province/state,county,district -->
+		<field name="adm1" type="string" stored="true" indexed="false" />
+		<field name="adm2" type="string" stored="true" indexed="false" />
+		<field name="adm3" type="ignored" />
+		<field name="adm4" type="ignored" />
+		<field name="adm5" type="ignored" />
+
+		<!-- the original source gazetteer system/data set -->
+		<field name="source" type="string" stored="true" indexed="true" />
+
+		<!-- ids from original source -->
+		<field name="src_place_id" type="ignored" />
+		<field name="src_name_id" type="ignored" />
+
+		<!-- the character system used -->
+		<field name="script" type="ignored" />
+
+		<!-- a hash used to dedupe -->
+		<field name="conflate_key" type="ignored" />
+
+		<!--name and id bias scores, supplied by gazetteer ETL -->
+		<field name="name_bias" type="float" stored="true" indexed="true" />
+		<field name="id_bias" type="float" stored="true" indexed="false" />
+
+		<!-- name_type defines if contents of "name" field is a conventional name, 
+			code or abbreviation -->
+		<field name="name_type" type="string" stored="true" indexed="true" />
+
+		<!-- name_type_system defines standard or system used for name_types of 
+			abbreviations or codes -->
+		<field name="name_type_system" type="string" stored="true" indexed="true" />
+
+		<!-- portion of gazetteer (used to select gazetteer subset on loading) -->
+		<field name="partition" type="ignored" />
+
+		<!-- version required by and supplied by Solr -->
+		<field name="_version_" type="long" stored="true" indexed="false" />
+
+	</fields>
+
+	<types>
+
+		<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
+		<fieldType name="string" class="solr.StrField"
+			sortMissingLast="true" />
+
+		<!-- Default numeric field types -->
+		<fieldType name="int" class="solr.TrieIntField"
+			precisionStep="0" positionIncrementGap="0" />
+		<fieldType name="float" class="solr.TrieFloatField"
+			precisionStep="0" positionIncrementGap="0" />
+		<fieldType name="long" class="solr.TrieLongField"
+			precisionStep="0" positionIncrementGap="0" />
+		<fieldType name="double" class="solr.TrieDoubleField"
+			precisionStep="0" positionIncrementGap="0" />
+
+		<!-- Numeric field types that index value at various levels of precision -->
+		<fieldType name="tint" class="solr.TrieIntField"
+			precisionStep="8" positionIncrementGap="0" />
+		<fieldType name="tfloat" class="solr.TrieFloatField"
+			precisionStep="8" positionIncrementGap="0" />
+		<fieldType name="tlong" class="solr.TrieLongField"
+			precisionStep="8" positionIncrementGap="0" />
+		<fieldType name="tdouble" class="solr.TrieDoubleField"
+			precisionStep="8" positionIncrementGap="0" />
+
+
+		<!-- adjust for contractions,reduce to lower case,remove punctuation and 
+			remove diacritics -->
+		<fieldType name="name_idx" class="solr.TextField"
+			positionIncrementGap="100">
+			<analyzer>
+				<charFilter class="solr.MappingCharFilterFactory" mapping="contraction-filter.txt" />
+				<tokenizer class="solr.ClassicTokenizerFactory" />
+				<filter class="solr.LowerCaseFilterFactory" />
+			</analyzer>
+		</fieldType>
+
+
+		<fieldType name="name4matchingType" class="solr.TextField"
+			positionIncrementGap="100" postingsFormat="Memory" omitTermFreqAndPositions="true" omitNorms="true">            
+			<analyzer type="index">
+				<charFilter class="solr.MappingCharFilterFactory" mapping="contraction-filter.txt" />
+				<tokenizer class="solr.ClassicTokenizerFactory" />
+				<filter class="solr.ASCIIFoldingFilterFactory" />
+				<filter class="solr.LowerCaseFilterFactory" />
+				<!-- only difference between index & query chains: -->
+				<filter class="org.opensextant.solrtexttagger.ConcatenateFilterFactory" />
+			</analyzer>
+			<analyzer type="query">
+				<charFilter class="solr.MappingCharFilterFactory" mapping="contraction-filter.txt" />
+				<tokenizer class="solr.ClassicTokenizerFactory" />
+				<filter class="solr.ASCIIFoldingFilterFactory" />
+				<filter class="solr.LowerCaseFilterFactory" />
+			</analyzer>
+		</fieldType>
+
+		<!-- Geospatial field type (aka GeoSolr) http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4 -->
+		<fieldType name="geo" class="solr.SpatialRecursivePrefixTreeFieldType"
+			spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+			units="degrees" />
+
+		<!-- completely ignored data -->
+		<fieldtype name="ignored" stored="false" indexed="false"
+			multiValued="true" class="solr.StrField" />
+
+	</types>
+
+</schema>

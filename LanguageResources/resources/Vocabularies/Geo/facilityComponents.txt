@@ -1,0 +1,102 @@
+auditorium
+auditoriums
+balconies
+balcony
+basement
+basements
+bathtub
+bathtubs
+boatlift
+boatlifts
+boatramp
+boatramps
+boiler room
+boiler rooms
+cafeteria
+cafeterias
+chimney
+chimneys
+classroom
+classrooms
+concrete slab
+concrete slabs
+courtroom
+courtrooms
+covered storage
+culvert
+culverts
+dirt pile
+dirt piles
+door
+doors
+driveway
+driveways
+fence
+fences
+flagpole
+flagpoles
+flat roof
+flat roofs
+footer
+footers
+footing
+footings
+foundation
+foundations
+gazebo
+gazebos
+graveyard
+graveyards
+headwall
+headwalls
+latrine
+latrines
+mall
+malls
+mast
+masts
+morgue
+morgues
+motor pool
+motor pools
+motor-pool
+motor-pools
+motorpool
+motorpools
+operating room
+operating rooms
+piling
+pilings
+portal
+portal opening
+portal openings
+portals
+power line
+power lines
+quaywall
+quaywalls
+roof
+roofs
+security fence
+security fences
+support beam
+support beams
+trench
+trenches
+trenching
+trenchs
+tunnel lining
+tunnel linings
+utility line
+utility lines
+utility pole
+utility poles
+ventilation
+ventilation shaft
+ventilation shafts
+ventilation stack
+ventilation stacks
+window
+windows
+wingwall
+wingwalls

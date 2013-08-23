@@ -1,0 +1,87 @@
+Phase: NounPhraseParts
+Input: Token Number tempEntity
+Options: control = appelt
+
+
+Rule: Determiner
+(
+		{Token.pos == ABL}| 
+		{Token.pos == ABN }|
+		{Token.pos == ABX }|
+		{Token.pos == AP}| 
+		{Token.pos == "AP$"}| 
+		{Token.pos == AT }|
+		{Token.pos == DT}| 
+		{Token.pos == DTI}| 
+		{Token.pos == DTS}| 
+		{Token.pos == DTX }|
+		{Token.pos == "PP$" }
+)
+:det
+-->
+	:det.tempNP_DET = {}
+
+
+Rule: HeadSimpleCommon
+(
+		{Token.pos ==NN }|  // singular common
+		{Token.pos ==NNS }| // plural common
+		{tempEntity}
+):head
+-->
+	:head.tempNP_HEAD = {nounType = "common"}
+
+
+Rule: HeadSimpleProper
+(
+		 {Token.pos ==NP }|  // singular proper		
+		 {Token.pos ==NPS } // plural proper
+):head
+-->
+	:head.tempNP_HEAD = {nounType = "proper"}
+
+Rule: HeadPronoun
+(
+		{Token.pos == DTS}| // "these"
+		{Token.pos ==PN }|
+		{Token.pos =="PN$" }|
+		{Token.pos ==PPO }|
+		{Token.pos ==PPS }|
+		{Token.pos ==PPSS }|
+		{Token.pos ==PPLS }|
+		{Token.pos ==PPL }
+
+):head
+-->
+	:head.tempNP_HEAD = {nounType = "pronoun"}
+
+Rule: Modifier
+(
+		{Token.pos ==JJ }|
+		{Token.pos ==JJR }|
+		{Token.pos =="JJ$" }|
+		{Token.pos ==JJS }|
+		{Token.pos ==JJT }|
+		{Token.pos ==CD }|
+		{Token.pos ==OD }|
+		{Token.pos =="PP$$" }|
+		{Token.pos == RB}|
+		{Token.pos == RBR}|
+		{Token.pos == RBS}|
+		{Token.pos == NN}|
+		{Token.pos == NNS}|
+		{Token.pos == NP}|
+		{Token.pos == NPS}|
+		({Token.pos == JJ}{Token.pos == ","}{Token.pos == JJ})|
+		{Token.pos == VBN}|
+		({Token.pos == NN}{Token.pos ==POSS })|
+		({Token.pos == NNS}{Token.pos ==POSS })|
+		({Token.pos == NP}{Token.pos ==POSS })|
+		({Token.pos == NPS}{Token.pos ==POSS })|
+		{Number}|
+		{tempEntity}
+):mod
+-->
+		:mod.tempNP_MOD = {}
+
+

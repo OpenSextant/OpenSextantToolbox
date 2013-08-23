@@ -1,0 +1,17 @@
+address
+addresses
+border
+borders
+boundaries
+boundary
+location
+locations
+outskirts
+place
+places
+position
+positions
+section
+sections
+spot
+spots

@@ -1,0 +1,71 @@
+aerosol
+alloy
+alloys
+chemical
+chemicals
+crystal
+crystals
+dirt
+drinking water
+electricity
+fluid
+fluids
+fuel
+fuel rod
+fuel rods
+gas
+gases
+gel
+gels
+glass
+glue
+glues
+gunpowder
+gunpowders
+ink
+inks
+insecticide
+insecticides
+liquid
+liquids
+lubricant
+lubricants
+metal
+metals
+mud
+nuclear fuel
+nuclear fuel rod
+nuclear fuel rods
+nuclear material
+nuclear materials
+nuclear waste
+oil
+oils
+pesticide
+pesticides
+petrochemical
+petrochemicals
+poison
+poisons
+pollutant
+pollutants
+polymer
+polymerase
+polymers
+powder
+powders
+propellant
+radioactive waste
+radioactive wastes
+slurries
+slurry
+soil
+solid
+solids
+toxic material
+toxic materials
+toxin
+toxins
+water
+wax
+waxes

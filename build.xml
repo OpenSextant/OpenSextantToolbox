@@ -1,0 +1,31 @@
+<project name="OpenSextantToolbox Master" basedir="." default="">
+
+    <property name="version" value="2.0" />
+
+    <!-- include the user settings -->
+    <property file="build.properties" />
+
+    <!-- the component homes -->
+    <property name="lang.home" location="./LanguageResources" />
+    <property name="toolbox.home" location="./OpenSextantToolbox" />
+
+    <!--====================== Targets ============================-->
+
+    
+    <!-- clean all of the components -->
+    <target name="clean" depends="">
+        <subant target="clean">
+            <fileset dir="${toolbox.home}" includes="build.xml" />
+            <fileset dir="${lang.home}" includes="build.xml" />
+        </subant>
+    </target>
+
+    <!--  build all of the components -->
+    <target name="build" depends="">
+        <subant target="build">
+            <fileset dir="${toolbox.home}" includes="build.xml" />
+            <fileset dir="${lang.home}" includes="build.xml" />
+        </subant>
+    </target>
+
+</project>

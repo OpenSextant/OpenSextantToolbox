@@ -1,0 +1,13 @@
+<ivysettings>
+
+	<settings defaultResolver="chain-resolver" overwriteMode="newer" />
+	<property name="nexus-snapshots"
+		value="https://oss.sonatype.org/content/repositories/snapshots" />
+
+	<resolvers>
+		<chain name="chain-resolver" dual="true">
+			<ibiblio name="maven2" m2compatible="true" />
+			<ibiblio name="nexus" m2compatible="true" root="${nexus-snapshots}" />
+		</chain>
+	</resolvers>
+</ivysettings>

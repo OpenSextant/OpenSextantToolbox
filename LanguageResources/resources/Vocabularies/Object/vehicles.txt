@@ -1,0 +1,144 @@
+ammunition carrier
+ammunition carriers
+auto
+automobile
+automobiles
+autos
+bicycle
+bicycles
+bike
+bikes
+boxcar
+boxcars
+bus
+buses
+busses
+car
+cargo truck
+cargo trucks
+cars
+cart
+carts
+chassis
+firetruck
+firetrucks
+flat bed
+flat beds
+flat-bed
+flat-beds
+flatbed
+flatbed trailer
+flatbed trailers
+flatbeds
+flatcar
+flatcars
+glider
+gliders
+heavy equipment transport
+heavy equipment transporter
+heavy equipment transporters
+heavy equipment transports
+heavy-equipment transport
+heavy-equipment transporter
+heavy-equipment transporters
+heavy-equipment transports
+house trailer
+house trailers
+housetrailer
+housetrailers
+jeep
+jeeps
+light utility vehicle
+light utility vehicles
+limousine
+limousines
+locomotive
+locomotives
+mini bus
+mini buses
+mini-bus
+mini-buses
+minibus
+minibuses
+minivan
+minivans
+motor scooter
+motor scooters
+motor vehicle
+motor vehicles
+motorbike
+motorbikes
+motorcycle
+motorcycles
+motorscooter
+motorscooters
+passenger vessel
+passenger vessels
+pick-up
+pick-up truck
+pick-up trucks
+pick-ups
+pickup
+pickup truck
+pickup trucks
+pickups
+pov
+povs
+prime mover
+prime movers
+prime-mover
+prime-movers
+primemover
+primemovers
+privately owned vehicle
+privately owned vehicles
+privately-owned vehicle
+privately-owned vehicles
+rail car
+rail cars
+railcar
+railcars
+sedan
+sedans
+sport utility vehicle
+sport utility vehicles
+stake bed
+stake beds
+stake-bed
+stake-beds
+stakebed
+stakebeds
+suv
+suvs
+tanker truck
+tanker trucks
+taxi
+taxicab
+taxicabs
+taxis
+tractor trailer
+tractor trailers
+tractor-trailer
+tractor-trailers
+trailer
+trailers
+train
+trains
+trainset
+trainsets
+transloader
+transloaders
+transporter
+transporters
+truck
+trucks
+utility vehicle
+utility vehicles
+van
+vans
+vehicle
+vehicles
+vessel
+vessels
+water tanker
+water tankers

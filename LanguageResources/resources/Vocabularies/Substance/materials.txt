@@ -1,0 +1,11 @@
+brass
+bronze
+canvas
+cardboard
+cloth
+concrete
+fabric
+plaster
+plastic
+steel
+wood

@@ -1,0 +1,34 @@
+adult
+adults
+babies
+baby
+boy
+boys
+child
+children
+citizen
+citizens
+girl
+girls
+guy
+guys
+human
+human being
+human beings
+humans
+infant
+infants
+man
+men
+people
+peoples
+person
+persons
+woman
+women
+youth
+youths
+youngster
+youngsters
+toddler
+toddlers

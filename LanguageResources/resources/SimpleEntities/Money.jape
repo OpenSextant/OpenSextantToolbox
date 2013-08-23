@@ -1,0 +1,83 @@
+/*
+
+  This phase finds references to amounts of money
+
+*/
+
+Imports: {
+import static gate.Utils.*;
+}
+ 
+
+Phase:	Money
+Input:	Token Number CurrencySymbol CurrencyName
+Options: control = appelt
+
+
+// -------------The rules -------------
+
+// $23.45
+Rule:Money1
+(
+ ( {CurrencySymbol}):sym ({Number}):amount 
+)
+:money
+-->
+{
+	gate.AnnotationSet moneySet = (gate.AnnotationSet)bindings.get("money");
+	Node moneyStartNode = moneySet.firstNode(); 
+	Node moneyEndNode   = moneySet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,moneySet));
+	 tempFeatures.put("hierarchy","Object.finance.money");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(moneyStartNode, moneyEndNode, "Money",tempFeatures);
+}
+
+// 100 dollars
+Rule:Money2
+(
+  ({Number}):amount ({CurrencyName} ):sym 
+)
+:money
+-->
+{
+	gate.AnnotationSet moneySet = (gate.AnnotationSet)bindings.get("money");
+	Node moneyStartNode = moneySet.firstNode(); 
+	Node moneyEndNode   = moneySet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,moneySet));
+	 tempFeatures.put("hierarchy","Object.finance.money");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(moneyStartNode, moneyEndNode, "Money",tempFeatures);
+}
+
+
+
+// hundreds of dollars
+Rule:Money3
+(
+ ({Number}):amount {Token.string ==~ "of|Of|OF"} ({CurrencyName}):sym 
+)
+:money
+-->
+{
+	gate.AnnotationSet moneySet = (gate.AnnotationSet)bindings.get("money");
+	Node moneyStartNode = moneySet.firstNode(); 
+	Node moneyEndNode   = moneySet.lastNode();
+ 
+	 gate.FeatureMap tempFeatures = Factory.newFeatureMap();
+	 tempFeatures.put("rule",ruleName());
+	 tempFeatures.put("string", stringFor(doc,moneySet));
+	 tempFeatures.put("hierarchy","Object.finance.money");
+	 tempFeatures.put("isEntity",true);
+	 
+	outputAS.add(moneyStartNode, moneyEndNode, "Money",tempFeatures);
+}
+

@@ -1,0 +1,22 @@
+<!--
+This file defines the dependencies for the OpenSextantToolbox
+NOTE this creole presumes that the dependencies defined below will be loaded by the GATE classloader
+but all the Solr dependencies will be listed on the JVM classpath via
+-Dgate.class.path=<somewhere>/lib/Solr/*
+-->
+
+<CREOLE-DIRECTORY>
+    <JAR SCAN="True">lib/OpenSextantToolbox.jar</JAR>
+   
+    <JAR SCAN="False">lib/annotations.jar</JAR>
+    <JAR SCAN="False">lib/commons-codec.jar</JAR>
+    <JAR SCAN="False">lib/commons-io.jar</JAR>
+    <JAR SCAN="False">lib/commons-lang.jar</JAR>
+    <JAR SCAN="False">lib/geodesy.jar</JAR>
+    <JAR SCAN="False">lib/joda-convert.jar</JAR>
+    <JAR SCAN="False">lib/joda-time.jar</JAR>
+    <JAR SCAN="False">lib/slf4j-api.jar</JAR>
+    <JAR SCAN="False">lib/slf4j-simple.jar</JAR>
+    <JAR SCAN="False">lib/super-csv.jar</JAR>
+    <JAR SCAN="False">lib/JITAR.jar</JAR>
+</CREOLE-DIRECTORY>

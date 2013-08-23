@@ -1,0 +1,99 @@
+accuracies
+accuracy
+age
+altitude
+altitudes
+amount
+amounts
+angle
+angles
+attitude
+attitudes
+azimuth
+azimuthes
+azimuths
+bandwidth
+breadth
+breadths
+caliber
+calibers
+capabilities
+capability
+capacities
+capacity
+characterisation
+characteristics
+characterization
+count
+counts
+degree celsius
+degree centigrade
+degree fahrenheit
+degree kelvin
+degrees celsius
+degrees centigrade
+degrees fahrenheit
+degrees kelvin
+diameter
+diameters
+dimension
+dimensions
+distance
+distances
+elevation
+elevations
+factor
+factors
+force readiness
+forces readiness
+frequencies
+frequency
+half life
+half-life
+halflife
+height
+heights
+intensities
+intensity
+length
+lengths
+lethality
+mass
+masses
+number
+numbers
+percentage
+percentages
+precision
+precisions
+qualities
+quality
+quantities
+quantity
+radii
+radius
+radiuses
+rate
+rates
+readiness level
+readiness levels
+shape
+shapes
+signal to noise ratio
+signal-to-noise ratio
+size
+sizes
+socio-economic
+speed
+speeds
+status
+thickness
+thicknesses
+velocities
+velocity
+volume
+volumes
+weight
+weights
+width
+widths

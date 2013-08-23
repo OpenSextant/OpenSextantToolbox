@@ -1,0 +1,30 @@
+area
+areas
+border region
+border regions
+heartland
+heartlands
+land
+lands
+localities
+locality
+neighborhood
+neighborhoods
+region
+regions
+sector
+sectors
+sub area
+sub areas
+sub-area
+sub-areas
+subarea
+subareas
+suburb
+suburbs
+tribal region
+tribal regions
+urban area
+urban areas
+zone
+zones

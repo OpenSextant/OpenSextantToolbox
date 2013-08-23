@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.mitre.opensextant" module="OpenSextant Toolbox" status="test" />
+
+
+	<configurations>
+		<conf name="GATE" description="Just the GATE stuff" />
+		<conf name="Plugin" description="Just the stuff for the plugin" />
+		<conf name="Solr" description="Just the stuff for the solr text tagger" />
+	</configurations>
+
+
+	<dependencies>
+
+		<dependency org="uk.ac.gate" name="gate-core" rev="7.1" conf ="GATE->*">
+		  <!-- need to exclude older lucene jar, conflicts with solr -->
+		   <exclude name="lucene-core"/>
+		</dependency>
+
+		<dependency org="org.opensextant" name="solr-text-tagger" rev="2.0-SNAPSHOT" conf ="Solr->*"/>
+		<!--dependency org="org.opensextant" name="solr-text-tagger" rev="1.2-SNAPSHOT" conf ="Solr->*"/-->
+		<dependency org="com.vividsolutions" name="jts" rev="1.13" conf ="Solr->*"/>
+		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf ="Solr->*"/>
+		
+		<dependency org="joda-time" name="joda-time" rev="2.2" conf ="Plugin->*" />
+		<dependency org="org.opensextant" name="geodesy" rev="2.0.0" conf ="Plugin->*"/>
+		<dependency org="commons-codec" name="commons-codec" rev="1.7" conf ="Plugin->*" />
+		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf ="Plugin->*"/>
+        <dependency org="commons-io" name="commons-io" rev="2.4" conf ="Plugin->*"/>
+            
+		
+		<exclude ext="txt" />
+		<exclude type="src" />
+		<exclude type="javadoc" ext="jar" />
+		<exclude type="source" ext="jar" />
+		<exclude org="org.restlet.jee" />
+		<!--exclude org="org.eclipse.jetty" /-->
+		<exclude artifact ="slf4j-simple" />
+		<exclude artifact ="slf4j-classic" />
+		<exclude artifact="!sources" />
+		<exclude artifact="lucene-analyzers-kuromoji" />
+		<exclude artifact="lucene-analyzers-morfologik" />
+	</dependencies>
+
+</ivy-module>
