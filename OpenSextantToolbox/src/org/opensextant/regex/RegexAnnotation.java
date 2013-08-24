@@ -8,6 +8,7 @@ public class RegexAnnotation {
   private int end;
   private String type;
   private String matchText;
+  private String rule;
   private boolean valid = true;
   private Map<String, Object> features = new HashMap<String, Object>();
 
@@ -48,6 +49,14 @@ public class RegexAnnotation {
 
   public void setMatchText(String matchText) {
     this.matchText = matchText;
+  }
+
+  public String getRule() {
+    return rule;
+  }
+
+  public void setRule(String rule) {
+    this.rule = rule;
   }
 
   public boolean isValid() {

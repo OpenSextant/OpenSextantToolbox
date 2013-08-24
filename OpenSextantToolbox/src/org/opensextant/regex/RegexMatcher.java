@@ -64,6 +64,7 @@ public class RegexMatcher {
         }
         // check to see if the normalizer declared the match invalid
         if (tmp.isValid()) {
+          tmp.setRule(r.getRuleFamily() + "-" + r.getRuleName());
           matches.add(tmp);
         }
       }

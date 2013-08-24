@@ -15,23 +15,11 @@ import org.opensextant.regex.RegexRule;
 public class DateTimeNormalizer implements Normalizer {
 
   // Enum representing YEAR, MON, WEEK, DAY, HR, MIN
-  //
 
   /**
    * A simplistic way to capture resolution of the date/time reference.
    */
-  public enum TimeResolution {
-    NONE(-1, "U"), YEAR(1, "Y"), MONTH(2, "M"), WEEK(3, "W"), DAY(4, "D"), HOUR(5, "H"), MINUTE(6, "m"), SECOND(7, "s");
-    public int level = -1;
-    public String code = null;
-
-    TimeResolution(int l, String c) {
-      level = l;
-      code = c;
-    }
-  };
-
-  public TimeResolution resolution = TimeResolution.NONE;
+  public enum TimeResolution {NONE, YEAR, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND};
 
   static final DateTime CAL = DateTime.now(DateTimeZone.UTC);
   static final int YEAR = CAL.getYear();

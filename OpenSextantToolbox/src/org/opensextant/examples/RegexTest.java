@@ -9,9 +9,9 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
@@ -50,7 +50,7 @@ public class RegexTest {
     }
     // write the results header
     try {
-      resWriter.write("Entity Type\tPos\\Neg\tTest Input\tScore\tCount\tTypes Found\tAnnotations Found");
+      resWriter.write("Entity Type\tPos\\Neg\tTest Input\tScore\tCount\tTypes Found\tRules Matched\tAnnotations Found");
       resWriter.newLine();
     } catch (IOException e) {
       System.err.println("Couldnt write to " + resFile.getName() + ":" + e.getMessage());
@@ -78,10 +78,12 @@ public class RegexTest {
       // get next line
       String line = iter.next();
 
-      // skip comments
-      if (!line.startsWith("#")) {
+      // skip comments and blank lines
+      if (line == null || line.startsWith("#") || line.trim().length() == 0 ) {
+        continue;
+      }
         // get the fields of the line
-        String[] pieces = line.split("\t");
+        String[] pieces = line.split("[\t\\s]+",3);
         String entityType = pieces[0];
         String posOrNeg = pieces[1];
         String testText = pieces[2];
@@ -97,7 +99,7 @@ public class RegexTest {
         } catch (IOException e) {
           System.err.println("Couldnt write to " + resFile.getName() + ":" + e.getMessage());
         }
-      }
+      
     }
 
     // cleanup
@@ -114,14 +116,19 @@ public class RegexTest {
 
     String assessment = "??";
     int annoCount = annos.size();
-    Set<String> typesFound = new HashSet<String>();
+    Set<String> typesFound = new TreeSet<String>();
+    Set<String> rulesFired = new TreeSet<String>();
     String tmpRes = "";
 
     for (RegexAnnotation a : annos) {
       typesFound.add(a.getType());
+      rulesFired.add(a.getRule());
       tmpRes += (a.toString() + ",");
     }
 
+    
+    
+    
     if (posOrNeg.equalsIgnoreCase("POS")) {
       // perfect result
       if (typesFound.contains(correctType) && annoCount == 1) {
@@ -158,7 +165,7 @@ public class RegexTest {
 
     }
 
-    String results = assessment + "\t" + annoCount + "\t" + typesFound.toString() + "\t" + tmpRes;
+    String results = assessment + "\t" + annoCount + "\t" + typesFound.toString() + "\t" + rulesFired.toString() + "\t"                      + tmpRes;
     return results;
   }
 
