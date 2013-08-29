@@ -34,6 +34,8 @@ public class RegexMatcher {
   String elementRegex = "<[a-zA-Z0-9_]+>";
   Pattern elementPattern = Pattern.compile(elementRegex);
 
+  // has this mather been sucessfully initialized
+  boolean isInited = false;
   // Log object
   private static Logger log = LoggerFactory.getLogger(RegexMatcher.class);
 
@@ -46,8 +48,18 @@ public class RegexMatcher {
   }
 
   public ArrayList<RegexAnnotation> match(String input) {
+    
+    
     // The matches to return
     ArrayList<RegexAnnotation> matches = new ArrayList<RegexAnnotation>();
+    
+    
+    if(!isInited){
+      log.error("Tried to use RegexMatcher without initializing first");
+      return matches;
+    }
+    
+
     for (RegexRule r : rules) {
       String t = r.getEntityType();
       Normalizer normer = r.getNormalizer();
@@ -56,14 +68,19 @@ public class RegexMatcher {
       while (matcher.find()) {
         // for each hit from the regex, create a RegexAnnotation
         RegexAnnotation tmp = new RegexAnnotation(t, matcher.group(0), matcher.start(), matcher.end());
-        // add the "hierarchy" feature
-        tmp.getFeatures().put("hierarchy", r.getTaxo());
         // if the a normalizer has been specified,
         if (normer != null) {
           normer.normalize(tmp, r, matcher.toMatchResult());
         }
         // check to see if the normalizer declared the match invalid
         if (tmp.isValid()) {
+          // add the "hierarchy"  and "isEntity" features
+          String tmpHier = r.getTaxo();
+          if(tmpHier != null && tmpHier.trim().length() >0){
+            tmp.getFeatures().put("hierarchy", tmpHier);
+            tmp.getFeatures().put("isEntity", true);
+          }
+          
           tmp.setRule(r.getRuleFamily() + "-" + r.getRuleName());
           matches.add(tmp);
         }
@@ -137,6 +154,7 @@ public class RegexMatcher {
       }
       // Ignore everything else
     } // end file read loop
+    
     try {
       if (reader != null) {
         reader.close();
@@ -207,7 +225,9 @@ public class RegexMatcher {
       } else { // nothing in file
         r.setTaxo("");
       }
-    }
+    }// end rule loop
+    
+    isInited = true;
   } // end initialize
 
   public void initialize(File patFile) {
@@ -229,16 +249,17 @@ public class RegexMatcher {
   public static void main(String[] args) throws IOException {
     File patternFile = new File(args[0]);
     File inputFile = new File(args[1]);
-    // contents to be tagged
+    // get contents to be tagged from file
     String content = FileUtils.readFileToString(inputFile, "UTF-8");
     // initialize the matcher
     RegexMatcher reger = new RegexMatcher(patternFile);
-    // what can the matcher find
+    // see what the matcher can find
     System.out.println("This tagger can find " + reger.types);
+    // see what rules the matcher has
     for (RegexRule r : reger.rules) {
       System.out.println(r);
     }
-    // Create tokens and print them
+    // see what the matcher can find in the content
     ArrayList<RegexAnnotation> annos = reger.match(content);
     for (RegexAnnotation anno : annos) {
       System.out.println(anno);

@@ -1,7 +1,6 @@
 package org.opensextant.examples;
 
 import gate.Annotation;
-import gate.AnnotationSet;
 import gate.Corpus;
 import gate.CorpusController;
 import gate.Document;
@@ -11,6 +10,7 @@ import gate.util.persistence.PersistenceManager;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -19,9 +19,9 @@ import org.apache.commons.io.FileUtils;
  Takes a GATE application (GAPP) file and directory as input
  processes each file in the directory through the process defined in the GAPP.
  */
-public class ToolboxExample1 {
+public class GeneralPurposeTaggerExample {
 
-  private ToolboxExample1() {
+  private GeneralPurposeTaggerExample() {
 
   }
 
@@ -39,9 +39,6 @@ public class ToolboxExample1 {
     Collection<File> files = FileUtils.listFiles(inDir, null, true);
     int numDocs = files.size();
 
-    // count the total number of annotations found
-    Integer totalAnnos = 0;
-
     // initialize GATE
     Gate.init();
 
@@ -58,7 +55,7 @@ public class ToolboxExample1 {
     for (File f : files) {
 
       // create a GATE document from the file contents
-      String contents = FileUtils.readFileToString(f);
+      String contents = FileUtils.readFileToString(f, "UTF-8");
       Document doc = Factory.newDocument(contents);
 
       // or create a GATE document directly from the file
@@ -76,14 +73,24 @@ public class ToolboxExample1 {
       // this is where we would do something with
       // the annotations found
 
-      AnnotationSet results = doc.getAnnotations();
-      Set<String> annotationTypesFound = results.getAllTypes();
-      System.out.println("Document " + doc.getName() + " contains " + annotationTypesFound.toString());
-      for (Annotation a : results) {
-        // a.getType();
-      }
+      // get any annotation with the "isEntity" feature
+      Set<String> featureNameSet = new HashSet<String>();
+      featureNameSet.add("isEntity");
+      gate.AnnotationSet entitySet = doc.getAnnotations().get(null, featureNameSet);
 
-      totalAnnos = totalAnnos + results.size();
+      // see what entity types we found
+      Set<String> entityTypesFound = entitySet.getAllTypes();
+      System.out.println("Document " + doc.getName() + " contains annotations of type (count)");
+      for (String a : entityTypesFound) {
+        gate.AnnotationSet tmpSet = doc.getAnnotations().get(a);
+        System.out.println("\t" + a + " (" + tmpSet.size() + ")");
+        for (Annotation s : tmpSet) {
+          String text = gate.Utils.cleanStringFor(doc, s);
+          String taxo = (String) s.getFeatures().get("hierarchy");
+          System.out.println("\t\t" + text + " (" + taxo + ")");
+        }
+
+      }
 
       // cleanup
       Factory.deleteResource(doc);
@@ -103,8 +110,7 @@ public class ToolboxExample1 {
     double totalDuration = (end - start) / 1000000000.0;
     double rate = numDocs / totalDuration;
 
-    System.out.println("Document count=" + numDocs + "\t" + "Total annotations found= " + totalAnnos + "\t"
-        + "Total time=" + totalDuration + "\t" + "Rate=" + rate + " documents/sec");
+    System.out.println("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate + " documents/sec");
 
   }
 

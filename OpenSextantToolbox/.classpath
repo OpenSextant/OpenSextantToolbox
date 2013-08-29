@@ -69,8 +69,6 @@
 	<classpathentry kind="lib" path="lib/Solr/javax.servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/jcl-over-slf4j.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/jts.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/logback-classic.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/logback-core.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/lucene-analyzers-common.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/lucene-analyzers-phonetic.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/lucene-codecs.jar"/>

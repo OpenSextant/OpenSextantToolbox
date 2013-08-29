@@ -43,9 +43,6 @@ public class GeoNormalizer implements Normalizer {
       elementsFound.put(elemName, elemenValue);
     }
 
-    annoFeatures.put("hierarchy", "Geo.place.geocoordinate");
-    annoFeatures.put("isEntity", true);
-
     // the rule family tells us the set of elements to expect
     String family = r.getRuleFamily();
     String ruleName = r.getRuleName();

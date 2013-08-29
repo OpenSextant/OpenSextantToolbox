@@ -33,7 +33,8 @@ Build file for OpenSextantToolbox.
 	<property name="resources.home" location="../LanguageResources" />
 
 	<!-- location for the generated JAR files -->
-	<property name="toolbox.jar.location" location="${build.dir}/${project.name}.jar" />
+	<property name="core.jar.location" location="${build.dir}/opensextant.jar" />
+	<property name="toolbox.jar.location" location="${build.dir}/opensextant-toolbox.jar" />
 	<property name="phonetics.jar.location" location="${build.dir}/opensextant-phonetics.jar" />
 	<property name="examples.jar.location" location="${build.dir}/opensextant-examples.jar" />
 
@@ -62,7 +63,7 @@ Build file for OpenSextantToolbox.
 	
 	<!-- Classpath to run test examples -->
 	<path id="examples.runtime.classpath">
-		<fileset dir="${release.dir}/lib/examples" includes="**/*.jar" />
+		<fileset dir="${release.dir}/lib" includes="**/*.jar" />
 		<fileset dir="${release.dir}/lib/GATE" includes="**/*.jar" />
 		<fileset dir="${release.dir}/lib/Solr" includes="**/*.jar" />
 		<fileset file="${release.dir}/etc/log4j.properties" />
@@ -70,9 +71,8 @@ Build file for OpenSextantToolbox.
 	
 
 	<path id="examples.runtime.standalone.classpath">
-		<fileset dir="${release.dir}/lib/examples" includes="**/*.jar" />
+		<fileset dir="${release.dir}/lib" includes="**/*.jar" />
 		<fileset dir="${release.dir}/lib/Solr" includes="**/*.jar" />
-		<fileset dir="${release.dir}/plugins/OpenSextantToolbox/lib" includes="**/*.jar" />
 		<fileset file="${release.dir}/etc/log4j.properties" />
 	</path>
 	
@@ -135,8 +135,7 @@ Build file for OpenSextantToolbox.
 	</target>
 
 	<target name="get.dependencies" depends="resolve,copy.orphan" />
-
-
+	
 	<!-- compile the source  -->
 	<target name="compile" depends="setup,get.dependencies">
 		<javac classpathref="compile.classpath" srcdir="${src.dir}" destdir="${build.dir}" debug="true" debuglevel="lines,source" source="${java_level}" encoding="utf-8" />
@@ -144,23 +143,28 @@ Build file for OpenSextantToolbox.
 
 	<!-- create the JAR files -->
 	<target name="jar" depends="compile">
-		<jar destfile="${toolbox.jar.location}" update="false" basedir="${build.dir}">
+		
+		<jar destfile="${core.jar.location}" update="false" basedir="${build.dir}">
 			<include name="org/opensextant/**" />
+			<exclude name="org/opensextant/toolbox/**" />
 			<exclude name="org/opensextant/examples/**" />
+		</jar>
+		
+		<jar destfile="${toolbox.jar.location}" update="false" basedir="${build.dir}">
+			<include name="org/opensextant/toolbox/**" />
 		</jar>
 
 		<jar destfile="${phonetics.jar.location}" update="false" basedir="${build.dir}">
 			<include name="org/opensextant/phonetic/**" />
 		</jar>
-
+		
 		<jar destfile="${examples.jar.location}" update="false" basedir="${build.dir}">
 			<include name="org/opensextant/examples/**" />
-			<manifest>
-				<attribute name="Main-Class" value="org.opensextant.examples.ToolboxExample1" />
-			</manifest>
-		</jar>
-
-
+			<fileset dir="${src.dir}" includes="org/opensextant/examples/*.java"/>
+		</jar>	
+		
+		
+		
 	</target>
 
 	<!-- Build and populate the Solr gazetteer -->
@@ -247,16 +251,16 @@ Build file for OpenSextantToolbox.
 	</target>
 
 
-	<!-- copy over the plugin to the release directory -->
-	<target name="release.examples" depends="">
-		<copy todir="${release.dir}/lib/examples">
-			<fileset file="${examples.jar.location}" />
-		</copy>
-	</target>
-
 	<!-- copy over jars to the release directory -->
 	<target name="release.libs" depends="">
 
+		<copy todir="${release.dir}/lib">
+			<fileset file="${core.jar.location}"/>
+			<fileset file="${phonetics.jar.location}"/>
+			<fileset file="${examples.jar.location}"/>
+			<fileset dir="${basedir}/lib/Plugin"/>
+		</copy>
+	
 		<copy todir="${release.dir}/lib/solr">
 			<fileset dir="${basedir}/lib/solr">
 				<include name="*.jar" />
@@ -269,16 +273,19 @@ Build file for OpenSextantToolbox.
 			</fileset>
 		</copy>
 
+		
+		
+		
+		
+		
+		
 	</target>
 
 	<!-- copy over the plugin to the release directory -->
 	<target name="release.plugin" depends="">
 		<copy file="${basedir}/gate/creole.xml" tofile="${release.dir}/plugins/OpenSextantToolbox/creole.xml" />
 		<copy todir="${release.dir}/plugins/OpenSextantToolbox/lib">
-			<fileset dir="${basedir}/lib/Plugin">
-				<include name="*.jar" />
-			</fileset>
-			<fileset file="${build.dir}/OpenSextantToolbox.jar" />
+			<fileset file="${toolbox.jar.location}" />
 		</copy>
 		<copy todir="${release.dir}/plugins/ANNIE">
 			<fileset dir="${basedir}/gate/plugins/ANNIE" />
@@ -294,17 +301,14 @@ Build file for OpenSextantToolbox.
 				<exclude name="**/.settings/" />
 				<exclude name=".project" />
 				<exclude name="build.xml" />
+				<exclude name="build.properties" />
+				<exclude name="build.local.properties" />
 			</fileset>
 		</copy>
 	</target>
 
 	<!-- Copy over the shell scripts, configuration, and basic test data -->
 	<target name="release.misc">
-		<copy todir="${release.dir}/test/testDocs">
-			<fileset dir="${basedir}/test/testDocs">
-				<filename name="*.txt" />
-			</fileset>
-		</copy>
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/log4j.properties" />
 		<copy todir="${release.dir}" file="${basedir}/gate/gate.xml" />
 		<copy todir="${release.dir}" file="${basedir}/gate/user-gate.xml" />
@@ -321,7 +325,6 @@ Build file for OpenSextantToolbox.
 	<!-- Build a full release in the "release" directory -->
 	<target name="release" depends="build">
 		<antcall target="release.prepare" />
-		<antcall target="release.examples" />
 		<antcall target="release.libs" />
 		<antcall target="release.plugin" />
 		<antcall target="release.resources" />
@@ -356,7 +359,7 @@ Build file for OpenSextantToolbox.
 		
 		<!-- run the geotagger -->
 		
-		<java classname="org.opensextant.examples.ToolboxExample1" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.examples.GeotaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dgate.home=${release.dir}" />
 			<env key="solr.home" value="${release.dir}\Gazetteer\solr"/>
@@ -365,17 +368,17 @@ Build file for OpenSextantToolbox.
 		</java>
 	
 		<!-- run the general purpose tagger -->
-		<!--
-		<java classname="org.opensextant.examples.ToolboxExample1" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+	
+		<java classname="org.opensextant.examples.GeneralPurposeTaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dgate.home=${release.dir}" />
 			<env key="solr.home" value="${release.dir}\Gazetteer\solr"/>
 			<arg value="${test.app.generalPurpose}" />
 			<arg value="${test.input}" />
 		</java>
-	-->
+
 	<!-- run the matcher test -->
-		<!--	
+	<!--		
 	<java classname="org.opensextant.examples.MatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
 		<jvmarg value="-Xmx500M" />
 		<arg value="${release.dir}\Gazetteer\solr" />
@@ -383,10 +386,6 @@ Build file for OpenSextantToolbox.
 	-->	
 		
 </target>
-	
-	
-	
-	
 	
 	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
 	<target name="toolbox.deploy" depends="">
@@ -399,12 +398,18 @@ Build file for OpenSextantToolbox.
 			<fileset dir="${release.dir}/plugins/OpenSextantToolbox"/>
 		</copy>
 		
-		<!-- copy over the solr libs from release -->
-		<copy todir="${toolbox.plugin.dir}/lib_solr">
-			<fileset dir="${release.dir}/lib/solr"/>
+		<!-- copy over the other jars libs from release -->
+		<copy todir="${toolbox.plugin.dir}/lib_extra">
+			<fileset dir="${release.dir}/lib/">
+				<include name = "*.jar" />
+				<exclude name= "**/GATE/**" />
+			</fileset>
+			<fileset dir="${release.dir}/lib/solr">
+				<include name = "*.jar" />
+			</fileset>
 		</copy>
 
-		<echo> Remember to add -Dgate.class.path=./plugins/OpenSextantToolbox/lib_solr/* to your gate.l4j.ini or other start up script </echo>
+		<echo> Remember to add -Dgate.class.path=./plugins/OpenSextantToolbox/lib_extra/* to your gate.l4j.ini or other start up script </echo>
 		
 	</target>
 </project>
