@@ -10,7 +10,6 @@
 	<classpathentry kind="lib" path="lib/Plugin/geodesy.jar"/>
 	<classpathentry kind="lib" path="lib/Plugin/joda-convert.jar"/>
 	<classpathentry kind="lib" path="lib/Plugin/joda-time.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/solr-core.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/solr-solrj.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/solr-text-tagger.jar"/>
@@ -37,7 +36,6 @@
 	<classpathentry kind="lib" path="lib/GATE/jdom.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/jempbox.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/junit.jar"/>
-	<classpathentry kind="lib" path="lib/GATE/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/metadata-extractor.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/nekohtml.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/pdfbox.jar"/>
@@ -67,7 +65,6 @@
 	<classpathentry kind="lib" path="lib/Solr/httpcore.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/httpmime.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/javax.servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/jcl-over-slf4j.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/jts.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/lucene-analyzers-common.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/lucene-analyzers-phonetic.jar"/>
@@ -82,9 +79,12 @@
 	<classpathentry kind="lib" path="lib/Solr/lucene-spatial.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/lucene-suggest.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/noggit.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/spatial4j.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/wstx-asl.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/zookeeper.jar"/>
+	<classpathentry kind="lib" path="lib/Logging/jcl-over-slf4j.jar"/>
+	<classpathentry kind="lib" path="lib/Logging/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/Logging/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="lib/Logging/slf4j-log4j12.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

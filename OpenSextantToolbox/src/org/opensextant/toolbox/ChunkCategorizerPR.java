@@ -121,7 +121,7 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
    */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
-    initialize();
+    
   }
 
   public String getAnnotationName() {

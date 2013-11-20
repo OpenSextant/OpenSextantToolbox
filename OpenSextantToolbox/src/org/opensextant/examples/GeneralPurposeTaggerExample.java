@@ -15,9 +15,9 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
-/* A "canonical" GATE application
- Takes a GATE application (GAPP) file and directory as input
- processes each file in the directory through the process defined in the GAPP.
+/** A simple example of how to use the OpenSextant General Purpose extractor pipeline.<br>
+ Takes a directory as input and processes each file in the directory through the general purpose pipeline,
+  printing some basic results of what it found.
  */
 public class GeneralPurposeTaggerExample {
 
@@ -30,11 +30,14 @@ public class GeneralPurposeTaggerExample {
     Long start = System.nanoTime();
 
     // file containing the pre-defined GATE application (GAPP)
+    // this should point to opensextant-toolbox-2.0/LanguageResources/GAPPs/OpenSextant_GeneralPurpose.gapp
     File gappFile = new File(args[0]);
 
     // directory containing the files to be processed
     File inDir = new File(args[1]);
 
+    System.out.println("Initializing");
+    
     // get the list of files to be processed
     Collection<File> files = FileUtils.listFiles(inDir, null, true);
     int numDocs = files.size();
@@ -51,12 +54,17 @@ public class GeneralPurposeTaggerExample {
     // associate the corpus with the application
     application.setCorpus(corpus);
 
-    // process the files, one at a time
+    System.out.println("Done Initializing");
+    Double initTime = (System.nanoTime() - start)/ 1000000000.0;
+
+    
+    // run the files through the tagger
     for (File f : files) {
 
       // create a GATE document from the file contents
       String contents = FileUtils.readFileToString(f, "UTF-8");
       Document doc = Factory.newDocument(contents);
+      doc.setName(f.getName());
 
       // or create a GATE document directly from the file
       // Document doc = Factory.newDocument(f.toURI().toURL());
@@ -70,36 +78,48 @@ public class GeneralPurposeTaggerExample {
       // remove the document from the corpus
       corpus.clear();
 
-      // this is where we would do something with
-      // the annotations found
+      // document now has been tagged
+      // now do something with the annotations found
 
-      // get any annotation with the "isEntity" feature
+      // get any annotation which has the "isEntity" feature
+      // "isEntity" is the marker OpenSextant uses to distinquish finished entities
+      // from candidates, intermediate results, building blocks and other internal stuff
       Set<String> featureNameSet = new HashSet<String>();
       featureNameSet.add("isEntity");
       gate.AnnotationSet entitySet = doc.getAnnotations().get(null, featureNameSet);
 
-      // see what entity types we found
+      // see what entity types we found in this document
       Set<String> entityTypesFound = entitySet.getAllTypes();
-      System.out.println("Document " + doc.getName() + " contains annotations of type (count)");
+      
+      // loop over all found entities and print some basic info
+      System.out.println("Document " + doc.getName() + " contains annotations of type (count):");
       for (String a : entityTypesFound) {
+        // get all annotations of a type 
         gate.AnnotationSet tmpSet = doc.getAnnotations().get(a);
         System.out.println("\t" + a + " (" + tmpSet.size() + ")");
+        // loop over all instance of this type and print some basic info
         for (Annotation s : tmpSet) {
+          // get a clean string representation of the tagged text
           String text = gate.Utils.cleanStringFor(doc, s);
+          // get the taxonomic categorization for this entity
           String taxo = (String) s.getFeatures().get("hierarchy");
+          // could also get the start/end points, other features ... 
           System.out.println("\t\t" + text + " (" + taxo + ")");
         }
 
       }
 
-      // cleanup
+      // make sure all gets written
+      System.out.flush();
+      
+      // cleanup the document, the file and the content
       Factory.deleteResource(doc);
       contents = null;
       f = null;
 
     } // end file loop
 
-    // cleanup
+    // cleanup the corpus and application
     Factory.deleteResource(corpus);
     application.cleanup();
 
@@ -108,9 +128,10 @@ public class GeneralPurposeTaggerExample {
 
     // print some summary stats
     double totalDuration = (end - start) / 1000000000.0;
-    double rate = numDocs / totalDuration;
+    double rate = numDocs / (totalDuration - initTime);
 
-    System.out.println("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate + " documents/sec");
+    System.out.println("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate
+        + " documents/sec");
 
   }
 

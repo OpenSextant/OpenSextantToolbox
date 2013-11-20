@@ -37,6 +37,9 @@ public class Geocoord implements java.io.Serializable {
    */
   public boolean isValid = false;
 
+  // radius of the earth in kilometers, used for distance calc
+  public static final double R = 6372.8;
+
   // empty public constructor so this class be used like a Bean
   public Geocoord() {
     isValid = true;
@@ -76,6 +79,35 @@ public class Geocoord implements java.io.Serializable {
       // System.err.println("Null in Geocoord" + this.expression);
     }
     return d;
+  }
+
+  /**
+   * This returns distance in kilometers. 
+   * @return distance from the given Geocoord, in kilometers.
+   */
+  public Double distance(double lat, double lon) {
+
+    double lat2 = this.getLatitude();
+    double lon2 = this.getLongitude();
+
+    return distance(lat, lon, lat2, lon2);
+
+  }
+
+  /**
+   * This returns distance in kilometers. 
+   * @return distance from the given Geocoord, in kilometers.
+   */
+  public static double distance(double lat1, double lon1, double lat2, double lon2) {
+    double dLat = Math.toRadians(lat2 - lat1);
+    double dLon = Math.toRadians(lon2 - lon1);
+    lat1 = Math.toRadians(lat1);
+    lat2 = Math.toRadians(lat2);
+
+    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1)
+        * Math.cos(lat2);
+    double c = 2 * Math.asin(Math.sqrt(a));
+    return R * c;
   }
 
   public Double getLatitude() {

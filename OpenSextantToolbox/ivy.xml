@@ -2,61 +2,70 @@
 <ivy-module version="2.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
-	<info organisation="org.mitre.opensextant" module="OpenSextant Toolbox"
-		status="test" />
-
+	<info organisation="org.mitre.opensextant" module="OpenSextant Toolbox" status="test" />
 
 	<configurations>
 		<conf name="GATE" description="Just the GATE stuff" />
 		<conf name="Plugin" description="Just the stuff for the plugin" />
 		<conf name="Solr" description="Just the stuff for the solr text tagger" />
-		<conf name="logging" description="Just the logging stuff" />
+		<conf name="Logging" description="Just the logging stuff" />
 	</configurations>
 
 
 	<dependencies>
 
+	<!--  Get the GATE core -->
 		<dependency org="uk.ac.gate" name="gate-core" rev="7.1" conf="GATE->*">
 			<!-- need to exclude older lucene jar, conflicts with solr -->
 			<exclude name="lucene-core" />
+			<!-- exclude logging stuff  -->
 			<exclude name="commons-logging" />
+			<exclude name="log4j" />
 		</dependency>
-
+		
+	<!--  Get the Solr Text Tagger, which brings along the rest of Solr  -->
 		<dependency org="org.opensextant" name="solr-text-tagger" rev="2.0-SNAPSHOT" conf="Solr->*">
+			<!-- exclude logging stuff  -->
 			<exclude name="logback-core" />
 			<exclude name="logback-classic" />
+			<exclude org="org.slf4j" />
+			<!-- seems to be a broken link in Maven Central, not needed anyway -->
+			<exclude org="org.restlet.jee" />
+			<!--  big and not needed -->
 			<exclude name="lucene-analyzers-kuromoji" />
 			<exclude name="lucene-analyzers-morfologik" />
-			
 		</dependency>
 
+		<!--  JTS is used for geospatial stuff in Solr -->
 		<dependency org="com.vividsolutions" name="jts" rev="1.13" conf="Solr->*" />
+		
+		<!--  Solr needs this even if running embedded -->
 		<dependency org="javax.servlet" name="javax.servlet-api" rev="3.0.1" conf="Solr->*" />
-
+		
+		<!-- the plugin uses joda time for date/time normalization -->
 		<dependency org="joda-time" name="joda-time" rev="2.2" conf="Plugin->*" />
-		<dependency org="org.opensextant" name="geodesy" rev="2.0.0" conf="Plugin->*" />
+		
+		<!-- the plugin uses geodesy for geocoord normalization  -->
+		<dependency org="org.opensextant" name="geodesy" rev="2.0.0" conf="Plugin->*">
+			<!-- exclude logging stuff  -->
+			<exclude org="org.slf4j" />
+		</dependency>
+
+		<!--  some general stuff used by the plugin -->
 		<dependency org="commons-codec" name="commons-codec" rev="1.7" conf="Plugin->*" />
 		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="Plugin->*" />
 		<dependency org="commons-io" name="commons-io" rev="2.4" conf="Plugin->*" />
 
-
-		<!--dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"/ -->
-		<!--dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5"/-->
-		<!--dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.7.5"/-->
-		<!--dependency org="log4j" name="log4j" rev="1.2.17"/ -->
-
-		<exclude ext="txt" />
-		<exclude type="src" />
+		<!--  all the logging stuff -->
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5" conf="Logging->*" />
+		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5" conf="Logging->*" />
+		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.7.5" conf="Logging->*" />
+		<dependency org="log4j" name="log4j" rev="1.2.17" conf="Logging->*"/>
+            
+         <!--  exclude other projects' source -->   
 		<exclude type="javadoc" ext="jar" />
 		<exclude type="source" ext="jar" />
-		<exclude org="org.restlet.jee" />
-		<!--exclude org="org.eclipse.jetty" / -->
-		<exclude artifact="slf4j-simple" />
-		<exclude artifact="slf4j-classic" />
-
-		<exclude artifact="!sources" />
-		<exclude artifact="lucene-analyzers-kuromoji" />
-		<!--exclude artifact="lucene-analyzers-morfologik" / -->
+		
 	</dependencies>
 
 </ivy-module>

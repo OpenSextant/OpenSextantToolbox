@@ -106,7 +106,14 @@ public class DateTimeNormalizer2 implements Normalizer {
     }
 
     // parse the reduced match using the equivalent formatter
-    DateTime dt = fmt.parseDateTime(reducedMatch.toString());
+    DateTime dt =null;
+    try {
+      dt = fmt.parseDateTime(reducedMatch.toString());
+    } catch (Exception e) {
+      log.error("Cannot normalize " + anno.getMatchText() + " using " + r.toString() + " error was:" + e.getMessage() );
+      anno.setValid(false);
+      return;
+    }
     // create a JDK Date to return
     Date jdkDate = dt.toDate();
     normalizedResults.put("date", jdkDate);

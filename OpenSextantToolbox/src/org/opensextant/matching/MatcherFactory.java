@@ -48,9 +48,9 @@ public class MatcherFactory {
   static Map<PlacenameSearcher, Boolean> searchers = new WeakHashMap<PlacenameSearcher, Boolean>();
 
   // the fields of the match and query response
-  private static String fieldnames = "id,place_id,name,lat,lon,geo,feat_class,feat_code," +
-    "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script," +
-    "conflate_key,name_bias,id_bias,name_type,name_type_system,partition";
+  private static String fieldnames = "id,place_id,name,lat,lon,geo,feat_class,feat_code,"
+      + "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
+      + "conflate_key,name_bias,id_bias,name_type,name_type_system,partition";
 
   // the initial parameters for matchers and the searchers
   private static ModifiableSolrParams matchParams = new ModifiableSolrParams();
@@ -75,6 +75,7 @@ public class MatcherFactory {
 
     searchParams.set(CommonParams.Q, "*:*");
     searchParams.set(CommonParams.FL, fieldnames + ",score");
+    searchParams.set(CommonParams.ROWS, 100000);
   }
 
   /**
@@ -86,19 +87,22 @@ public class MatcherFactory {
 
     if (isStarted) {
       // already running
+      log.info("Tried to configure MatcherFactory when already started. Doing nothing.");
       return;
     }
 
     // not running but already configured must be re-configuring
     if (isConfigured) {
+      log.info("Trying to re-configure MatcherFactory.");
       isRemote = false;
       isConfigured = false;
       isStarted = false;
       solrServer = null;
     }
 
-    // no home given default to env param
+    // no home given, look for env param
     if (home == null || home.length() == 0) {
+      log.info("No config value supplied. Looking for environment variable");
       String solrEnv = System.getenv(envParam);
       if (solrEnv != null && solrEnv.length() > 0) {
         if (validFile(solrEnv)) {
@@ -109,22 +113,14 @@ public class MatcherFactory {
         }
       } else {
         // nothing given and nothing in env
+        log.error("Could not configure MatcherFactory: No config value supplied and no environment variable exists");
         isConfigured = false;
         return;
       }
     }
 
-    // remote solr
-    if (home.toLowerCase().startsWith("http:") && validURL(home)) {
-      isConfigured = true;
-      isRemote = true;
-      homeLocation = home;
-      isConfigured = true;
-      return;
-    }
-
-    // local using file URL
-    if (home.toLowerCase().startsWith("file:") && validURL(home)) {
+    // home supplied, check if URL of some type
+    if (validURL(home)) {
 
       URL tmpURL = null;
       try {
@@ -135,17 +131,32 @@ public class MatcherFactory {
         return;
       }
 
-      String filePath = tmpURL.getPath();
-      if (validFile(filePath)) {
-        homeLocation = filePath;
-      } else {
+      String proto = tmpURL.getProtocol();
+
+      if (proto.toLowerCase().equalsIgnoreCase("http") || proto.toLowerCase().equalsIgnoreCase("http")) {
+        isConfigured = true;
+        isRemote = true;
+        homeLocation = home;
+        isConfigured = true;
         return;
       }
 
-      isRemote = false;
-      isConfigured = true;
-      return;
-    }
+      // local using file URL
+      if (proto.toLowerCase().equalsIgnoreCase("file")) {
+        String filePath = tmpURL.getPath();
+        if (validFile(filePath)) {
+          homeLocation = filePath;
+        } else {
+          log.error("Not a valid location for solr home: " + home + " (" + filePath + ")");
+          return;
+        }
+
+        isRemote = false;
+        isConfigured = true;
+        return;
+      }
+
+    }// end if URL
 
     // anything else, local using file path
     if (validFile(home)) {
@@ -170,7 +181,7 @@ public class MatcherFactory {
 
     if (!isConfigured) {
       // can't start not configured
-      log.error("Could not start MatcherFactory, it hasnt been configured yet");
+      log.error("Could not start MatcherFactory, it hasn't been configured yet");
       return;
     }
 
@@ -184,7 +195,7 @@ public class MatcherFactory {
       HttpSolrServer server = new HttpSolrServer(homeLocation);
       server.setAllowCompression(true);
       solrServer = server;
-    } else {
+    } else { // must be local
       try {
         File solrXML = new File(homeLocation + File.separator + "solr.xml");
         CoreContainer solrContainer = new CoreContainer(homeLocation);

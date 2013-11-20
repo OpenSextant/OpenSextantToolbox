@@ -77,7 +77,7 @@ public class MGRSParser {
         try {
           tmp = new MGRS(var);
         } catch (IllegalArgumentException e) {
-          log.error("Could not parse MGRS:" + var);
+          log.warn("Could not parse MGRS:" + var);
         }
         if (tmp != null) {
           mgrs.add(tmp);

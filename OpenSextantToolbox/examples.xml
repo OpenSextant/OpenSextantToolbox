@@ -1,0 +1,158 @@
+<!--======================================================================
+ant file to run OpenSextantToolbox Examples.  
+=======================================================================-->
+<project name="OpenSextantToolboxExamples" basedir="." default="run.examples" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+	<!-- set toolbox.home to the top of the unpacked release -->
+	<property name="toobox.home" location="." />
+
+	<!-- Classpath to run example code -->
+	<path id="examples.runtime.classpath">
+		<fileset dir="${toobox.home}/lib" includes="**/*.jar" />
+		<fileset dir="${toobox.home}/lib/GATE" includes="**/*.jar" />
+		<fileset dir="${toobox.home}/lib/Solr" includes="**/*.jar" />
+		<fileset dir="${toobox.home}/lib/Logging" includes="**/*.jar" />
+	</path>
+
+	<!-- classpath to run the components that don't need GATE -->
+	<path id="examples.runtime.standalone.classpath">
+		<fileset dir="${toobox.home}/lib" includes="**/*.jar" />
+		<fileset dir="${toobox.home}/lib/Solr" includes="**/*.jar" />
+		<fileset dir="${toobox.home}/lib/Logging" includes="**/*.jar" />
+	</path>
+
+
+	<!-- location of the GAPP (GATE application) files -->
+	<property name="test.gapp.geotagger" location="${toobox.home}/LanguageResources/GAPPs/OpenSextant_geotagger.gapp" />
+	<property name="test.gapp.generalPurpose" location="${toobox.home}/LanguageResources/GAPPs/OpenSextant_GeneralPurpose.gapp" />
+
+	<!-- location of the regex pattern files -->
+	<property name="test.patterns.date" location="${toobox.home}/LanguageResources/resources/patterns/datetime_patterns2.cfg" />
+	<property name="test.patterns.geo" location="${toobox.home}/LanguageResources/resources/patterns/geocoord_regex.cfg" />
+
+	<!-- location of the test data and test results directory-->
+	<property name="test.testdocs.dir" location="${toobox.home}/LanguageResources/testData/TestDocs" />
+	<property name="test.matcher.file" location="${toobox.home}/LanguageResources/testData/MatcherTestData/matcherTest.txt" />
+	<property name="test.dateTest.file" location="${toobox.home}/LanguageResources/testData/RegexTestData/dateTime_test.csv" />
+	<property name="test.geoTest.file" location="${toobox.home}/LanguageResources/testData/RegexTestData/geocoord_test.csv" />
+	<property name="test.patterns.results" location="${toobox.home}/LanguageResources/TestData/results" />
+
+	<!--====================== Targets ============================-->
+
+	<!-- run some simple examples -->
+	<target name="run.examples">
+		
+		<echo />
+		<echo>-----------------------------------------------</echo>
+		<echo>Running the Geotagger Example</echo>
+		<echo>-----------------------------------------------</echo>
+		<!-- run the geotagger example-->
+		<java classname="org.opensextant.examples.GeotaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+			<!-- add some memory -->
+			<jvmarg value="-Xmx500M" />
+			<!-- set gate.home to to toolbox.home (where you unpacked the release) -->
+			<jvmarg value="-Dgate.home=${toobox.home}" />
+			<!-- point to the log config file -->
+			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<!-- set an env variable to point to solr gazetteer -->
+			<env key="solr.home" value="${toobox.home}\Gazetteer\solr" />
+			<!-- pass in the location of the geotagger GAPP file -->
+			<arg value="${test.gapp.geotagger}" />
+			<!-- pass in the location of the directory containing the files to be processed -->
+			<arg value="${test.testdocs.dir}" />
+		</java>
+
+		<echo />
+		<echo>-------------------------------------------------------------------------------</echo>
+		<echo>Running the General Purpose Entity Extractor Example</echo>
+		<echo>-------------------------------------------------------------------------------</echo>
+		<!-- run the general purpose tagger example-->
+		<java classname="org.opensextant.examples.GeneralPurposeTaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+			<!-- add some memory -->
+			<jvmarg value="-Xmx500M" />
+			<!-- set gate.home to to toolbox.home (where you unpacked the release) -->
+			<jvmarg value="-Dgate.home=${toobox.home}" />
+			<!-- point to the log config file -->
+			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<!-- set an env variable to point to solr gazetteer -->
+			<env key="solr.home" value="${toobox.home}\Gazetteer\solr" />
+			<!-- pass in the location of the general purpose extractor GAPP file -->
+			<arg value="${test.gapp.generalPurpose}" />
+			<!-- pass in the location of the directory containing the files to be processed -->
+			<arg value="${test.testdocs.dir}" />
+		</java>
+
+		<echo/>
+		<echo>--------------------------------------------------</echo>
+		<echo>Running the Solr Matcher Example</echo>
+		<echo>--------------------------------------------------</echo>
+		<!-- run the matcher example -->
+		<java classname="org.opensextant.examples.MatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+			<!-- add some memory -->
+			<jvmarg value="-Xmx500M" />
+			<!-- point to the log config file -->
+			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<!-- set an env variable to point to solr gazetteer -->
+			<env key="solr.home" value="${toobox.home}\Gazetteer\solr" />
+			<!-- or pass in location solr gazetteer -->
+			<!--arg value="${toobox.home}\Gazetteer\solr" /-->
+			<!-- location of some matcher test data -->
+			<arg value="${test.matcher.file}" />
+		</java>
+
+		<echo />
+		<echo>--------------------------------------------------</echo>
+		<echo>Running the Solr Searcher Example</echo>
+		<echo>--------------------------------------------------</echo>
+		<!-- run the searcher example -->
+		<java classname="org.opensextant.examples.SearcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+			<!-- add some memory -->
+			<jvmarg value="-Xmx500M" />
+			<!-- point to the log config file -->
+			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<!-- set an env variable to point to solr gazetteer -->
+			<env key="solr.home" value="${toobox.home}\Gazetteer\solr" />
+			<!-- or pass in location solr gazetteer -->
+			<!--arg value="${toobox.home}\Gazetteer\solr" /-->
+		</java>
+
+		<echo />
+		<echo>--------------------------------------------------</echo>
+		<echo>Running the Date Regex Matcher Example</echo>
+		<echo>--------------------------------------------------</echo>
+		<!-- run the date regex example -->
+		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+			<!-- add some memory -->
+			<jvmarg value="-Xmx500M" />
+			<!-- point to the log config file -->
+			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<!-- file containing the date test data -->
+			<arg value="${test.dateTest.file}" />
+			<!-- file containing the date regex patterns to use -->
+			<arg value="${test.patterns.date}" />
+			<!-- file into which to write results -->
+			<arg value="${test.patterns.results}/dateResults.txt" />
+		</java>
+
+		<echo />
+		<echo>--------------------------------------------------</echo>
+		<echo>Running the Geocoord Regex Matcher Example</echo>
+		<echo>--------------------------------------------------</echo>
+		<!-- run the geocoord regex example -->
+		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+			<!-- add some memory -->
+			<jvmarg value="-Xmx500M" />
+			<!-- point to the log config file -->
+			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<!-- file containing the geocoord test data -->
+			<arg value="${test.geoTest.file}" />
+			<!-- file containing the geocoord regex patterns to use -->
+			<arg value="${test.patterns.geo}" />
+			<!-- file into which to write results -->
+			<arg value="${test.patterns.results}/geoResults.txt" />
+		</java>
+
+	</target>
+
+
+</project>

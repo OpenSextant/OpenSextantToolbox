@@ -34,7 +34,7 @@
 
 		<!-- geo = XY coordinate in the form 'lat,lon'. Created by update-script.js 
 			during loading -->
-		<field name="geo" type="geo" stored="true" indexed="false" />
+		<field name="geo" type="geo" stored="true" indexed="true" />
 		<field name="lat" type="ignored" />
 		<field name="lon" type="ignored" />
 
@@ -149,6 +149,7 @@
 		<!-- Geospatial field type (aka GeoSolr) http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4 -->
 		<fieldType name="geo" class="solr.SpatialRecursivePrefixTreeFieldType"
 			spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+			geo="true"
 			units="degrees" />
 
 		<!-- completely ignored data -->
