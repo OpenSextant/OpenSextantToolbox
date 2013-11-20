@@ -4,7 +4,6 @@ Currently there are two OpenSextant extraction pipelines, each defined in its ow
 2) The OpenSextant General Purpose Extractor (OpenSextant_GeneralPurpose.gapp)
 
 
-
 The OpenSextant Entities spreadsheet (OpenSextant Entities.xlsx) defines the GATE annotations (types,features and feature values)produced by these OpenSextant processes.
 
 Annotation Model
@@ -19,8 +18,7 @@ The OpenSextant Entities spreadsheet  contains the following information:
 	hierarchy - the type of entity as a hierarchical (taxonomic) categorization. This is consistent with but usually more specific than the EntityType label.
 	Type specific features - the features names and value types which are specific to that annotation type. Written as <FEATURE_NAME>(<VALUE_TYPE>)
 	Geotagger - if produced by the OpenSextant Geotagger process
-	GeneralPurpose Lite - if produced by the OpenSextant General Purpose LITE process 
-	General Purpose Full	Source - if produced by the Full OpenSextant General Purpose process 
+	General Purpose - if produced by the  OpenSextant General Purpose process 
 	Source - the internal OpenSextant component which generates this type (info only)
 
 Flattened entities
