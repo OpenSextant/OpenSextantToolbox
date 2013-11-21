@@ -2,3 +2,5 @@
 /build.properties
 classes
 doc/javadoc
+release
+lib
