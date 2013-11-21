@@ -48,6 +48,7 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
   BufferedWriter vocabWriter = null;
   Map<String, Long> vocabStats = new HashMap<String, Long>();
   private Integer docCount = 0;
+  String annotationSetName;
   String annotationName;
   String featureName;
   Boolean convertToLower;
@@ -87,8 +88,8 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
    */
   @Override
   public void execute() throws ExecutionException {
-    // get all of the annotations of interest
-    AnnotationSet annoSet = document.getAnnotations().get(annotationName);
+    // get all of the annotations of interest from the annotationset given
+    AnnotationSet annoSet = document.getAnnotations(annotationSetName).get(annotationName);
     // if no explicit feature name is given, use word/phrase as found in
     // document
     Boolean explicitFeatureName = true;
@@ -238,6 +239,16 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
   @CreoleParameter(defaultValue = "vocabStats.txt")
   public void setOutFileName(String outFileName) {
     this.outFileName = outFileName;
+  }
+
+  public String getAnnotationSetName() {
+    return annotationSetName;
+  }
+
+  @RunTime
+  @CreoleParameter(defaultValue = "")
+  public void setAnnotationSetName(String annotationSetName) {
+    this.annotationSetName = annotationSetName;
   }
 
   public String getAnnotationName() {
