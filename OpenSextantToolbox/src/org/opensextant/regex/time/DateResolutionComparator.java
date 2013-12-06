@@ -75,7 +75,6 @@ public class DateResolutionComparator implements Comparator<RegexAnnotation> {
       result = Integer.compare(len2, len1);
     }
 
-    System.out.println("\tfinal result=" + result);
     return result;
   }
 
