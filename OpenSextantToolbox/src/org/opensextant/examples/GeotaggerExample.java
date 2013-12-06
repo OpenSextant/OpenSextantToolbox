@@ -1,3 +1,24 @@
+/**
+ Copyright 2009-2013 The MITRE Corporation.
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * **************************************************************************
+ *                          NOTICE
+ * This software was produced for the U. S. Government under Contract No.
+ * W15P7T-12-C-F600, and is subject to the Rights in Noncommercial Computer
+ * Software and Noncommercial Computer Software Documentation Clause
+ * 252.227-7014 (JUN 1995)
+ *
+ * (c) 2012 The MITRE Corporation. All Rights Reserved.
+ * **************************************************************************
+ **/
 package org.opensextant.examples;
 
 import gate.Annotation;
@@ -17,16 +38,26 @@ import org.apache.commons.io.FileUtils;
 import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
 
+// TODO: Auto-generated Javadoc
 /** A simple example of how to use the OpenSextant Geotagger pipeline.<br>
 Takes a directory as input and processes each file in the directory through the geotagger,
  printing some basic results of what it found.
 */
 public class GeotaggerExample {
 
+  /**
+   * Instantiates a new geotagger example.
+   */
   private GeotaggerExample() {
 
   }
 
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   * @throws Exception the exception
+   */
   public static void main(String[] args) throws Exception {
     // start time
     Long start = System.nanoTime();
@@ -69,7 +100,7 @@ public class GeotaggerExample {
       doc.setName(f.getName());
 
       // or create a GATE document directly from the file
-      // Document doc = Factory.newDocument(f.toURI().toURL());
+      // Document doc = Factory.newDocument(f.toURI().toURL(),"UTF-8");
 
       // put the document in the corpus
       corpus.add(doc);

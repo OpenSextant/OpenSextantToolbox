@@ -97,8 +97,7 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
       explicitFeatureName = false;
     }
     docCount++;
-    System.out
-        .println("(" + docCount + ") This document has " + annoSet.size() + " " + annotationName + " annotations");
+    log.info("(" + docCount + ") This document has " + annoSet.size() + " " + annotationName + " annotations");
     // loop over all selected annotations
     for (Annotation a : annoSet) {
       String feat = "";
@@ -122,7 +121,7 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
     } // end annottaion loop
       // write out interim stats files
     if (docCount % 500 == 0) {
-      System.out.println("Writing incremental stats at " + docCount + " documents");
+      log.info("Writing incremental stats at " + docCount + " documents");
       closeFiles();
       openFiles();
       writeStats();
@@ -196,7 +195,7 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
   }
 
   private void writeStats() {
-    System.out.println("Vocab stats has " + vocabStats.size() + " entries");
+    log.info("Vocab stats has " + vocabStats.size() + " entries");
     // write out vocab stats
     for (String word : vocabStats.keySet()) {
       Long count = vocabStats.get(word);

@@ -41,6 +41,9 @@ public class GeoNormalizer implements Normalizer {
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
+      if( log.isDebugEnabled()){
+        annoFeatures.put(elemName, elemenValue);
+      }
     }
 
     // the rule family tells us the set of elements to expect

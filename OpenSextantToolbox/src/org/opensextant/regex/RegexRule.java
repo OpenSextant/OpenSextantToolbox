@@ -90,6 +90,6 @@ public class RegexRule {
   @Override
   public String toString() {
     return this.entityType + "(" + this.getTaxo() + ") " + this.ruleFamily + "/" + this.ruleName + "->"
-        + this.patternString + "\t" + this.elementMap + "\t" + this.normalizer.getClass().getName();
+        + this.patternString + "\t" +  this.modifedPatternString + "\t" +  this.elementMap + "\t" + this.normalizer.getClass().getName();
   }
 }

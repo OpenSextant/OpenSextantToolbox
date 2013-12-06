@@ -9,7 +9,7 @@
 	<classpathentry kind="lib" path="lib/Plugin/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/Plugin/geodesy.jar"/>
 	<classpathentry kind="lib" path="lib/Plugin/joda-convert.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/joda-time.jar"/>
+	<classpathentry kind="lib" path="lib/Plugin/joda-time.jar" sourcepath="/joda-time/src"/>
 	<classpathentry kind="lib" path="lib/Solr/solr-core.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/solr-solrj.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/solr-text-tagger.jar"/>

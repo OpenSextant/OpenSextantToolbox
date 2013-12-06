@@ -24,8 +24,8 @@ public class DebugNormalizer implements Normalizer {
       annoFeatures.put(elemName, elemenValue);
     }
 
-    anno.getFeatures().put("entityType", r.getEntityType());
-    anno.getFeatures().put("ruleFamily", r.getRuleFamily());
-    anno.getFeatures().put("ruleName", r.getRuleName());
+    annoFeatures.put("entityType", r.getEntityType());
+    annoFeatures.put("ruleFamily", r.getRuleFamily());
+    annoFeatures.put("ruleName", r.getRuleName());
   }
 }

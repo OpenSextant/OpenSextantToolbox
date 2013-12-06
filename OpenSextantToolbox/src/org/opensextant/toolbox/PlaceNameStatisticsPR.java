@@ -132,7 +132,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     } // end placeCandidate annotation loop
       // write out interim stats files
     if (docCount % 500 == 0) {
-      System.out.println("Writing incremental stats at " + docCount + " documents");
+      log.info("Writing incremental stats at " + docCount + " documents");
       closeFiles();
       openFiles();
       writeStats();
@@ -206,7 +206,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
   }
 
   private void writeStats() {
-    System.out.println("Place name stats has " + placeNameStats.size() + " entries");
+    log.info("Place name stats has " + placeNameStats.size() + " entries");
     // write out vocab stats
     for (String word : placeNameStats.keySet()) {
       Long[] count = placeNameStats.get(word);

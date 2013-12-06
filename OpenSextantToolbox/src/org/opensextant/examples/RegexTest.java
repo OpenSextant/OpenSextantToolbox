@@ -1,3 +1,24 @@
+/**
+ Copyright 2009-2013 The MITRE Corporation.
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+       http://www.apache.org/licenses/LICENSE-2.0
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ * **************************************************************************
+ *                          NOTICE
+ * This software was produced for the U. S. Government under Contract No.
+ * W15P7T-12-C-F600, and is subject to the Rights in Noncommercial Computer
+ * Software and Noncommercial Computer Software Documentation Clause
+ * 252.227-7014 (JUN 1995)
+ *
+ * (c) 2012 The MITRE Corporation. All Rights Reserved.
+ * **************************************************************************
+ **/
 package org.opensextant.examples;
 
 import java.io.BufferedWriter;
@@ -18,6 +39,7 @@ import org.apache.commons.io.LineIterator;
 import org.opensextant.regex.RegexAnnotation;
 import org.opensextant.regex.RegexMatcher;
 
+// TODO: Auto-generated Javadoc
 /**
  * A simple example of using the RegexMatcher which is used to tag text based on regular expressions defined in a
  * config file. This example reads a tab separated file containing text to be tagged. That file should be in the form:
@@ -29,10 +51,18 @@ import org.opensextant.regex.RegexMatcher;
  */
 public class RegexTest {
 
+  /**
+   * Instantiates a new regex test.
+   */
   private RegexTest() {
   }
 
 
+  /**
+   * The main method.
+   *
+   * @param args the arguments
+   */
   public static void main(String[] args) {
 
     // file containing the tab separated test data
@@ -60,7 +90,7 @@ public class RegexTest {
 
     // write the results header
     try {
-      resWriter.write("Entity Type\tPos\\Neg\tTest Input\tScore\tCount\tTypes Found\tRules Matched\tAnnotations Found");
+      resWriter.write("Entity Type\tPos\\Neg\tTest Input\tScore\tComplete\tCount\tTypes Found\tRules Matched\tAnnotations Found");
       resWriter.newLine();
     } catch (IOException e) {
       System.err.println("Couldnt write to " + resFile.getName() + ":" + e.getMessage());
@@ -107,7 +137,7 @@ public class RegexTest {
       // send the test text to regex matcher
       List<RegexAnnotation> annos = reger.match(testText);
       // examine the results and return a line to be sent to the results file
-      String results = score(entityType, posOrNeg, annos);
+      String results = score(entityType, posOrNeg,testText, annos);
       try {
         // write the original line and the results to the results file
         resWriter.write(line + "\t" + results);
@@ -132,17 +162,32 @@ public class RegexTest {
 
   }
 
-  public static String score(String correctType, String posOrNeg, List<RegexAnnotation> annos) {
+  /**
+   * Score.
+   *
+   * @param correctType the correct type
+   * @param posOrNeg the pos or neg
+   * @param annos the annos
+   * @return the string
+   */
+  public static String score(String correctType, String posOrNeg,String testText, List<RegexAnnotation> annos) {
 
     String assessment = "??";
     int annoCount = annos.size();
+    int correctMatchLength = testText.trim().length();
     Set<String> typesFound = new TreeSet<String>();
     Set<String> rulesFired = new TreeSet<String>();
     String tmpRes = "";
 
+    int maxMatchedLength =0;
+    
     for (RegexAnnotation a : annos) {
       typesFound.add(a.getType());
       rulesFired.add(a.getRule());
+      int matchLen = a.getMatchText().trim().length();
+      if(matchLen > maxMatchedLength){
+        maxMatchedLength = matchLen;
+      }
       tmpRes += (a.toString() + ",");
     }
 
@@ -182,7 +227,14 @@ public class RegexTest {
 
     }
 
-    String results = assessment + "\t" + annoCount + "\t" + typesFound.toString() + "\t" + rulesFired.toString() + "\t"
+    // check the match lengths to see if we got the whole thing
+    boolean whole = false;
+    
+    if(correctMatchLength == maxMatchedLength ){
+      whole =true;  
+    }
+    
+    String results = assessment + "\t" + whole + "\t" + annoCount + "\t" + typesFound.toString() + "\t" + rulesFired.toString() + "\t"
         + tmpRes;
     return results;
   }

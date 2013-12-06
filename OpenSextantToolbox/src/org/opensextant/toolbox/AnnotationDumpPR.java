@@ -50,6 +50,7 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
   BufferedWriter vocabWriter = null;
   // a running count of how many documents seen so far
   private Integer docCount = 0;
+  String annotationSetName;
   String annotationName = "Token";
   List<String> featureNames = new ArrayList<String>();
   Long contxtSize = 75L;
@@ -88,8 +89,8 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
    */
   @Override
   public void execute() throws ExecutionException {
-    // get all of the annotations of interest
-    AnnotationSet annoSet = document.getAnnotations().get(this.annotationName);
+    // get all of the annotations of interest from the annotationset given
+    AnnotationSet annoSet = document.getAnnotations(annotationSetName).get(annotationName);
     docCount++;
     log.info("(" + docCount + ") " + document.getName() + " has " + annoSet.size() + " " + annotationName
         + " annotations");
@@ -256,6 +257,17 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     this.featureNames = featureNames;
   }
 
+  
+  public String getAnnotationSetName() {
+    return annotationSetName;
+  }
+
+  @RunTime
+  @CreoleParameter(defaultValue = "")
+  public void setAnnotationSetName(String annotationSetName) {
+    this.annotationSetName = annotationSetName;
+  }
+  
   public String getAnnotationName() {
     return annotationName;
   }

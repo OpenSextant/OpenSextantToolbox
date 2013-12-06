@@ -475,8 +475,7 @@ Build file for OpenSextantToolbox.
 			<fileset dir="${release.dir}/lib/Logging">
 				<include name="*.jar" />
 			</fileset>
-			
-			
+
 		</copy>
 
 		<echo> Remember to add -Dgate.class.path=./plugins/OpenSextantToolbox/lib_extra/* to your gate.l4j.ini or other start up script </echo>

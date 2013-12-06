@@ -15,16 +15,20 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RegexMatcher {
   // the rules used by this RegexMatcher
   List<RegexRule> rules = new ArrayList<RegexRule>();
+  
   // the list of entity type this matcher can find
   Set<String> types = new HashSet<String>();
 
+  // the postprocessors to apply
+  HashMap<PostProcessor, Set<String> > posters = new HashMap<PostProcessor, Set<String>>();
+  
+  
   // future stuff: named groups useful?
   // String namedGroup = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
   // Pattern namedGroupPattern = Pattern.compile(namedGroup);
@@ -86,16 +90,30 @@ public class RegexMatcher {
         }
       }
     }
+    
+    // TODO dedup/postprocess here
+    for(PostProcessor p : posters.keySet() ){
+      p.postProcess(matches, posters.get(p));
+    }
+    
+    
+    
     return matches;
   }
 
   public void initialize(URL patFile) {
     // the #DEFINE statements as name and regex
     HashMap<String, String> defines = new HashMap<String, String>();
+    
     // the #RULE statements as name and a sequence of DEFINES and regex bits
     // HashMap<String, String> rulesLines = new HashMap<String, String>();
-    // the #CLASS statements as entitytype and class
+    
+    // the #NORM statements as entitytype and classname
     HashMap<String, String> normalizerClassnames = new HashMap<String, String>();
+    
+    // the #POST statements as entitytype and classname
+    HashMap<String, Set<String>> posterClassnames = new HashMap<String, Set<String>>();
+    
     // the #TAXO statements as entitytype and taxonomy string
     HashMap<String, String> taxos = new HashMap<String, String>();
     BufferedReader reader = null;
@@ -143,7 +161,7 @@ public class RegexMatcher {
         tmpRule.setPatternString(rulePattern);
         rules.add(tmpRule);
         types.add(type);
-      } else if (line.startsWith("#CLASS")) {
+      } else if (line.startsWith("#NORM")) {
         fields = line.split("[\t ]+", 3);
         String type = fields[1].trim();
         normalizerClassnames.put(type, fields[2].trim());
@@ -151,7 +169,16 @@ public class RegexMatcher {
         fields = line.split("[\t ]+", 3);
         String type = fields[1].trim();
         taxos.put(type, fields[2].trim());
+      }else if (line.startsWith("#POST")) {
+        fields = line.split("[\t ]+", 3);
+        String type = fields[1].trim();
+        String posterName = fields[2].trim();
+        if(!posterClassnames.containsKey(posterName)){
+          posterClassnames.put(posterName, new HashSet<String>());
+        }
+         posterClassnames.get(posterName).add(type);
       }
+
       // Ignore everything else
     } // end file read loop
     
@@ -227,6 +254,28 @@ public class RegexMatcher {
       }
     }// end rule loop
     
+    
+    // create the postprocessors
+
+    for (String p : posterClassnames.keySet()) {
+      PostProcessor pstr;
+
+      try {
+        pstr = (PostProcessor) Class.forName(p).newInstance();
+      } catch (InstantiationException e) {
+        pstr = new NoOpPostProcessor();
+        log.error("Cannot instantiate a " + p + ", using a No Op PostProcessor instead.");
+      } catch (IllegalAccessException e) {
+        pstr = new NoOpPostProcessor();
+        log.error("Cannot access a " + p + ", using a No Op PostProcessor instead.");
+      } catch (ClassNotFoundException e) {
+        pstr = new NoOpPostProcessor();
+        log.error("Class " + p + " is not a PostProcessor, using a No Op PostProcessor instead.");
+      }
+
+      posters.put(pstr, posterClassnames.get(p));
+    }
+
     isInited = true;
   } // end initialize
 
@@ -248,16 +297,17 @@ public class RegexMatcher {
 
   public static void main(String[] args) throws IOException {
     File patternFile = new File(args[0]);
-    File inputFile = new File(args[1]);
+    //File inputFile = new File(args[1]);
     // get contents to be tagged from file
-    String content = FileUtils.readFileToString(inputFile, "UTF-8");
+    //String content = FileUtils.readFileToString(inputFile, "UTF-8");
+    String content = " CNN_IP_20030402.1600.00-4  STORY  \n2003-04-02T16:00:00-05:00\n\n  Push to Baghdad Begins; POW Safe in Army's Care";
     // initialize the matcher
     RegexMatcher reger = new RegexMatcher(patternFile);
     // see what the matcher can find
     System.out.println("This tagger can find " + reger.types);
     // see what rules the matcher has
     for (RegexRule r : reger.rules) {
-      System.out.println(r);
+     // System.out.println(r);
     }
     // see what the matcher can find in the content
     ArrayList<RegexAnnotation> annos = reger.match(content);
