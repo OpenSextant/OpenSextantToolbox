@@ -12,7 +12,7 @@ Input:	Token Number TimeUnit Month Date
 Options: control = appelt
 
 
-
+/* replaced by Time regexs
 // 1234Z  12:34L
 Rule: BasicTime
 (
@@ -38,7 +38,7 @@ Rule: BasicTime
 	 
 	outputAS.add(sentStartNode, sentEndNode, "Time",tempFeatures);		
 }
-
+*/
 
 // 12 minutes, 34 years
 Rule: LengthOfTime
@@ -61,6 +61,7 @@ Rule: LengthOfTime
 	outputAS.add(sentStartNode, sentEndNode, "TimePeriod",tempFeatures);		
 }
 
+/* replaced by DayOftheMonth regexes
 // Jan 23, December 17
 Rule: DayOfTheMonth
 (
@@ -81,3 +82,4 @@ Rule: DayOfTheMonth
 	 
 	outputAS.add(sentStartNode, sentEndNode, "DayOfTheMonth",tempFeatures);		
 }
+*/
