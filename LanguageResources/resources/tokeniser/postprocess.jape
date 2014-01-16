@@ -33,6 +33,12 @@ Rule: simpleJoin
   //o'clock
   (({Token.string=="O"}|{Token.string=="o"}){Token.string=="'"} {Token.string=="clock"})
   |
+   //Mr.	
+  (({Token.string=="Mr"}|{Token.string=="MR"}){Token.string=="."})
+   |
+   //Dr.	
+  (({Token.string=="Dr"}|{Token.string=="DR"}){Token.string=="."})
+   |
   //ma'am
   (({Token.string=="ma"}|{Token.string=="Ma"}){Token.string=="'"} {Token.string=="am"})
  ):left

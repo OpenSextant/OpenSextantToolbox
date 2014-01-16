@@ -37,25 +37,30 @@ import org.slf4j.LoggerFactory;
 /**
  * This PR categorizes noun phrases by looking at the vocabulary and other entities that they contain. *
  */
-@CreoleResource(name = "OpenSextant Sequence Abstractor", comment = "Categorizes Annotations by examining" +
-    " the vocabulary and entities they contain")
+@CreoleResource(name = "OpenSextant Sequence Abstractor", comment = "Categorizes Annotations by examining"
+    + " the vocabulary and entities they contain")
 public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
+  
   private static final long serialVersionUID = 1L;
+  
   // the annotationSet into which the created annotations will be written
   private String outputAnnotationSet;
+  
   // the name of the noun phrase annotation to categorize
   String nounPhraseAnnoName;
+  
   // the feature name which identifies a vocabulary entity
   String vocabFeatureName = "hierarchy";
+  
   // What portion of the NounPhrase should be tagged as a derived entity?
   boolean markPhrase = true;
-  // boolean MarkHead = true;
-  // boolean MarkModifierAndHead = true;
-  // also create a Entity annotation "flattened model"
-  boolean makeFlatten = false;
+  
+  //do corefercing for otherwise uncategorized annotations
   boolean doCoref = true;
+  
   // co-referencing mapping <word,category>
   private Map<String, String> wordCatMap = new HashMap<String, String>();
+  
   // Log object
   private static Logger log = LoggerFactory.getLogger(ChunkCategorizerPR2.class);
 
@@ -92,19 +97,25 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     // get the annotation set into which we will place any annotations
     AnnotationSet annotSet = (outputAnnotationSet == null || outputAnnotationSet.equals("")) ? document
         .getAnnotations() : document.getAnnotations(outputAnnotationSet);
+        
     // get all of the noun phrase chunks annotations
     AnnotationSet npSet = document.getAnnotations().get(nounPhraseAnnoName);
+    
     // get all of the vocabulary and simple entity annotations.
+    
     // get all of the hierarchically tagged vocab
     Set<String> hierFeatureNameSet = new HashSet<String>();
     hierFeatureNameSet.add("hierarchy");
     AnnotationSet vocabSet = document.getAnnotations().get(null, hierFeatureNameSet);
+    
     // get all of the previously tagged entities (has feature "isEntity")
     Set<String> entityFeatureNameSet = new HashSet<String>();
     entityFeatureNameSet.add("isEntity");
     AnnotationSet entitySet = document.getAnnotations().get(null, entityFeatureNameSet);
+    
     // get all of the tokens
     AnnotationSet tokenSet = document.getAnnotations().get("Token");
+    
     // categorize all tokens based on the vocab and entities
     categorizeTokens(tokenSet, vocabSet, entitySet);
     // clear out the co-ref mapping
@@ -156,7 +167,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
    */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
-   
+
   }
 
   public String getAnnotationName() {
@@ -317,10 +328,6 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
       fm.put("isEntity", true);
       try {
         as.add(start, end, entType, fm);
-        // if we are producing the flatten model entities as well
-        // if (makeFlatten) {
-        // as.add(start, end, "Entity", fm);
-        // }
       } catch (InvalidOffsetException e) {
         log.error("Invalid Offset exception when creating Entity annotation", e);
       }

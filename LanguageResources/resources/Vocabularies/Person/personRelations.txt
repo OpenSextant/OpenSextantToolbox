@@ -114,3 +114,15 @@ uncle
 uncles
 wife
 wives
+step mother
+step father
+step mothers
+step fathers
+step-mother
+step-father
+step-mothers
+step-fathers
+stepmother
+stepfather
+stepmothers
+stepfathers

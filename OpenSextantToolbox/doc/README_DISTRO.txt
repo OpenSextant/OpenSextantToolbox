@@ -41,3 +41,5 @@ First, take a look at the GeotaggerExample and GeneralPurposeTaggerExample examp
  These examples just print out some basic info about all annotations found but they demonstrate the major steps needed to call the tagger
  and get the results.
  The examples.xml ant file show the input parameters needed to run these examples (location of GATE,Solr gazetteer etc) 
+
+The source code for OpenSextant Toolbox is available on github at https://github.com/OpenSextant/OpenSextantToolbox

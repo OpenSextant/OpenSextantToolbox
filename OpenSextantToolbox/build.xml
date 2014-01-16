@@ -359,6 +359,7 @@ Build file for OpenSextantToolbox.
 
 	<!-- zip and post the generated release to the distro site -->
 	<target name="post" depends = "release">
+		
 		<!-- delete existing release zip -->
 		<delete file="${basedir}/opensextant-toolbox-${version}.zip" />
 		
@@ -367,11 +368,11 @@ Build file for OpenSextantToolbox.
 			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}"/>
 			</zip>
 		
-		<!--
+		<!--  upload to site -->
 		<ftp server="${post.site}" remotedir="${post.dir}" userid="${post.user}" password="${post.password}">
 			<fileset file="${basedir}/opensextant-toolbox-${version}.zip" />
 		</ftp>
-		-->
+		
 	</target>
 
 	<!-- run some simple examples -->
