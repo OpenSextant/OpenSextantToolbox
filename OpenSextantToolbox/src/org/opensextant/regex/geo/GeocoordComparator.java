@@ -16,6 +16,11 @@ public class GeocoordComparator  implements Comparator<RegexAnnotation> {
     String fam1 = (String) o1.getFeatures().get("geoFamily");
     String fam2 = (String) o2.getFeatures().get("geoFamily");
     
+    // if they havent been normalized, no family info
+    if(fam1 == null || fam2 == null){
+      return 0;
+    }
+    
     if(fam1.equalsIgnoreCase("DM") && fam2.equalsIgnoreCase("DMS")  ){
       return 1;
     }
