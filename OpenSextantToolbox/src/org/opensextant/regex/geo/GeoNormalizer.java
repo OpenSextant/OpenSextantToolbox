@@ -51,8 +51,15 @@ public class GeoNormalizer implements Normalizer {
     String ruleName = r.getRuleName();
 
     if (family.equals(DD_FAMILY)) {
-      Ordinate lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATE_TYPE.DD);
-      Ordinate lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATE_TYPE.DD);
+      
+      Ordinate lat = null;
+      Ordinate lon = null;
+      try {
+        lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATE_TYPE.DD);
+        lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATE_TYPE.DD);
+      } catch (Exception e) {
+        log.debug("Couldn't normalize " + anno.toString() + " Ordinate Parser exception:" + e.getMessage());
+      }
 
       if (lat != null && lon != null) {
         Geocoord geo = new Geocoord(lat.getOrdinateValue(), lon.getOrdinateValue());
@@ -83,7 +90,14 @@ public class GeoNormalizer implements Normalizer {
     }
 
     if (family.equals(MGRS_FAMILY)) {
-      List<MGRS> mgrsCandidates = MGRSParser.parseMGRS(elementsFound);
+      
+      List<MGRS> mgrsCandidates = null;
+      try {
+        mgrsCandidates = MGRSParser.parseMGRS(elementsFound);
+      } catch (Exception e) {
+        log.debug("Couldn't normalize " + anno.toString() + " MGRS parser exception:" + e.getMessage());
+
+      }
 
       if (mgrsCandidates != null && !mgrsCandidates.isEmpty()) {
         MGRS mgrs = mgrsCandidates.get(0);
@@ -108,7 +122,14 @@ public class GeoNormalizer implements Normalizer {
       }
     }
     if (family.equals(UTM_FAMILY)) {
-      UTM utm = UTMParser.parseUTM(elementsFound);
+      UTM utm = null;
+      try {
+        utm = UTMParser.parseUTM(elementsFound);
+      } catch (Exception e) {
+        log.debug("Couldn't normalize " + anno.toString() + " UTM parser exception:" + e.getMessage() );
+      }
+      
+      
       if (utm != null) {
         Geodetic2DPoint pt = utm.getGeodetic();
         Geocoord geo = new Geocoord(pt.getLatitudeAsDegrees(), pt.getLongitudeAsDegrees());
