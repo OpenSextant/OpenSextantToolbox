@@ -260,6 +260,12 @@ public class DateTimeNormalizer2 implements Normalizer {
         && (elemValue.equalsIgnoreCase("Z") || elemValue.equalsIgnoreCase("ZULU") || elemValue.equalsIgnoreCase("UTC"))) {
       elemValue = "GMT";
     }
+    
+    // strip periods from am/pm eras
+    if (elemName.equals("a")) {
+      elemValue = elemValue.replaceAll("\\.", "").toUpperCase();
+    }
+    
 
     return elemValue;
   }
