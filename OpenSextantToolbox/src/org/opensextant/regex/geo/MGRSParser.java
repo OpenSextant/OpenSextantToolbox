@@ -98,47 +98,6 @@ public class MGRSParser {
 
     return vars;
 
-    // TODO verify and cleanup the alternate form stuff below
-    /*
-     * // ---------------------------------------| // // MGRS precision is 1m. Quad is 100,000m sq so resolution is 5
-     * digits + // 5 digits with optional whitespace // 99999n 99999e -- in MGRS we never see "m" units or N/E denoted
-     * // explicitly // Occassionally, newlines or whitespace are interspersed in offset // minimal: // dd // ddddd
-     * ddddd with an additional one or two white spaces. The offsets // start and end with numbers. Only whitespace
-     * between is optional. // ddddd dddddd additional digit in Easting -- trailing 6th digit is a // typo; trim off //
-     * dddddd ddddd additional digit in Northing -- trailing 6th digit is a // typo; trim off // ddddddddddd Typo
-     * introduces ambiguity -- only correct thing is to // split on halfway point +/- 1 digit and emit two answers //
-     * dd\nddd ddddd Newline early in offset // ---------------------------------------| Integer digits =
-     * countDigits(en); boolean isOddLen = ((digits & 0x0001) == 1); //cleanup the pieces String z =
-     * deleteWhitespace(zn); String q = deleteWhitespace(quad); String en = deleteWhitespace(eastNorth); if (!isOddLen)
-     * { } else { } // if normal // if eatNoth has odd digits // ---------------------------- // Slightly obscure case
-     * that is possibly a typo or Easting/Northing // disturbed. // // The following logic for parsing is predominantly
-     * related to // managing typos and rare cases. // < 5% of the instances seen fall into this category. // //
-     * ---------------------------- int spaceCount = countWhiteSpace(en); String nenorm; StringBuilder mgrs1 = null; if
-     * (spaceCount == 0) { nenorm = en; // ddddddddd odd number of digits, no spaces. // answer 1: dddd ddddd ==>
-     * N=dddd0 // answer 2: ddddd dddd ==> E=dddd0 int midpoint = nenorm.length() / 2; mgrs1 = new StringBuilder(en);
-     * mgrs1.insert(midpoint, "0"); // N=dddd0, add 0 mgrs1.insert(0, quad); mgrs1.insert(0, zone); StringBuilder mgrs2
-     * = new StringBuilder(en); mgrs2.append("0"); // E=dddd0 add 0 mgrs2.insert(0, quad); mgrs2.insert(0, zone); try {
-     * MGRS m1 = new MGRS(mgrs1.toString()); mgrs.add(m1); } catch (IllegalArgumentException e) {
-     * log.debug("Could not parse MGRS:" + mgrs1); } try { MGRS m2 = new MGRS(mgrs2.toString()); mgrs.add(m2); } catch
-     * (IllegalArgumentException e) { log.debug("Could not parse MGRS:" + mgrs2); } return mgrs; } nenorm =
-     * squeezeWhitespace(en); spaceCount = countWhiteSpace(nenorm); int wsIndex = nenorm.indexOf(" "); int midpoint =
-     * nenorm.length() / 2; // Even Split -- meaning easting northing appear to be good. But one // needs to be fixed.
-     * // boolean even_split = Math.abs( midpoint - ws_index ) <= 1; // Given one of // dddd ddddd // ddddd dddd // dd
-     * ddddddd // where whitespace is ' ' or '\n' or '\r', etc. // GIVEN: dddd ddddd if (spaceCount == 1 && (wsIndex +
-     * 1) == midpoint) { mgrs1 = new StringBuilder(nenorm); // ANSWER: dddd0 ddddd mgrs1.insert(wsIndex, "0");
-     * mgrs1.insert(0, quad); mgrs1.insert(0, zone); // Just one answer: MGRS tmp = new
-     * MGRS(deleteWhitespace(mgrs1.toString())); mgrs.add(tmp); return mgrs; } if (spaceCount == 1 && (wsIndex ==
-     * midpoint)) { mgrs1 = new StringBuilder(nenorm); // ANSWER: ddddd dddd0 mgrs1.append("0"); mgrs1.insert(0, quad);
-     * mgrs1.insert(0, zone); MGRS tmp = new MGRS(deleteWhitespace(mgrs1.toString())); mgrs.add(tmp); return mgrs; } //
-     * Given // ddd dd d // ddddd ddd dd // etc. // You have a bunch of MGRS digits broken up by whitespace. // This is
-     * really obscure case where formatting or content // conversion // or word processing interferred with the MGRS
-     * text. // // This is < 0.1% of the cases // nenorm = deleteWhitespace(en); // ddddddddd odd number of digits, no
-     * spaces. // answer 1: dddd ddddd ==> N=dddd0 // answer 2: ddddd dddd ==> E=dddd0 midpoint = nenorm.length() / 2;
-     * mgrs1 = new StringBuilder(nenorm); mgrs1.insert(midpoint, "0"); // N=dddd0, add 0 mgrs1.insert(0, quad);
-     * mgrs1.insert(0, zone); StringBuilder mgrs2 = new StringBuilder(nenorm); mgrs2.append("0"); // E=dddd0 add 0
-     * mgrs2.insert(0, quad); mgrs2.insert(0, zone); MGRS m1 = new MGRS(mgrs1.toString()); MGRS m2 = new
-     * MGRS(mgrs2.toString()); mgrs.add(m1); mgrs.add(m2); return mgrs; return null;
-     */
   }
 
   private static boolean isOK(String txt) {

@@ -74,7 +74,7 @@ public abstract class PostProcessorBase implements PostProcessor {
       // get the next anno to compare
       RegexAnnotation b = annos.get(i);
 
-      //TDO confirm this logic for all possible combos of interaction
+      // TODO confirm this logic for all possible combos of interaction
       // compare the next anno to the current group
       if(interactsWithGroup(currentGroup, b)){
         currentGroup.add(b);

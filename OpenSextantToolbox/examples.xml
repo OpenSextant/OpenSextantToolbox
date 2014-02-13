@@ -55,7 +55,7 @@ ant file to run OpenSextantToolbox Examples.
 			<!-- point to the log config file -->
 			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
 			<!-- set an env variable to point to solr gazetteer -->
-			<env key="solr.home" value="${toobox.home}/Gazetteer/solr" />
+			<env key="solr.home" value="${toobox.home}/solr" />
 			<!-- pass in the location of the geotagger GAPP file -->
 			<arg value="${test.gapp.geotagger}" />
 			<!-- pass in the location of the directory containing the files to be processed -->
@@ -75,7 +75,7 @@ ant file to run OpenSextantToolbox Examples.
 			<!-- point to the log config file -->
 			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
 			<!-- set an env variable to point to solr gazetteer -->
-			<env key="solr.home" value="${toobox.home}/Gazetteer/solr" />
+			<env key="solr.home" value="${toobox.home}/solr" />
 			<!-- pass in the location of the general purpose extractor GAPP file -->
 			<arg value="${test.gapp.generalPurpose}" />
 			<!-- pass in the location of the directory containing the files to be processed -->
@@ -93,7 +93,7 @@ ant file to run OpenSextantToolbox Examples.
 			<!-- point to the log config file -->
 			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
 			<!-- set an env variable to point to solr gazetteer -->
-			<env key="solr.home" value="${toobox.home}/Gazetteer/solr" />
+			<env key="solr.home" value="${toobox.home}/solr" />
 			<!-- or pass in location solr gazetteer -->
 			<!--arg value="${toobox.home}/Gazetteer/solr" /-->
 			<!-- location of some matcher test data -->
@@ -111,7 +111,7 @@ ant file to run OpenSextantToolbox Examples.
 			<!-- point to the log config file -->
 			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
 			<!-- set an env variable to point to solr gazetteer -->
-			<env key="solr.home" value="${toobox.home}/Gazetteer/solr" />
+			<env key="solr.home" value="${toobox.home}/solr" />
 			<!-- or pass in location solr gazetteer -->
 			<!--arg value="${toobox.home}/Gazetteer/solr" /-->
 		</java>

@@ -100,6 +100,9 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
       }
     } else {
       // already configured
+      if (!MatcherFactory.isStarted()) {
+        MatcherFactory.start();
+      }
       log.info("NaiveTagger is using MatcherFactory configured to use " + MatcherFactory.getHomeLocation());
     }
 

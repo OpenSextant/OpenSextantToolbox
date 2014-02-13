@@ -8,7 +8,7 @@ Build file for OpenSextantToolbox.
 
 	<!-- Project level properties -->
 	<property name="project.name" value="OpenSextantToolbox" />
-	<property name="version" value="2.0" />
+	<property name="version" value="2.1" />
 	<property name="java_level" value="1.6" />
 
 	<!-- Source directory - contains the Java source files for this project -->
@@ -45,20 +45,26 @@ Build file for OpenSextantToolbox.
 		<fileset dir="${lib.dir}/GATE" includes="**/*.jar" />
 		<fileset dir="${lib.dir}/Solr" includes="**/*.jar" />
 		<fileset dir="${lib.dir}/Plugin" includes="**/*.jar" />
+		<fileset dir="${lib.dir}/JCarafe" includes="**/*.jar" />
 		<fileset dir="${lib.dir}/Logging" includes="**/*.jar" />
 	</path>
 
 	<!-- Classpath to run solr gazetteer loader -->
 	<path id="solr.runtime.classpath">
+		<fileset dir="${build.dir}" includes="opensextant.jar" />
 		<fileset dir="${lib.dir}/Solr" includes="**/*.jar" />
 		<fileset dir="${lib.dir}/Logging" includes="**/*.jar" />
 		<!--fileset file="${lib.dir}/log4j.properties" /-->
 	</path>
 
 	<!-- Properties for creating/loading the Solr gazetteer -->
-	<property name="fieldnames" value="id,place_id,name,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,conflate_key,name_bias,id_bias,name_type,name_type_system,partition" />
-	<property name="csv" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" />
-	<property name="solr.home" location="${basedir}/build/Gazetteer/solr" />
+	<property name="solr.home" location="${basedir}/build/solr" />
+	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" />
+	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/small.txt" /-->
+	<property name="fieldnames.gaz" value="id,place_id,name,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,conflate_key,name_bias,id_bias,name_type,name_type_system,partition" />
+	<property name="csv.vocab" value="${resources.home}/resources/Vocabularies/vocab4Solr.csv" />
+	<property name="index.vocab" value="${resources.home}/resources/Vocabularies/vocab.def" />
+	<property name="fieldnames.vocab" value="id,phrase,category,taxonomy" />
 
 	<!-- Properties for example code -->
 
@@ -85,8 +91,8 @@ Build file for OpenSextantToolbox.
 	<property name="test.matcher.file" location="${release.dir}/LanguageResources/testData/MatcherTestData/matcherTest.txt" />
 	<property name="test.dateTest.file" location="${release.dir}/LanguageResources/testData/RegexTestData/dateTime_test.csv" />
 	<property name="test.geoTest.file" location="${release.dir}/LanguageResources/testData/RegexTestData/geocoord_test.csv" />
-	
-	
+
+
 	<!-- location of the GAPP and pattern files -->
 	<property name="test.gapp.geotagger" location="${release.dir}/LanguageResources/GAPPs/OpenSextant_geotagger.gapp" />
 	<property name="test.gapp.generalPurpose" location="${release.dir}/LanguageResources/GAPPs/OpenSextant_GeneralPurpose.gapp" />
@@ -96,7 +102,7 @@ Build file for OpenSextantToolbox.
 
 	<property name="test.patterns.results" location="${release.dir}/LanguageResources/TestData/results" />
 
-	
+
 
 	<!-- Properties for local GATE install -->
 	<property name="toolbox.plugin.dir" location="${gate.home}/plugins/OpenSextantToolbox" />
@@ -127,10 +133,9 @@ Build file for OpenSextantToolbox.
 	<!-- delete the created Solr gazetteer -->
 	<!-- NOTE: creating (loading) the gazetteer takes a while so don't delete if even mildly impatient -->
 	<target name="clean.gaz" depends="setup">
-		<delete includeEmptyDirs="true">
-			<fileset dir="${build.dir}" includes="Gazetteer/**" />
+		<delete includeEmptyDirs="true" quiet="true">
+			<fileset dir="${solr.home}" />
 		</delete>
-		<mkdir dir="${build.dir}/Gazetteer" />
 	</target>
 
 	<!-- clean up the ivy cache  -->
@@ -149,16 +154,9 @@ Build file for OpenSextantToolbox.
 		<ivy:report todir="${build.dir}/ivy-report" graph="false"/>
 	</target>
 
-	<!-- get the one jar which is not resolved via Ivy -->
-	<target name="copy.orphan" depends="">
-		<copy todir="${lib.dir}\Plugin" file="${externals.dir}\JITAR.jar" />
-	</target>
-
-	<!-- get all of our dependencies -->
-	<target name="get.dependencies" depends="resolve,copy.orphan" />
 
 	<!-- compile the source  -->
-	<target name="compile" depends="setup,get.dependencies">
+	<target name="compile" depends="setup,resolve">
 		<javac classpathref="compile.classpath" srcdir="${src.dir}" destdir="${build.dir}" debug="true" debuglevel="lines,source" source="${java_level}" encoding="utf-8" />
 	</target>
 
@@ -192,6 +190,7 @@ Build file for OpenSextantToolbox.
 		<antcall target="clean.gaz" />
 		<antcall target="create.solr.home" />
 		<antcall target="load.gazetteer" />
+		<antcall target="load.vocabulary.index" />
 	</target>
 
 	<!-- create the empty solr home directory -->
@@ -199,9 +198,12 @@ Build file for OpenSextantToolbox.
 		<mkdir dir="${solr.home}" />
 		<mkdir dir="${solr.home}/gazetteer" />
 		<mkdir dir="${solr.home}/gazetteer/data" />
+		<mkdir dir="${solr.home}/vocabulary" />
+		<mkdir dir="${solr.home}/vocabulary/data" />
 
 		<!-- Unpack Solr4 config baseline-->
 		<unzip src="${basedir}/solr/solr4-conf.zip" dest="${solr.home}/gazetteer/." />
+		<unzip src="${basedir}/solr/solr4-conf.zip" dest="${solr.home}/vocabulary/." />
 
 		<!-- Gaz and SolrTextTagger Solr config -->
 		<copy todir="${solr.home}/" file="${basedir}/solr/solr.xml" />
@@ -211,19 +213,38 @@ Build file for OpenSextantToolbox.
 				<include name="**/*.*" />
 			</fileset>
 		</copy>
+		<copy todir="${solr.home}/vocabulary/conf">
+			<fileset dir="${basedir}/solr/vocabulary/conf">
+				<!-- Include character mappings, schema, server config -->
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
 	</target>
 
 	<!-- Load the gazetteer data into Solr -->
 	<!-- NOTE: this is the step that takes a long time -->
 	<target name="load.gazetteer">
-		<java classname="org.opensextant.solrtexttagger.EmbeddedSolrUpdater" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.matching.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx3G" />
-			<!-- This MaxPermSize appears to be helpful for loading numerous JARs -->
 			<jvmarg value="-XX:MaxPermSize=256m" />
 			<jvmarg value="-Dlog4j.configuration=file:${basedir}/etc/log4j.properties" />
-			<jvmarg value="-Dsolr.solr.home=${solr.home}" />
-			<arg value="--input=${csv}" />
-			<arg value="/update?update.contentType=text/csv&amp;skipLines=1&amp;optimize=true&amp;separator=%09&amp;header=false&amp;trim=on&amp;overwrite=false&amp;fieldnames=${fieldnames}" />
+			<jvmarg value="-Dsolr.home=${solr.home}" />
+			<arg value="gazetteer" />
+			<arg value="CSV" />
+			<arg value="${csv.gaz}" />
+		</java>
+	</target>
+
+	<!-- Load the vocabulary data into Solr (from a vocab index file)-->
+	<target name="load.vocabulary.index">
+		<java classname="org.opensextant.matching.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
+			<jvmarg value="-Xmx3G" />
+			<jvmarg value="-XX:MaxPermSize=256m" />
+			<jvmarg value="-Dlog4j.configuration=file:${basedir}/etc/log4j.properties" />
+			<jvmarg value="-Dsolr.home=${solr.home}" />
+			<arg value="vocabulary" />
+			<arg value="INDEX" />
+			<arg value="${index.vocab}" />
 		</java>
 	</target>
 
@@ -256,7 +277,7 @@ Build file for OpenSextantToolbox.
 		<mkdir dir="${release.dir}/lib" />
 		<mkdir dir="${release.dir}/plugins" />
 		<mkdir dir="${release.dir}/LanguageResources" />
-		<mkdir dir="${release.dir}/Gazetteer" />
+		<mkdir dir="${release.dir}/solr" />
 		<mkdir dir="${release.dir}/etc" />
 		<mkdir dir="${release.dir}/examples" />
 	</target>
@@ -288,8 +309,13 @@ Build file for OpenSextantToolbox.
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-		
-		
+
+		<copy todir="${release.dir}/lib/JCarafe">
+			<fileset dir="${basedir}/lib/JCarafe">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
+
 	</target>
 
 	<!-- copy over the plugin to the release directory -->
@@ -329,8 +355,8 @@ Build file for OpenSextantToolbox.
 
 	<!-- Copy the gaz to the release folder-->
 	<target name="release.gaz">
-		<copy todir="${release.dir}/Gazetteer">
-			<fileset dir="${build.dir}/Gazetteer" />
+		<copy todir="${release.dir}/solr">
+			<fileset dir="${build.dir}/solr" />
 		</copy>
 	</target>
 
@@ -340,11 +366,11 @@ Build file for OpenSextantToolbox.
 			<fileset dir="${src.dir}/org/opensextant/examples" />
 		</copy>
 	</target>
-	
-	
-	
+
+
+
 	<!-- Build a full release in the "release" directory -->
-	<target name="release" depends="build">
+	<target name="release" depends="buildWithGaz">
 		<antcall target="release.prepare" />
 		<antcall target="release.libs" />
 		<antcall target="release.plugin" />
@@ -355,29 +381,39 @@ Build file for OpenSextantToolbox.
 	</target>
 
 
-	<!-- the following three targets asssume a release has been built but doesn't trigger one if it is not -->
 
 	<!-- zip and post the generated release to the distro site -->
 	<target name="post" depends = "release">
-		
+
 		<!-- delete existing release zip -->
 		<delete file="${basedir}/opensextant-toolbox-${version}.zip" />
-		
+
 		<!-- zip up the finished release -->
 		<zip destfile="${basedir}/opensextant-toolbox-${version}.zip">
 			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}"/>
-			</zip>
-		
+		</zip>
+
 		<!--  upload to site -->
 		<ftp server="${post.site}" remotedir="${post.dir}" userid="${post.user}" password="${post.password}">
 			<fileset file="${basedir}/opensextant-toolbox-${version}.zip" />
 		</ftp>
-		
+
 	</target>
+
+	<!-- the following two targets asssume a release has been built but doesn't trigger one if it is not -->
 
 	<!-- run some simple examples -->
 	<target name="run.examples">
-
+		<antcall target="example.geotagger" />
+		<antcall target="example.generalPurposeTagger" />
+		<antcall target="example.placeNameMatcher" />
+		<antcall target="example.vocabMatcher" />
+		<antcall target="example.placeNameSearch" />
+		<antcall target="example.dateRegexMatcher" />
+		<antcall target="example.geoRegexMatcher" />
+	</target>
+	
+	<target name="example.geotagger">
 		<echo>-----------------------------------------------</echo>
 		<echo>Running the Geotagger Example</echo>
 		<echo>-----------------------------------------------</echo>
@@ -386,11 +422,13 @@ Build file for OpenSextantToolbox.
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dgate.home=${release.dir}" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\Gazetteer\solr" />
+			<env key="solr.home" value="${release.dir}\solr" />
 			<arg value="${test.gapp.geotagger}" />
 			<arg value="${test.testdocs.dir}" />
 		</java>
+	</target>
 
+	<target name="example.generalPurposeTagger">
 		<echo>-------------------------------------------------------------------------------</echo>
 		<echo>Running the General Purpose Entity Extractor Example</echo>
 		<echo>-------------------------------------------------------------------------------</echo>
@@ -399,23 +437,42 @@ Build file for OpenSextantToolbox.
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dgate.home=${release.dir}" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\Gazetteer\solr" />
+			<env key="solr.home" value="${release.dir}\solr" />
 			<arg value="${test.gapp.generalPurpose}" />
 			<arg value="${test.testdocs.dir}" />
 		</java>
+	</target>
 
+	<target name="example.placeNameMatcher">
 		<echo>--------------------------------------------------</echo>
-		<echo>Running the Solr Matcher Example</echo>
+		<echo>Running the place name Matcher Example</echo>
 		<echo>--------------------------------------------------</echo>
 		<!-- run the matcher example -->
 		<java classname="org.opensextant.examples.MatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\Gazetteer\solr" />
+			<env key="solr.home" value="${release.dir}\solr" />
 			<!--arg value="${release.dir}\Gazetteer\solr" /-->
 			<arg value="${test.matcher.file}" />
 		</java>
+	</target>
 
+	<target name="example.vocabMatcher">
+		<echo>--------------------------------------------------</echo>
+		<echo>Running the vocabulary  Matcher Example</echo>
+		<echo>--------------------------------------------------</echo>
+		<!-- run the matcher example -->
+		<java classname="org.opensextant.examples.VocabMatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+			<jvmarg value="-Xmx500M" />
+			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
+			<!--jvmarg value="-Dsolr.home=${release.dir}\solr" /-->
+			<env key="solr.home" value="${release.dir}\solr" />
+			<arg value="${test.testdocs.dir}/test.txt" />
+			<!--arg value="${release.dir}\solr" /-->
+		</java>
+	</target>
+
+	<target name="example.placeNameSearch">
 		<echo>--------------------------------------------------</echo>
 		<echo>Running the Solr Searcher Example</echo>
 		<echo>--------------------------------------------------</echo>
@@ -423,10 +480,11 @@ Build file for OpenSextantToolbox.
 		<java classname="org.opensextant.examples.SearcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\Gazetteer\solr" />
+			<env key="solr.home" value="${release.dir}\solr" />
 			<!--arg value="${release.dir}\Gazetteer\solr" /-->
 		</java>
-		
+	</target>
+	<target name="example.dateRegexMatcher">
 		<echo>--------------------------------------------------</echo>
 		<echo>Running the Date Regex Matcher Example</echo>
 		<echo>--------------------------------------------------</echo>
@@ -438,7 +496,8 @@ Build file for OpenSextantToolbox.
 			<arg value="${test.patterns.date}" />
 			<arg value="${test.patterns.results}/dateResults.txt" />
 		</java>
-		
+	</target>
+	<target name="example.geoRegexMatcher">
 		<echo>--------------------------------------------------</echo>
 		<echo>Running the Geocoord Regex Matcher Example</echo>
 		<echo>--------------------------------------------------</echo>
@@ -450,8 +509,9 @@ Build file for OpenSextantToolbox.
 			<arg value="${test.patterns.geo}" />
 			<arg value="${test.patterns.results}/geoResults.txt" />
 		</java>
-		
 	</target>
+
+
 
 	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
 	<target name="toolbox.deploy" depends="">
@@ -474,6 +534,9 @@ Build file for OpenSextantToolbox.
 				<include name="*.jar" />
 			</fileset>
 			<fileset dir="${release.dir}/lib/Logging">
+				<include name="*.jar" />
+			</fileset>
+			<fileset dir="${release.dir}/lib/JCarafe">
 				<include name="*.jar" />
 			</fileset>
 

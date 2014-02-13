@@ -14,7 +14,6 @@
 	<classpathentry kind="lib" path="lib/Solr/solr-solrj.jar"/>
 	<classpathentry kind="lib" path="lib/Solr/solr-text-tagger.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/commons-codec.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/JITAR.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ant-launcher.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ant.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/aopalliance.jar"/>
@@ -86,5 +85,12 @@
 	<classpathentry kind="lib" path="lib/Logging/log4j.jar"/>
 	<classpathentry kind="lib" path="lib/Logging/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="lib/Logging/slf4j-log4j12.jar"/>
+	<classpathentry kind="lib" path="lib/JCarafe/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/JCarafe/jackson-core-asl.jar"/>
+	<classpathentry kind="lib" path="lib/JCarafe/jackson-mapper-asl.jar"/>
+	<classpathentry kind="lib" path="lib/JCarafe/jcarafe-core_2.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/JCarafe/sbinary_2.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/JCarafe/scala-library.jar"/>
+	<classpathentry kind="lib" path="lib/Plugin/jitar.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

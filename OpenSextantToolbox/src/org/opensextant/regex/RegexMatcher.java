@@ -90,9 +90,9 @@ public class RegexMatcher {
         }
       }
     }
-    
-    // TODO dedup/postprocess here
-    for(PostProcessor p : posters.keySet() ){
+
+    // run the matches through the postprocessor(s) if any specified
+    for (PostProcessor p : posters.keySet()) {
       p.postProcess(matches, posters.get(p));
     }
     
@@ -295,24 +295,4 @@ public class RegexMatcher {
     return types;
   }
 
-  public static void main(String[] args) throws IOException {
-    File patternFile = new File(args[0]);
-    //File inputFile = new File(args[1]);
-    // get contents to be tagged from file
-    //String content = FileUtils.readFileToString(inputFile, "UTF-8");
-    String content = " CNN_IP_20030402.1600.00-4  STORY  \n2003-04-02T16:00:00-05:00\n\n  Push to Baghdad Begins; POW Safe in Army's Care";
-    // initialize the matcher
-    RegexMatcher reger = new RegexMatcher(patternFile);
-    // see what the matcher can find
-    System.out.println("This tagger can find " + reger.types);
-    // see what rules the matcher has
-    for (RegexRule r : reger.rules) {
-     // System.out.println(r);
-    }
-    // see what the matcher can find in the content
-    ArrayList<RegexAnnotation> annos = reger.match(content);
-    for (RegexAnnotation anno : annos) {
-      System.out.println(anno);
-    }
-  }
 }

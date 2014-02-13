@@ -4,6 +4,14 @@
  */
 package org.opensextant.toolbox;
 
+import eu.danieldk.nlp.jitar.data.Model;
+import eu.danieldk.nlp.jitar.languagemodel.LanguageModel;
+import eu.danieldk.nlp.jitar.languagemodel.LinearInterpolationLM;
+import eu.danieldk.nlp.jitar.tagger.HMMTagger;
+import eu.danieldk.nlp.jitar.tagger.HMMTagger.Sequence;
+import eu.danieldk.nlp.jitar.wordhandler.KnownWordHandler;
+import eu.danieldk.nlp.jitar.wordhandler.SuffixWordHandler;
+import eu.danieldk.nlp.jitar.wordhandler.WordHandler;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.ProcessingResource;
@@ -24,14 +32,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.langkit.tagger.data.Model;
-import org.langkit.tagger.languagemodel.LanguageModel;
-import org.langkit.tagger.languagemodel.LinearInterpolationLM;
-import org.langkit.tagger.tagger.HMMTagger;
-import org.langkit.tagger.tagger.HMMTagger.Sequence;
-import org.langkit.tagger.wordhandler.KnownWordHandler;
-import org.langkit.tagger.wordhandler.SuffixWordHandler;
-import org.langkit.tagger.wordhandler.WordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

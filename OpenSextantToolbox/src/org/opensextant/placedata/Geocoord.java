@@ -51,11 +51,12 @@ public class Geocoord implements java.io.Serializable {
     setLongitude(lon);
   }
 
-  // TODO We need a real distance method
   /**
    * This returns distance in degrees. Only to be used for fast comparison of relative distances from the same point.
    * @return distance from the given latitude and longitude, in degrees.
+   * @deprecated use {@link distance(double lat, double lon)} instead.
    */
+  @Deprecated
   public Double distanceDeg(double lat, double lon) {
     Double d = Double.MAX_VALUE;
     if (isValid) {
@@ -69,7 +70,9 @@ public class Geocoord implements java.io.Serializable {
   /**
    * This returns distance in degrees. Only to be used for fast comparison of relative distances from the same point.
    * @return distance from the given Geocoord, in degrees.
+   * @deprecated use {@link distance()} instead.
    */
+  @Deprecated
   public Double distanceDeg(Geocoord another) {
     Double d = Double.MAX_VALUE;
     if (isValid && another != null) {
@@ -82,7 +85,21 @@ public class Geocoord implements java.io.Serializable {
   }
 
   /**
-   * This returns distance in kilometers. 
+   * This returns distance in kilometers.
+   * @return distance from the given Geocoord, in kilometers.
+   */
+  public Double distance(Geocoord another) {
+
+    double lat = this.getLatitude();
+    double lon = this.getLongitude();
+    double lat2 = another.getLatitude();
+    double lon2 = another.getLongitude();
+
+    return distance(lat, lon, lat2, lon2);
+  }
+
+  /**
+   * This returns distance in kilometers.
    * @return distance from the given Geocoord, in kilometers.
    */
   public Double distance(double lat, double lon) {

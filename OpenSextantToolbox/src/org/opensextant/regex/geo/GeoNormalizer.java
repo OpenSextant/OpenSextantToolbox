@@ -74,8 +74,14 @@ public class GeoNormalizer implements Normalizer {
     }
 
     if (family.equals(DM_FAMILY) || family.equals(DMS_FAMILY)) {
-      Ordinate lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATE_TYPE.DMS);
-      Ordinate lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATE_TYPE.DMS);
+      Ordinate lat = null;
+      Ordinate lon = null;
+      try {
+        lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATE_TYPE.DMS);
+        lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATE_TYPE.DMS);
+      } catch (Exception e) {
+        log.debug("Couldn't normalize " + anno.toString() + " Ordinate Parser exception:" + e.getMessage());
+      }
 
       if (lat != null && lon != null) {
         Geocoord geo = new Geocoord(lat.getOrdinateValue(), lon.getOrdinateValue());

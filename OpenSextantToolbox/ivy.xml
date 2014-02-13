@@ -7,6 +7,7 @@
 	<configurations>
 		<conf name="GATE" description="Just the GATE stuff" />
 		<conf name="Plugin" description="Just the stuff for the plugin" />
+		<conf name="JCarafe" description="Just the stuff for the CRF tagger" />
 		<conf name="Solr" description="Just the stuff for the solr text tagger" />
 		<conf name="Logging" description="Just the logging stuff" />
 	</configurations>
@@ -51,11 +52,20 @@
 			<exclude org="org.slf4j" />
 		</dependency>
 
+		<!-- JITAR is POS tagger used by plugin -->
+		<dependency org="eu.danieldk.nlp.jitar" name="jitar" rev="0.1.0" conf="Plugin->*"/>
+            
 		<!--  some general stuff used by the plugin -->
 		<dependency org="commons-codec" name="commons-codec" rev="1.7" conf="Plugin->*" />
 		<dependency org="commons-lang" name="commons-lang" rev="2.6" conf="Plugin->*" />
 		<dependency org="commons-io" name="commons-io" rev="2.4" conf="Plugin->*" />
-
+		
+		<!--  JSON parser used to talk to JCarafe CRF tagger-->
+		<dependency org="org.codehaus.jackson" name="jackson-mapper-asl" rev="1.9.13" conf="JCarafe->*"/>
+            
+		<!-- JCarafe used by the CRF tagger in the plugin -->
+		<dependency org="net.sf.carafe.jcarafe" name="jcarafe-core_2.9.1" rev="0.9.8.3.RC4" conf="JCarafe->*"/>
+               
 		<!--  all the logging stuff -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5" conf="Logging->*" />
 		<dependency org="org.slf4j" name="slf4j-log4j12" rev="1.7.5" conf="Logging->*" />

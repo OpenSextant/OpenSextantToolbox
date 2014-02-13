@@ -68,9 +68,10 @@
   </module>
 
   <!-- http://checkstyle.sourceforge.net/config_duplicates.html -->
-  <module name="StrictDuplicateCode">
-    <property name="min" value="15"/>
-  </module>
+  <!--  module name="StrictDuplicateCode"-->
+    <!--property name="min" value="15"/-->
+  <!--/module-->
+  
   <!-- http://www.harukizaemon.com/simian/installation.html#checkstyle -->
   <!--<module name="au.com.redhillconsulting.simian.SimianCheck">-->
     <!--<property name="threshold" value="6"/>-->
@@ -116,14 +117,14 @@
   <!-- </module> -->
 
   <module name="TreeWalker">
-    <property name="tabWidth" value="${checkstyle.indentChars}" default="2"/>
+    <property name="tabWidth" value="1" default="1"/>
 
     <module name="Indentation">
       <property name="severity" value="warning"/>
-      <property name="basicOffset" value="${checkstyle.indentChars}" default="2"/>
-      <property name="caseIndent" value="${checkstyle.indentChars}" default="2"/>
-      <!-- https://sourceforge.net/p/checkstyle/patches/226/
-          and https://github.com/maikelsteneker/checkstyle-throwsIndent -->
+      <property name="basicOffset" value="2" default="1"/>
+      <property name="braceAdjustment" value="0" default="1"/>
+      <property name="caseIndent" value="2" default="1"/>
+      <!-- https://sourceforge.net/p/checkstyle/patches/226/ and https://github.com/maikelsteneker/checkstyle-throwsIndent -->
       <!--<property name="throwsIndent" value="${checkstyle.indentCharsThrows}" default="4"/>-->
     </module>
 

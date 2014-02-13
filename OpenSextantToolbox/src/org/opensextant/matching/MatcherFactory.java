@@ -4,8 +4,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -20,6 +24,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.DateUtil;
 import org.apache.solr.core.CoreContainer;
 import org.opensextant.placedata.Place;
+import org.opensextant.vocab.Vocab;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,33 +33,47 @@ public class MatcherFactory {
   private MatcherFactory() {
   }
 
-  // the environment variable for the default location
+  // the name of environment var and system property for solr
   private static String envParam = "solr.home";
 
   // string specifying solr home, could be file path or URL
   private static String homeLocation;
 
   // states of solr server and thus the MatcherFactory
+  // is solr accessed via URL (remote) or embedded?
   private static boolean isRemote = false;
+  // do we have a valid solr home?
   private static boolean isConfigured = false;
+  // have we started solr?
   private static boolean isStarted = false;
 
-  // the solr server which is the heart of the MatcherFactory
-  private static SolrServer solrServer = null;
+  // the solr servers which are the heart of the MatcherFactory
+  private static SolrServer solrServerGeo = null;
+  private static SolrServer solrServerVocab = null;
 
-  // all of the Matchers and Searchers the Factory has created
+  // all of the Matchers,Searchers and VocabMatchers the Factory has created
   // weak references so they can be GC'ed
   static Map<PlacenameMatcher, Boolean> matchers = new WeakHashMap<PlacenameMatcher, Boolean>();
   static Map<PlacenameSearcher, Boolean> searchers = new WeakHashMap<PlacenameSearcher, Boolean>();
+  static Map<VocabMatcher, Boolean> vocabers = new WeakHashMap<VocabMatcher, Boolean>();
 
-  // the fields of the match and query response
-  private static String fieldnames = "id,place_id,name,lat,lon,geo,feat_class,feat_code,"
+  // the fields of the geo match and query response
+  private static String gazetteerFieldNames = "id,place_id,name,lat,lon,geo,feat_class,feat_code,"
       + "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
       + "conflate_key,name_bias,id_bias,name_type,name_type_system,partition";
 
-  // the initial parameters for matchers and the searchers
+  // the field names to load the gazetteer (same as match/query except for "geo" field which is created on load
+  private static String gazetteerFieldNamesLoader = "id,place_id,name,lat,lon,feat_class,feat_code,"
+      + "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
+      + "conflate_key,name_bias,id_bias,name_type,name_type_system,partition";
+
+  // the fixed fields of the vocab match and response
+  private static String vocabFieldNames = "id,phrase,category,taxonomy";
+
+  // the initial parameters for matchers and the searchers and vocabers
   private static ModifiableSolrParams matchParams = new ModifiableSolrParams();
   private static ModifiableSolrParams searchParams = new ModifiableSolrParams();
+  private static ModifiableSolrParams vocabParams = new ModifiableSolrParams();
 
   // the matching request handler
   private static final String MATCH_REQUESTHANDLER = "/tag";
@@ -65,7 +84,7 @@ public class MatcherFactory {
   // set the base config for the matching and searching params
   static {
     matchParams.set(CommonParams.QT, MATCH_REQUESTHANDLER);
-    matchParams.set(CommonParams.FL, fieldnames);
+    matchParams.set(CommonParams.FL, gazetteerFieldNames);
     matchParams.set("tagsLimit", 100000);
     matchParams.set(CommonParams.ROWS, 100000);
     matchParams.set("subTags", false);
@@ -74,8 +93,18 @@ public class MatcherFactory {
     matchParams.set("field", "name4matching");
 
     searchParams.set(CommonParams.Q, "*:*");
-    searchParams.set(CommonParams.FL, fieldnames + ",score");
+    searchParams.set(CommonParams.FL, gazetteerFieldNames + ",score");
     searchParams.set(CommonParams.ROWS, 100000);
+
+    vocabParams.set(CommonParams.QT, MATCH_REQUESTHANDLER);
+    vocabParams.set(CommonParams.FL, vocabFieldNames);
+    vocabParams.set("tagsLimit", 100000);
+    vocabParams.set(CommonParams.ROWS, 100000);
+    vocabParams.set("subTags", false);
+    vocabParams.set("matchText", false);
+    vocabParams.set("overlaps", "LONGEST_DOMINANT_RIGHT");
+    vocabParams.set("field", "phrase4matching");
+
   }
 
   /**
@@ -91,87 +120,35 @@ public class MatcherFactory {
       return;
     }
 
-    // not running but already configured must be re-configuring
+    // not running but already configured, must be re-configuring
     if (isConfigured) {
       log.info("Trying to re-configure MatcherFactory.");
       isRemote = false;
       isConfigured = false;
       isStarted = false;
-      solrServer = null;
+      solrServerGeo = null;
+      solrServerVocab = null;
     }
 
-    // no home given, look for env param
-    if (home == null || home.length() == 0) {
-      log.info("No config value supplied. Looking for environment variable");
-      String solrEnv = System.getenv(envParam);
-      if (solrEnv != null && solrEnv.length() > 0) {
-        if (validFile(solrEnv)) {
-          isRemote = false;
-          homeLocation = solrEnv;
-          isConfigured = true;
-          return;
-        }
-      } else {
-        // nothing given and nothing in env
-        log.error("Could not configure MatcherFactory: No config value supplied and no environment variable exists");
-        isConfigured = false;
-        return;
-      }
-    }
-
-    // home supplied, check if URL of some type
-    if (validURL(home)) {
-
-      URL tmpURL = null;
-      try {
-        tmpURL = new URL(home);
-      } catch (MalformedURLException e) {
-        // how could this happen? we just checked it was valid
-        log.error("Malformed URL in initializing MatcherFactory:" + tmpURL, e);
-        return;
-      }
-
-      String proto = tmpURL.getProtocol();
-
-      if (proto.toLowerCase().equalsIgnoreCase("http") || proto.toLowerCase().equalsIgnoreCase("http")) {
-        isConfigured = true;
-        isRemote = true;
-        homeLocation = home;
-        isConfigured = true;
-        return;
-      }
-
-      // local using file URL
-      if (proto.toLowerCase().equalsIgnoreCase("file")) {
-        String filePath = tmpURL.getPath();
-        if (validFile(filePath)) {
-          homeLocation = filePath;
-        } else {
-          log.error("Not a valid location for solr home: " + home + " (" + filePath + ")");
-          return;
-        }
-
-        isRemote = false;
-        isConfigured = true;
-        return;
-      }
-
-    }// end if URL
-
-    // anything else, local using file path
-    if (validFile(home)) {
-      isRemote = false;
-      homeLocation = home;
-      isConfigured = true;
+    // get value for home
+    boolean foundHome = setHome(home);
+    if (!foundHome) {
+      isConfigured = false;
+      log.error("Could not configure MatcherFactory: Could not find a value for solr home");
       return;
     }
 
-    // fell through no valid config
-    homeLocation = "";
-    isConfigured = false;
-    log.error("Could not configure the MatcherFactory using " + home);
-    return;
+    // determine if home is local or remote
+    boolean foundRemoteLocal = setLocalorRemote();
+    if (!foundRemoteLocal) {
+      isConfigured = false;
+      log.error("Could not configure MatcherFactory: Could not interpret:" + homeLocation);
+      return;
+    }
 
+    // all OK
+    isConfigured = true;
+    log.info("Configured MatcherFactory: solr.home=" + homeLocation + " Remote=" + isRemote);
   }
 
   /**
@@ -187,21 +164,25 @@ public class MatcherFactory {
 
     // already started
     if (isStarted) {
-      log.info("Tried to start MatcherFactory when it was already started");
+      log.info("Tried to start MatcherFactory when it was already started. Doing nothing.");
       return;
     }
 
+    // if remote, use HttpSolrServer
     if (isRemote) {
       HttpSolrServer server = new HttpSolrServer(homeLocation);
       server.setAllowCompression(true);
-      solrServer = server;
-    } else { // must be local
+      solrServerGeo = server;
+      solrServerVocab = server;
+    } else { // must be local, use EmbeddedSolrServer
       try {
         File solrXML = new File(homeLocation + File.separator + "solr.xml");
         CoreContainer solrContainer = new CoreContainer(homeLocation);
         solrContainer.load(homeLocation, solrXML);
-        EmbeddedSolrServer server = new EmbeddedSolrServer(solrContainer, "");
-        solrServer = server;
+        EmbeddedSolrServer serverGeo = new EmbeddedSolrServer(solrContainer, "gazetteer");
+        EmbeddedSolrServer serverVocab = new EmbeddedSolrServer(solrContainer, "vocabulary");
+        solrServerGeo = serverGeo;
+        solrServerVocab = serverVocab;
       } catch (FileNotFoundException e) {
         // this should never happen since we check before calling
         log.error("Could not find solr home when initializing MatcherFactory:" + homeLocation, e);
@@ -209,10 +190,12 @@ public class MatcherFactory {
       }
     }
 
-    // see if it is really there
-    SolrPingResponse ping;
+    // see if solr servers are really there
+    SolrPingResponse pingGeo;
+    SolrPingResponse pingVocab;
     try {
-      ping = solrServer.ping();
+      pingGeo = solrServerGeo.ping();
+      pingVocab = solrServerVocab.ping();
     } catch (SolrServerException e) {
       log.error("Solr Server didn't respond to ping from MatcherFactory", e);
       isStarted = false;
@@ -224,14 +207,87 @@ public class MatcherFactory {
     }
 
     // started and got good ping
-    if (ping.getStatus() == 0) {
+    if (pingGeo.getStatus() == 0) {
       isStarted = true;
     } else {
-      log.error("Solr Server responded with error code from ping from MatcherFactory. Got code:" + ping.getStatus());
+      log.error("Solr Server (Geo) responded with error code from ping from MatcherFactory. Got code:"
+          + pingGeo.getStatus());
       isStarted = false;
     }
+
+    // started and got good ping
+    if (pingVocab.getStatus() == 0) {
+      isStarted = true;
+    } else {
+      log.error("Solr Server (Vocab) responded with error code from ping from MatcherFactory. Got code:"
+          + pingVocab.getStatus());
+      isStarted = false;
+    }
+
     // do warmup here?
     return;
+
+  }
+
+  // set the value for solr home
+  private static boolean setHome(String home) {
+
+    String foundIt = home;
+    // explicit value given?
+    if (foundIt != null && foundIt.length() > 0) {
+      homeLocation = foundIt;
+      log.info("Explicit solr home found. Using " + foundIt);
+      return true;
+    } else {
+      log.debug("No explicit value given for solr home. Checking for system property");
+    }
+
+    // system property?
+    foundIt = System.getProperty(envParam);
+    if (foundIt != null && foundIt.length() > 0) {
+      homeLocation = foundIt;
+      log.info("System property for solr home found. Using " + foundIt);
+      return true;
+    } else {
+      log.debug("No " + envParam + " system property for solr home. Checking for env variable");
+    }
+
+    // environment variable?
+    foundIt = System.getenv(envParam);
+    if (foundIt != null && foundIt.length() > 0) {
+      homeLocation = foundIt;
+      log.info("Environment variable for solr home found. Using " + foundIt);
+      return true;
+    } else {
+      log.debug("No " + envParam + " environment variable for solr home");
+    }
+
+    // TODO add some sort of default location?
+
+    log.error("Tried everything and no value for solr home found");
+
+    return false;
+
+  }
+
+  private static boolean setLocalorRemote() {
+
+    if (validRemoteURL(homeLocation)) {
+      isRemote = true;
+      return true;
+    }
+
+    if (validFileURL(homeLocation)) {
+      isRemote = false;
+      return true;
+    }
+
+    if (validFile(homeLocation)) {
+      isRemote = false;
+      return true;
+    }
+
+    return false;
 
   }
 
@@ -245,14 +301,14 @@ public class MatcherFactory {
     if (isConfigured) {
 
       if (isStarted) {
-        PlacenameMatcher tmp = new PlacenameMatcher(solrServer, matchParams);
+        PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
         matchers.put(tmp, true);
         return tmp;
       } else {
         // configured but not started
         start();
         log.debug("Autostarting MatcherFactory");
-        PlacenameMatcher tmp = new PlacenameMatcher(solrServer, matchParams);
+        PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
         matchers.put(tmp, true);
         return tmp;
       }
@@ -264,11 +320,11 @@ public class MatcherFactory {
       if (isConfigured) {
         log.debug("Default config worked. Try to start");
         start();
-        PlacenameMatcher tmp = new PlacenameMatcher(solrServer, matchParams);
+        PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
         matchers.put(tmp, true);
         return tmp;
       } else {
-        log.error("MatcherFactory not configured and default config did'nt work");
+        log.error("MatcherFactory not configured and default config didn't work");
         return null;
       }
     }
@@ -284,14 +340,14 @@ public class MatcherFactory {
     if (isConfigured) {
 
       if (isStarted) {
-        PlacenameSearcher tmp = new PlacenameSearcher(solrServer, searchParams);
+        PlacenameSearcher tmp = new PlacenameSearcher(solrServerGeo, searchParams);
         searchers.put(tmp, true);
         return tmp;
       } else {
         // configured but not started
         start();
         log.debug("Autostarting MatcherFactory");
-        PlacenameSearcher tmp = new PlacenameSearcher(solrServer, searchParams);
+        PlacenameSearcher tmp = new PlacenameSearcher(solrServerGeo, searchParams);
         searchers.put(tmp, true);
         return tmp;
       }
@@ -303,8 +359,49 @@ public class MatcherFactory {
       if (isConfigured) {
         log.debug("Default config worked. Try to start");
         start();
-        PlacenameSearcher tmp = new PlacenameSearcher(solrServer, searchParams);
+        PlacenameSearcher tmp = new PlacenameSearcher(solrServerGeo, searchParams);
         searchers.put(tmp, true);
+        return tmp;
+      } else {
+        log.error("MatcherFactory not configured and default config did'nt work");
+        return null;
+      }
+
+    }
+
+  }
+
+  /**
+   * Get a VocabMatcher
+   * @return a PlacenameSearcher
+   */
+  public static VocabMatcher getVocabMatcher() {
+
+    // if started/configed etc
+    if (isConfigured) {
+
+      if (isStarted) {
+        VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
+        vocabers.put(tmp, true);
+        return tmp;
+      } else {
+        // configured but not started
+        start();
+        log.debug("Autostarting MatcherFactory");
+        VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
+        vocabers.put(tmp, true);
+        return tmp;
+      }
+    } else {
+      // not configured
+      // try default config
+      log.debug("Trying default config and autostarting Matcher Factory");
+      config("");
+      if (isConfigured) {
+        log.debug("Default config worked. Try to start");
+        start();
+        VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
+        vocabers.put(tmp, true);
         return tmp;
       } else {
         log.error("MatcherFactory not configured and default config did'nt work");
@@ -319,7 +416,7 @@ public class MatcherFactory {
    * @param mtcher
    *          the matcher which is requesting the shutdown
    */
-  static void shutdown(PlacenameMatcher mtcher) {
+  protected static void shutdown(PlacenameMatcher mtcher) {
     matchers.remove(mtcher);
     MatcherFactory.shutdown(false);
   }
@@ -329,8 +426,13 @@ public class MatcherFactory {
    * @param srcher
    *          the searcher which is request the shutdown
    */
-  static void shutdown(PlacenameSearcher srcher) {
+  protected static void shutdown(PlacenameSearcher srcher) {
     searchers.remove(srcher);
+    MatcherFactory.shutdown(false);
+  }
+
+  protected static void shutdown(VocabMatcher vocabMatcher) {
+    vocabers.remove(vocabMatcher);
     MatcherFactory.shutdown(false);
   }
 
@@ -342,15 +444,23 @@ public class MatcherFactory {
   public static void shutdown(boolean force) {
 
     if (force) {
-      if (solrServer != null) {
-        solrServer.shutdown();
+      if (solrServerGeo != null) {
+        solrServerGeo.shutdown();
+      }
+      if (solrServerVocab != null) {
+        solrServerVocab.shutdown();
       }
       isStarted = false;
     } else {
-      if (solrServer != null && !factoryInUse()) {
-        solrServer.shutdown();
+      if (solrServerGeo != null && !factoryInUse()) {
+        solrServerGeo.shutdown();
         isStarted = false;
       }
+      if (solrServerVocab != null && !factoryInUse()) {
+        solrServerVocab.shutdown();
+        isStarted = false;
+      }
+
     }
   }
 
@@ -364,7 +474,7 @@ public class MatcherFactory {
    *          the URL to check
    * @return
    */
-  private static boolean validURL(String url) {
+  private static boolean validRemoteURL(String url) {
 
     URL solrURL = null;
 
@@ -375,13 +485,45 @@ public class MatcherFactory {
       return false;
     }
 
-    // just so FindBug doesn't complain about unused variable
-    solrURL.getHost();
-    // check for existence/access here?
-    // solrURL.openStream(); ?
+    // some sort of URL, check to see if its is a HTTP URL
+    if (solrURL.getProtocol().equalsIgnoreCase("http")) {
+      return true;
+    }
 
-    return true;
+    // anything else return false;
+    return false;
+  }
 
+  private static boolean validFileURL(String url) {
+
+    URL solrURL = null;
+
+    try {
+      solrURL = new URL(url);
+    } catch (MalformedURLException e) {
+      // eat the exception and return not valid
+      return false;
+    }
+
+    // some sort of URL, check to see if its is a file URL
+    if (solrURL.getProtocol().equalsIgnoreCase("file")) {
+
+      // see if points to something
+      File tmp;
+      try {
+        tmp = new File(solrURL.toURI());
+      } catch (URISyntaxException e) {
+        // can't convert to file.
+        log.error("Cannot use " + url + " as solr home. Doesn't appear to be valid file URL");
+        return false;
+      }
+
+      // check if valid file
+      return validFile(tmp.getAbsolutePath());
+    }
+
+    // anything else return false;
+    return false;
   }
 
   private static boolean validFile(String file) {
@@ -421,10 +563,30 @@ public class MatcherFactory {
     return homeLocation;
   }
 
+  protected static String getGazetteerFieldNames() {
+    return gazetteerFieldNames;
+  }
+
+  protected static String getGazetteerFieldNamesLoader() {
+    return gazetteerFieldNamesLoader;
+  }
+
+  protected static String getVocabFieldNames() {
+    return vocabFieldNames;
+  }
+
+  protected static SolrServer getSolrServerGeo() {
+    return solrServerGeo;
+  }
+
+  protected static SolrServer getSolrServerVocab() {
+    return solrServerVocab;
+  }
+
   /**
    * Get an integer from a record
    */
-  public static int getInteger(SolrDocument d, String f) {
+  protected static int getInteger(SolrDocument d, String f) {
     Object obj = d.getFieldValue(f);
     if (obj == null) {
       return 0;
@@ -440,7 +602,7 @@ public class MatcherFactory {
   /**
    * Get a floating point object from a record
    */
-  public static Float getFloat(SolrDocument d, String f) {
+  protected static Float getFloat(SolrDocument d, String f) {
     Object obj = d.getFieldValue(f);
     if (obj == null) {
       return 0F;
@@ -453,7 +615,7 @@ public class MatcherFactory {
    * Get a Date object from a record
    * @throws java.text.ParseException
    */
-  public static Date getDate(SolrDocument d, String f) throws java.text.ParseException {
+  protected static Date getDate(SolrDocument d, String f) throws java.text.ParseException {
     if (d == null || f == null) {
       return null;
     }
@@ -472,7 +634,7 @@ public class MatcherFactory {
   /**
      *
      */
-  public static char getChar(SolrDocument solrDoc, String name) {
+  protected static char getChar(SolrDocument solrDoc, String name) {
     String result = getString(solrDoc, name);
     if (result == null) {
       return 0;
@@ -486,7 +648,7 @@ public class MatcherFactory {
   /**
    * Get a String object from a record
    */
-  public static String getString(SolrDocument solrDoc, String name) {
+  protected static String getString(SolrDocument solrDoc, String name) {
     Object result = solrDoc.getFirstValue(name);
     if (result == null) {
       return null;
@@ -497,7 +659,7 @@ public class MatcherFactory {
   /**
    * Get a double from a record
    */
-  public static double getDouble(SolrDocument solrDoc, String name) {
+  protected static double getDouble(SolrDocument solrDoc, String name) {
     Object result = solrDoc.getFirstValue(name);
     if (result == null) {
       throw new IllegalStateException("Blank: " + name + " in " + solrDoc);
@@ -514,7 +676,7 @@ public class MatcherFactory {
    * Parse XY pair stored in Solr Spatial4J record. No validation is done.
    * @return XY double array, [lat, lon]
    */
-  public static double[] getCoordinate(SolrDocument solrDoc, String field) {
+  protected static double[] getCoordinate(SolrDocument solrDoc, String field) {
     String xy = (String) solrDoc.getFirstValue(field);
     if (xy == null) {
       throw new IllegalStateException("Blank: " + field + " in " + solrDoc);
@@ -530,7 +692,7 @@ public class MatcherFactory {
    * Parse XY pair stored in Solr Spatial4J record. No validation is done.
    * @return XY double array, [lat, lon]
    */
-  public static double[] getCoordinate(String xy) {
+  protected static double[] getCoordinate(String xy) {
     final double[] xyPair = {0.0, 0.0};
     String[] latLon = xy.split(",", 2);
     xyPair[0] = Double.parseDouble(latLon[0]);
@@ -543,7 +705,7 @@ public class MatcherFactory {
    *          a string to be interned
    * @return the interned string
    */
-  public static String internString(String in) {
+  protected static String internString(String in) {
     if (in != null) {
       in = in.intern();
     }
@@ -556,7 +718,7 @@ public class MatcherFactory {
    *          a solr document describing a Place
    * @return the Place created from the solr Document
    */
-  public static Place createPlace(SolrDocument gazEntry) {
+  protected static Place createPlace(SolrDocument gazEntry) {
 
     // create the basic Place
     Place place = new Place(getString(gazEntry, "place_id"), getString(gazEntry, "name"));
@@ -589,6 +751,38 @@ public class MatcherFactory {
     place.setIdBias(getDouble(gazEntry, "id_bias"));
 
     return place;
+  }
+
+  protected static Vocab createVocab(SolrDocument solrDoc) {
+    Vocab v = new Vocab();
+    // get and set the fixed attributes
+    v.setId(getString(solrDoc, "id"));
+    v.setVocabMatch(getString(solrDoc, "phrase"));
+    // TODO add "collection" to schema and loader
+    v.setCollection("Generic");
+    v.setCategory(internString(getString(solrDoc, "category")));
+    v.setTaxonomy(internString(getString(solrDoc, "taxonomy")));
+
+    // set any other atttributes from the solrdoc into the vocabMatches attributes HashMap
+    String[] pieces = vocabFieldNames.split(",");
+    List<String> handled = new ArrayList<String>();
+    for (String s : pieces) {
+      handled.add(s);
+    }
+
+    Map<String, Object> tmpMap = solrDoc.getFieldValueMap();
+    Map<String, Object> others = new HashMap<String, Object>();
+
+    for (String s : tmpMap.keySet()) {
+      if (!handled.contains(s)) {
+        others.put(s, tmpMap.get(s));
+      }
+
+    }
+
+    v.setAttributes(others);
+
+    return v;
   }
 
 }

@@ -65,8 +65,8 @@ public class Scorer {
   static final double NAME_SIMILARITY_CASEINSENS = 0.90;
   static final double NAME_SIMILARITY_FLOOR = 0.50;
   // geocoord similarity thresholds and score
-  double geoInnerDist = 0.5; // degrees ~ 55km
-  double geoOuterDist = 2.5; // degrees ~ 280km
+  double geoInnerDist = 55.0; // kilometers
+  double geoOuterDist = 280.0; // kilometers
   double geoNearScore = 1.0;
   double geoMidScore = 0.5;
   double geoFarScore = -1.0;
@@ -208,8 +208,8 @@ public class Scorer {
     if (evidenceGeo == null) {
       return MIN_EVIDENCE;
     }
-    // distance between candidate and evidence (in degrees)
-    double dist = gazetteerGeo.distanceDeg(evidenceGeo);
+    // distance between candidate and evidence (in kms)
+    double dist = gazetteerGeo.distance(evidenceGeo);
     // non-null coords, check the thresholds
     // if near
     if (dist < geoInnerDist) {
