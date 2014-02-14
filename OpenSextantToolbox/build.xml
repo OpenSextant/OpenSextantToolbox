@@ -120,7 +120,7 @@ Build file for OpenSextantToolbox.
 	<!-- NOTE: this leaves the created Gazetteer (see clean.gaz target) -->
 	<target name="clean" depends="setup">
 		<delete includeEmptyDirs="true">
-			<fileset dir="${build.dir}" excludes="Gazetteer/**" />
+			<fileset dir="${build.dir}" excludes="solr/**" />
 		</delete>
 
 		<delete dir="${release.dir}" />

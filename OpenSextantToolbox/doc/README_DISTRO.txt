@@ -1,11 +1,11 @@
 OpenSextant Toolbox 2.0 (prebuilt distro)
 
-To use the OpenSextantToolbox 2.0 prebuilt distro, you will need
-  a. Java 1.6 or later
+To use the OpenSextantToolbox 2.x prebuilt distro, you will need
+  a. Java 1.7 or later
   b. ant (to run examples)
 
 
-unzip opensextant-toolbox-2.0.zip. This should produce the "opensextant-toolbox-2.0" directory = <TOOLBOX_HOME>
+unzip opensextant-toolbox-2.x.zip. This should produce the "opensextant-toolbox-2.x" directory = <TOOLBOX_HOME>
 
 to run the examples
 ------------------
