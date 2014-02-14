@@ -104,6 +104,7 @@ public class RegexTest {
       patternFile = new File(patternFileName).toURI().toURL();
     } catch (MalformedURLException e) {
       System.err.println("Couldn't use pattern file " + patternFileName + ":" + e.getMessage());
+      System.exit(-1);
     }
 
     // initialize the regex matcher
@@ -117,6 +118,7 @@ public class RegexTest {
       iter = FileUtils.lineIterator(testFile, "UTF-8");
     } catch (IOException e) {
       System.err.println("Couldnt read from " + testFile.getName() + ":" + e.getMessage());
+      System.exit(-1);
     }
 
     int lineCount = 0;

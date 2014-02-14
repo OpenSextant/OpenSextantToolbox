@@ -26,7 +26,10 @@
  */
 package org.opensextant.regex.geo;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -47,6 +50,15 @@ public class MGRSParser {
 
   // Log object
   private static Logger log = LoggerFactory.getLogger(MGRSParser.class);
+
+  private static DateFormat df1 = new java.text.SimpleDateFormat("ddMMMyyyy");
+  private static DateFormat df2 = new java.text.SimpleDateFormat("ddMMMyy");
+
+  static {
+    // turn off lenient date parsing
+    df1.setLenient(false);
+    df2.setLenient(false);
+  }
 
   /**
    * @param elements
@@ -72,7 +84,7 @@ public class MGRSParser {
 
     // get the MGRS for each possibility and add to results
     for (String var : variants) {
-      if (isOK(var)) {
+      if (!badMGRS(var)) {
         MGRS tmp = null;
         try {
           tmp = new MGRS(var);
@@ -100,13 +112,46 @@ public class MGRSParser {
 
   }
 
-  private static boolean isOK(String txt) {
-    // TODO add reject patterns
-    // possible reject patterns
-    // 12 DEG 1234 - obscure lat/lon
-    // 23 JAN 1900 - dates
+  // MGRS instances which should be rejected
+  private static boolean badMGRS(String txt) {
+    // reject these patterns
+    // 23 JAN 1900 - date
+    // 23 JAN 73 - date
+    
+    // TODO what about these?
+    // 20PER1000 - ratio
+    // 18DEG20 - part of an obscure lat/lon
+    
 
-    return true;
+    // remove whitespace
+    String tmp = txt.replaceAll("\\s", "");
+    Date dt = null;
+
+    try {
+      dt = df1.parse(tmp);
+    } catch (ParseException e) {
+      // eat the exception
+    }
+
+    if (dt != null) {
+      log.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
+      return true;
+    }
+
+    try {
+      dt = df2.parse(tmp);
+    } catch (ParseException e) {
+      // eat the exception
+    }
+
+    if (dt != null) {
+      log.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
+      return true;
+    }
+
+    log.debug("Accepting " + txt + " as good MGRS");
+
+    return false;
   }
 
   /**
