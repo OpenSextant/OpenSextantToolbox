@@ -66,7 +66,7 @@ public abstract class PostProcessorBase implements PostProcessor {
     RegexAnnotation a = annos.get(0);
     currentGroup.add(a);
     // add the current group to the list
-   // inters.add(currentGroup);
+    // inters.add(currentGroup);
 
     // loop over all the rest of the annos
     for (int i = 1; i < annos.size(); i++) {
@@ -76,9 +76,9 @@ public abstract class PostProcessorBase implements PostProcessor {
 
       // TODO confirm this logic for all possible combos of interaction
       // compare the next anno to the current group
-      if(interactsWithGroup(currentGroup, b)){
+      if (interactsWithGroup(currentGroup, b)) {
         currentGroup.add(b);
-      }else{// end of current group, b goes in next group
+      } else {// end of current group, b goes in next group
         // add the current group to the list
         inters.add(currentGroup);
         // get a new group and add to list
@@ -87,33 +87,30 @@ public abstract class PostProcessorBase implements PostProcessor {
         // add b to new group
         currentGroup.add(b);
       }
-      
+
       // slide forward to next anno
       a = b;
     }
 
     // catch the last group if not already added
-    if(!inters.contains(currentGroup)){
+    if (!inters.contains(currentGroup)) {
       inters.add(currentGroup);
     }
     return inters;
   }
 
   // check for interactions between an annotation and an existing group
-  private boolean interactsWithGroup(List<RegexAnnotation> group, RegexAnnotation b ){
-    
-    
-    for(RegexAnnotation g : group){
-      if(g.interactsWith(b)){
+  private boolean interactsWithGroup(List<RegexAnnotation> group, RegexAnnotation b) {
+
+    for (RegexAnnotation g : group) {
+      if (g.interactsWith(b)) {
         return true;
       }
     }
-    
+
     return false;
   }
-  
-  
-  
+
   /*
    * (non-Javadoc)
    * @see org.opensextant.regex.PostProcessor#postProcess(java.util.List, java.util.Set)
@@ -164,9 +161,10 @@ public abstract class PostProcessorBase implements PostProcessor {
   }
 
   /**
-   * Gets the comparator. Subclasses provide an implementation of this to supply the Comparator to be used in the decide() method.
+   * Gets the comparator. Subclasses provide an implementation of this to supply the Comparator to be used in the
+   * decide() method.
    * @return the comparator to be used to sort
    */
-  abstract public Comparator<? super RegexAnnotation> getComparator();
+  public abstract Comparator<? super RegexAnnotation> getComparator();
 
 }

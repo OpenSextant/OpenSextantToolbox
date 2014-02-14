@@ -45,8 +45,8 @@ import org.slf4j.LoggerFactory;
  * case or proper mixed case. Its primary purpose is to allow downstream rule sets to be applied only where their case
  * assumptions are valid. *
  */
-@CreoleResource(name = "OpenSextant Case Detector ", comment = "Determines if the document is in proper case," +
-    " all upper case or all lower case")
+@CreoleResource(name = "OpenSextant Case Detector ", comment = "Determines if the document is in proper case,"
+    + " all upper case or all lower case")
 public class CaseDetectorPR extends AbstractLanguageAnalyser implements ProcessingResource {
   /**
    *

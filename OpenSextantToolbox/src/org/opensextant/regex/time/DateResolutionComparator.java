@@ -39,10 +39,9 @@ public class DateResolutionComparator implements Comparator<RegexAnnotation> {
   public int compare(RegexAnnotation a1, RegexAnnotation a2) {
     int result;
 
-  
     String type1 = a1.getType();
     String type2 = a2.getType();
-    
+
     if (!type1.matches("Date|Time|DayOfTheMonth") || !type2.matches("Date|Time|DayOfTheMonth")) {
       return 0;
     }
@@ -62,7 +61,6 @@ public class DateResolutionComparator implements Comparator<RegexAnnotation> {
 
     // compare temporal resolutions, highest first
     result = res2.compareTo(res1);
-    
 
     // if resolutions are equal, compare rule families,
     // TODO add family ranking? e.g. MY vs DayOfTheMonth (jan 13)

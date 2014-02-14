@@ -112,7 +112,7 @@ public class Geocoord implements java.io.Serializable {
   }
 
   /**
-   * This returns distance in kilometers. 
+   * This returns distance in kilometers.
    * @return distance from the given Geocoord, in kilometers.
    */
   public static double distance(double lat1, double lon1, double lat2, double lon2) {

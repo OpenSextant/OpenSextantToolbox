@@ -257,7 +257,6 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     this.featureNames = featureNames;
   }
 
-  
   public String getAnnotationSetName() {
     return annotationSetName;
   }
@@ -267,7 +266,7 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
   public void setAnnotationSetName(String annotationSetName) {
     this.annotationSetName = annotationSetName;
   }
-  
+
   public String getAnnotationName() {
     return annotationName;
   }

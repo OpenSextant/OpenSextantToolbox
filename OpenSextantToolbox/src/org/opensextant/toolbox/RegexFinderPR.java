@@ -43,8 +43,8 @@ import org.opensextant.regex.RegexMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@CreoleResource(name = "OpenSextant Regex Finder", comment = "A simple plugin that finds and normalizes entities " +
-    "based on Java regular expresssions")
+@CreoleResource(name = "OpenSextant Regex Finder", comment = "A simple plugin that finds and normalizes entities "
+    + "based on Java regular expresssions")
 public class RegexFinderPR extends AbstractLanguageAnalyser implements ProcessingResource {
   private static final long serialVersionUID = 1375472181851584128L;
   // the Regexmatcher object which does all of the work

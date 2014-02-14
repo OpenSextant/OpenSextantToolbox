@@ -40,8 +40,8 @@ import org.slf4j.LoggerFactory;
  * This PR is used as a diagnostic tool. It collects a histogram (word counts) of how many times a specific candidate
  * place name was determined to be a Place, not a place or no opinion. *
  */
-@CreoleResource(name = "OpenSextant PlaceNameStatisticsPR", comment = "Diagnostic tool for collecting a histogram" +
-    " of Place name results")
+@CreoleResource(name = "OpenSextant PlaceNameStatisticsPR", comment = "Diagnostic tool for collecting a histogram"
+    + " of Place name results")
 public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
   private static final long serialVersionUID = 1L;
   private File outputDir = null;

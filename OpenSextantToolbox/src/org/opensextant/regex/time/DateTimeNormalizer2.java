@@ -254,18 +254,17 @@ public class DateTimeNormalizer2 implements Normalizer {
     if (elemName.equals("G")) {
       elemValue = elemValue.replaceAll("\\.", "").toUpperCase();
     }
-    
+
     // convert Z,ZULU and UTC timezones to GMT
     if (elemName.equals("z")
         && (elemValue.equalsIgnoreCase("Z") || elemValue.equalsIgnoreCase("ZULU") || elemValue.equalsIgnoreCase("UTC"))) {
       elemValue = "GMT";
     }
-    
+
     // strip periods from am/pm eras
     if (elemName.equals("a")) {
       elemValue = elemValue.replaceAll("\\.", "").toUpperCase();
     }
-    
 
     return elemValue;
   }

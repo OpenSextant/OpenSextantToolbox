@@ -21,14 +21,13 @@ import org.slf4j.LoggerFactory;
 public class RegexMatcher {
   // the rules used by this RegexMatcher
   List<RegexRule> rules = new ArrayList<RegexRule>();
-  
+
   // the list of entity type this matcher can find
   Set<String> types = new HashSet<String>();
 
   // the postprocessors to apply
-  HashMap<PostProcessor, Set<String> > posters = new HashMap<PostProcessor, Set<String>>();
-  
-  
+  HashMap<PostProcessor, Set<String>> posters = new HashMap<PostProcessor, Set<String>>();
+
   // future stuff: named groups useful?
   // String namedGroup = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
   // Pattern namedGroupPattern = Pattern.compile(namedGroup);
@@ -52,17 +51,14 @@ public class RegexMatcher {
   }
 
   public ArrayList<RegexAnnotation> match(String input) {
-    
-    
+
     // The matches to return
     ArrayList<RegexAnnotation> matches = new ArrayList<RegexAnnotation>();
-    
-    
-    if(!isInited){
+
+    if (!isInited) {
       log.error("Tried to use RegexMatcher without initializing first");
       return matches;
     }
-    
 
     for (RegexRule r : rules) {
       String t = r.getEntityType();
@@ -78,13 +74,13 @@ public class RegexMatcher {
         }
         // check to see if the normalizer declared the match invalid
         if (tmp.isValid()) {
-          // add the "hierarchy"  and "isEntity" features
+          // add the "hierarchy" and "isEntity" features
           String tmpHier = r.getTaxo();
-          if(tmpHier != null && tmpHier.trim().length() >0){
+          if (tmpHier != null && tmpHier.trim().length() > 0) {
             tmp.getFeatures().put("hierarchy", tmpHier);
             tmp.getFeatures().put("isEntity", true);
           }
-          
+
           tmp.setRule(r.getRuleFamily() + "-" + r.getRuleName());
           matches.add(tmp);
         }
@@ -95,25 +91,23 @@ public class RegexMatcher {
     for (PostProcessor p : posters.keySet()) {
       p.postProcess(matches, posters.get(p));
     }
-    
-    
-    
+
     return matches;
   }
 
   public void initialize(URL patFile) {
     // the #DEFINE statements as name and regex
     HashMap<String, String> defines = new HashMap<String, String>();
-    
+
     // the #RULE statements as name and a sequence of DEFINES and regex bits
     // HashMap<String, String> rulesLines = new HashMap<String, String>();
-    
+
     // the #NORM statements as entitytype and classname
     HashMap<String, String> normalizerClassnames = new HashMap<String, String>();
-    
+
     // the #POST statements as entitytype and classname
     HashMap<String, Set<String>> posterClassnames = new HashMap<String, Set<String>>();
-    
+
     // the #TAXO statements as entitytype and taxonomy string
     HashMap<String, String> taxos = new HashMap<String, String>();
     BufferedReader reader = null;
@@ -169,19 +163,19 @@ public class RegexMatcher {
         fields = line.split("[\t ]+", 3);
         String type = fields[1].trim();
         taxos.put(type, fields[2].trim());
-      }else if (line.startsWith("#POST")) {
+      } else if (line.startsWith("#POST")) {
         fields = line.split("[\t ]+", 3);
         String type = fields[1].trim();
         String posterName = fields[2].trim();
-        if(!posterClassnames.containsKey(posterName)){
+        if (!posterClassnames.containsKey(posterName)) {
           posterClassnames.put(posterName, new HashSet<String>());
         }
-         posterClassnames.get(posterName).add(type);
+        posterClassnames.get(posterName).add(type);
       }
 
       // Ignore everything else
     } // end file read loop
-    
+
     try {
       if (reader != null) {
         reader.close();
@@ -253,8 +247,7 @@ public class RegexMatcher {
         r.setTaxo("");
       }
     }// end rule loop
-    
-    
+
     // create the postprocessors
 
     for (String p : posterClassnames.keySet()) {

@@ -48,8 +48,8 @@ import org.slf4j.LoggerFactory;
  * This is the GATE ProcessingResource wrapper for the Cantilever class. It performs a geospatial-specific form of
  * co-referencing. It also propagates evidence from a geospatial entity to co-references of that entity.
  */
-@CreoleResource(name = "OpenSextant Cantilever Processor", comment = "A plugin that performs a simple form of " +
-    "co-reference  matching among geospatial entities ")
+@CreoleResource(name = "OpenSextant Cantilever Processor", comment = "A plugin that performs a simple form of "
+    + "co-reference  matching among geospatial entities ")
 public class CantileverPR extends AbstractLanguageAnalyser implements ProcessingResource {
   private static final long serialVersionUID = -5055098862407377701L;
   private String outputAnnotationSet;

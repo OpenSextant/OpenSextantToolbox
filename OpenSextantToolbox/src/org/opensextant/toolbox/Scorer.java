@@ -148,10 +148,8 @@ public class Scorer {
     double featureTypeScore = scoreFeatureType(ev, place);
     double adminStructureScore = scoreAdminStructure(ev, place);
     // calculate the total score from the weighted component scores
-    double totalScore = (nameWeight * nameScore +
-        geocoordWeight * geocoordScore +
-        featureTypeWeight * featureTypeScore +
-        adminStructureWeight * adminStructureScore)
+    double totalScore = (nameWeight * nameScore + geocoordWeight * geocoordScore + featureTypeWeight * featureTypeScore + adminStructureWeight
+        * adminStructureScore)
         / totalWeight;
     // System.out.println("\tComparing " + ev.toString() + "\t"
     // +place.toString() + "\t" + totalScore );

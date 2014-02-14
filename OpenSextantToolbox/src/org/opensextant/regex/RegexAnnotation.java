@@ -75,21 +75,20 @@ public class RegexAnnotation {
     this.features = features;
   }
 
-  public boolean interactsWith(RegexAnnotation other){
-    
-    int s1 =this.start;
+  public boolean interactsWith(RegexAnnotation other) {
+
+    int s1 = this.start;
     int e1 = this.end;
     int s2 = other.start;
     int e2 = other.end;
-    
-    if( (s1 < s2 && e1 < s2) || (s2 < s1 && e2 < s1)  ){
+
+    if ((s1 < s2 && e1 < s2) || (s2 < s1 && e2 < s1)) {
       return false;
     }
-    
+
     return true;
   }
-  
-  
+
   @Override
   public String toString() {
     return String.format("%s (%s %s %s %s)", matchText, type, start, end, features);

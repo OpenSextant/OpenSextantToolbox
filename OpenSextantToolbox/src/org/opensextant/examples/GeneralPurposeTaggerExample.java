@@ -36,10 +36,10 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
-
-/** A simple example of how to use the OpenSextant General Purpose extractor pipeline.<br>
- Takes a directory as input and processes each file in the directory through the general purpose pipeline,
-  printing some basic results of what it found.
+/**
+ * A simple example of how to use the OpenSextant General Purpose extractor pipeline.<br>
+ * Takes a directory as input and processes each file in the directory through the general purpose pipeline, printing
+ * some basic results of what it found.
  */
 public class GeneralPurposeTaggerExample {
 
@@ -49,12 +49,13 @@ public class GeneralPurposeTaggerExample {
   private GeneralPurposeTaggerExample() {
 
   }
-//TODO: Auto-generated Javadoc
+  // TODO: Auto-generated Javadoc
   /**
    * The main method.
-   *
-   * @param args the arguments
-   * @throws Exception the exception
+   * @param args
+   *          the arguments
+   * @throws Exception
+   *           the exception
    */
   public static void main(String[] args) throws Exception {
     // start time
@@ -68,7 +69,7 @@ public class GeneralPurposeTaggerExample {
     File inDir = new File(args[1]);
 
     System.out.println("Initializing");
-    
+
     // get the list of files to be processed
     Collection<File> files = FileUtils.listFiles(inDir, null, true);
     int numDocs = files.size();
@@ -86,9 +87,8 @@ public class GeneralPurposeTaggerExample {
     application.setCorpus(corpus);
 
     System.out.println("Done Initializing");
-    Double initTime = (System.nanoTime() - start)/ 1000000000.0;
+    Double initTime = (System.nanoTime() - start) / 1000000000.0;
 
-    
     // run the files through the tagger
     for (File f : files) {
 
@@ -121,11 +121,11 @@ public class GeneralPurposeTaggerExample {
 
       // see what entity types we found in this document
       Set<String> entityTypesFound = entitySet.getAllTypes();
-      
+
       // loop over all found entities and print some basic info
       System.out.println("Document " + doc.getName() + " contains annotations of type (count):");
       for (String a : entityTypesFound) {
-        // get all annotations of a type 
+        // get all annotations of a type
         gate.AnnotationSet tmpSet = entitySet.get(a);
         System.out.println("\t" + a + " (" + tmpSet.size() + ")");
         // loop over all instance of this type and print some basic info
@@ -134,7 +134,7 @@ public class GeneralPurposeTaggerExample {
           String text = gate.Utils.cleanStringFor(doc, s);
           // get the taxonomic categorization for this entity
           String taxo = (String) s.getFeatures().get("hierarchy");
-          // could also get the start/end points, other features ... 
+          // could also get the start/end points, other features ...
           System.out.println("\t\t" + text + " (" + taxo + ")");
         }
 
@@ -142,7 +142,7 @@ public class GeneralPurposeTaggerExample {
 
       // make sure all gets written
       System.out.flush();
-      
+
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
       contents = null;

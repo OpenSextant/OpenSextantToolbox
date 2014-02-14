@@ -39,10 +39,11 @@ import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
 
 // TODO: Auto-generated Javadoc
-/** A simple example of how to use the OpenSextant Geotagger pipeline.<br>
-Takes a directory as input and processes each file in the directory through the geotagger,
- printing some basic results of what it found.
-*/
+/**
+ * A simple example of how to use the OpenSextant Geotagger pipeline.<br>
+ * Takes a directory as input and processes each file in the directory through the geotagger, printing some basic
+ * results of what it found.
+ */
 public class GeotaggerExample {
 
   /**
@@ -54,9 +55,10 @@ public class GeotaggerExample {
 
   /**
    * The main method.
-   *
-   * @param args the arguments
-   * @throws Exception the exception
+   * @param args
+   *          the arguments
+   * @throws Exception
+   *           the exception
    */
   public static void main(String[] args) throws Exception {
     // start time
@@ -70,7 +72,7 @@ public class GeotaggerExample {
     File inDir = new File(args[1]);
 
     System.out.println("Initializing");
-    
+
     // get the list of files to be processed
     Collection<File> files = FileUtils.listFiles(inDir, null, true);
     int numDocs = files.size();
@@ -88,9 +90,8 @@ public class GeotaggerExample {
     application.setCorpus(corpus);
 
     System.out.println("Done Initializing");
-    Double initTime = (System.nanoTime() - start)/ 1000000000.0;
+    Double initTime = (System.nanoTime() - start) / 1000000000.0;
 
-    
     // run the files through the tagger
     for (File f : files) {
 
@@ -155,7 +156,7 @@ public class GeotaggerExample {
 
       // make sure all gets written
       System.out.flush();
-      
+
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
       contents = null;

@@ -36,8 +36,8 @@ import org.slf4j.LoggerFactory;
 /**
  * This PR categorizes noun phrases by looking at the vocabulary and other entities that they contain. *
  */
-@CreoleResource(name = "OpenSextant Chunk Categorizer", comment = "Categorizes noun phrase chunks by examining" +
-    " the vocabulary they contain")
+@CreoleResource(name = "OpenSextant Chunk Categorizer", comment = "Categorizes noun phrase chunks by examining"
+    + " the vocabulary they contain")
 public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
   private static final long serialVersionUID = 1L;
   // the name of the noun phrase annotation to categorize
@@ -121,7 +121,7 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
    */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
-    
+
   }
 
   public String getAnnotationName() {

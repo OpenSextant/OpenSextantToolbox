@@ -273,8 +273,7 @@ public class PlaceCandidate implements Serializable {
   }
 
   // some convenience methods to add evidence
-  public void addEvidence(String rule, double weight, String cc, String adm1, String fclass, String fcode,
-      Geocoord geo) {
+  public void addEvidence(String rule, double weight, String cc, String adm1, String fclass, String fcode, Geocoord geo) {
     PlaceEvidence ev = new PlaceEvidence();
     ev.setRule(rule);
     ev.setWeight(weight);

@@ -2119,8 +2119,8 @@ public class PhoneticUtils {
    */
   public static void main(String[] args) throws Exception {
     String[] testWords = {"Sa‘īd", "'Wombat", "Wombat'", "***[Image Bar", "99 luft Balloons...", "St. John U.S.S.R.",
-      "Jose-Enrique", "Al 'farqu Ha'na", "Bélow", "Colón", "Ås", "Bäck", "Ön", "Tōp", "Nõmme", "Çat", "Çavuş",
-      "Góry", "Onça", "Röd", "Armonía", "Poço", "Būm", "Våge", "", ""};
+        "Jose-Enrique", "Al 'farqu Ha'na", "Bélow", "Colón", "Ås", "Bäck", "Ön", "Tōp", "Nõmme", "Çat", "Çavuş",
+        "Góry", "Onça", "Röd", "Armonía", "Poço", "Būm", "Våge", "", ""};
     System.out.println("WORD\tNO PUNCT\tNO ACCENTS\tNO CASE\tFolded");
     for (String wd : testWords) {
       System.out.println(wd + " ->" + removePunctuation(wd) + "\t" + removeDiacritics(wd) + "\t" + removeCase(wd)

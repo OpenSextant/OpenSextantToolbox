@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * The Interface PostProcessor. <br> This interface provides the contract for any type of processing done to the collection
- * of RegexAnnotations which has been found by the RegexMatcher and specified via the "#POST" element of a RegexMatcher
- * configuration file.
+ * The Interface PostProcessor. <br>
+ * This interface provides the contract for any type of processing done to the collection of RegexAnnotations which has
+ * been found by the RegexMatcher and specified via the "#POST" element of a RegexMatcher configuration file.
  */
 public interface PostProcessor {
 

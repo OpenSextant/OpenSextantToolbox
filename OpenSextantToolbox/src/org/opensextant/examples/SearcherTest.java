@@ -28,7 +28,6 @@ import org.opensextant.matching.PlacenameSearcher;
 import org.opensextant.placedata.Place;
 import org.opensextant.placedata.ScoredPlace;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * Simple example of using the PlacenameSearcher to look up names in the gazetteer.
@@ -44,8 +43,8 @@ public class SearcherTest {
 
   /**
    * The main method.
-   *
-   * @param args the arguments
+   * @param args
+   *          the arguments
    */
   public static void main(String[] args) {
 
@@ -97,8 +96,8 @@ public class SearcherTest {
     System.out.println("Found " + placesWithDist.size() + " places within " + distance + " kilometers of (" + lat + ","
         + lon + ")");
     for (ScoredPlace p : placesWithDist) {
-      System.out.println("\t" + p.getPlace().getPlaceName() + " (" + p.getPlace().getLatitude() + "," + p.getPlace().getLongitude() + ") is "
-          + p.getScore() + " kms from center");
+      System.out.println("\t" + p.getPlace().getPlaceName() + " (" + p.getPlace().getLatitude() + ","
+          + p.getPlace().getLongitude() + ") is " + p.getScore() + " kms from center");
     }
 
     // do a search by passing in an arbitrary solr query

@@ -62,7 +62,7 @@ public class PlacenameMatcher {
     // Process Solr Response
     SolrDocumentList docList = response.getResults();
 
-    //TODO convert this section to use a StreamingResponseCallback
+    // TODO convert this section to use a StreamingResponseCallback
 
     // clear out the place id map
     placeIDMap.clear();
@@ -119,7 +119,7 @@ public class PlacenameMatcher {
 
         // don't add places already on candidate
         if (!seenPlaces.contains(place.getPlaceID())) {
-          pc.addPlaceWithScore(place,place.getIdBias());
+          pc.addPlaceWithScore(place, place.getIdBias());
           seenPlaces.add(place.getPlaceID());
           // get max name bias
           double nBias = place.getNameBias();

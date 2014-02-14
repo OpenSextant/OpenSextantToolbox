@@ -46,24 +46,23 @@ public class MatcherTest {
 
   /**
    * The main method.
-   *
-   * @param args the arguments
+   * @param args
+   *          the arguments
    */
   public static void main(String[] args) {
 
     // the file with some text to be processed
     File testText = new File(args[0]);
-    
+
     // location of solr containg the gazetteer
     // could be a directory, URL or missing
     String solrHome = "";
     if (args.length == 2) {
       System.out.println("Using supplied arg for location of solr gazetteer");
       solrHome = args[1];
-    }else{
+    } else {
       System.out.println("No arg supplied for location of solr gazetteer. Using environment variable");
     }
-
 
     // configure and start the Matcher Factory
     MatcherFactory.config(solrHome);
@@ -126,7 +125,7 @@ public class MatcherTest {
 
     // make sure all gets written
     System.out.flush();
-    
+
     // cleanup the matcher
     m.cleanup();
 

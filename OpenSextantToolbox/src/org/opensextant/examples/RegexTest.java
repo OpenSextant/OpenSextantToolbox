@@ -41,11 +41,14 @@ import org.opensextant.regex.RegexMatcher;
 
 // TODO: Auto-generated Javadoc
 /**
- * A simple example of using the RegexMatcher which is used to tag text based on regular expressions defined in a
- * config file. This example reads a tab separated file containing text to be tagged. That file should be in the form:
- * EntityType _TAB_ POS/NEG _TAB_ TestPhrase where <ol> <li>EntityType is the type of entity</li> <li>POS/NEG indicates whether this is a
- * positive (should be tagged) or negative example (should not be tagged)</li> <li>TestPhrase is the text which should be
- * examined</li> <p>
+ * A simple example of using the RegexMatcher which is used to tag text based on regular expressions defined in a config
+ * file. This example reads a tab separated file containing text to be tagged. That file should be in the form:
+ * EntityType _TAB_ POS/NEG _TAB_ TestPhrase where
+ * <ol>
+ * <li>EntityType is the type of entity</li>
+ * <li>POS/NEG indicates whether this is a positive (should be tagged) or negative example (should not be tagged)</li>
+ * <li>TestPhrase is the text which should be examined</li>
+ * <p>
  * See LanguageResources/TestData/RegexTestData for example test inputs<br>
  * See LanguageResources/resources/patterns for regex pattern definitions
  */
@@ -57,11 +60,10 @@ public class RegexTest {
   private RegexTest() {
   }
 
-
   /**
    * The main method.
-   *
-   * @param args the arguments
+   * @param args
+   *          the arguments
    */
   public static void main(String[] args) {
 
@@ -90,7 +92,8 @@ public class RegexTest {
 
     // write the results header
     try {
-      resWriter.write("Entity Type\tPos\\Neg\tTest Input\tScore\tComplete\tCount\tTypes Found\tRules Matched\tAnnotations Found");
+      resWriter
+          .write("Entity Type\tPos\\Neg\tTest Input\tScore\tComplete\tCount\tTypes Found\tRules Matched\tAnnotations Found");
       resWriter.newLine();
     } catch (IOException e) {
       System.err.println("Couldnt write to " + resFile.getName() + ":" + e.getMessage());
@@ -137,7 +140,7 @@ public class RegexTest {
       // send the test text to regex matcher
       List<RegexAnnotation> annos = reger.match(testText);
       // examine the results and return a line to be sent to the results file
-      String results = score(entityType, posOrNeg,testText, annos);
+      String results = score(entityType, posOrNeg, testText, annos);
       try {
         // write the original line and the results to the results file
         resWriter.write(line + "\t" + results);
@@ -164,13 +167,15 @@ public class RegexTest {
 
   /**
    * Score.
-   *
-   * @param correctType the correct type
-   * @param posOrNeg the pos or neg
-   * @param annos the annos
+   * @param correctType
+   *          the correct type
+   * @param posOrNeg
+   *          the pos or neg
+   * @param annos
+   *          the annos
    * @return the string
    */
-  public static String score(String correctType, String posOrNeg,String testText, List<RegexAnnotation> annos) {
+  public static String score(String correctType, String posOrNeg, String testText, List<RegexAnnotation> annos) {
 
     String assessment = "??";
     int annoCount = annos.size();
@@ -179,13 +184,13 @@ public class RegexTest {
     Set<String> rulesFired = new TreeSet<String>();
     String tmpRes = "";
 
-    int maxMatchedLength =0;
-    
+    int maxMatchedLength = 0;
+
     for (RegexAnnotation a : annos) {
       typesFound.add(a.getType());
       rulesFired.add(a.getRule());
       int matchLen = a.getMatchText().trim().length();
-      if(matchLen > maxMatchedLength){
+      if (matchLen > maxMatchedLength) {
         maxMatchedLength = matchLen;
       }
       tmpRes += (a.toString() + ",");
@@ -229,13 +234,13 @@ public class RegexTest {
 
     // check the match lengths to see if we got the whole thing
     boolean whole = false;
-    
-    if(correctMatchLength == maxMatchedLength ){
-      whole =true;  
+
+    if (correctMatchLength == maxMatchedLength) {
+      whole = true;
     }
-    
-    String results = assessment + "\t" + whole + "\t" + annoCount + "\t" + typesFound.toString() + "\t" + rulesFired.toString() + "\t"
-        + tmpRes;
+
+    String results = assessment + "\t" + whole + "\t" + annoCount + "\t" + typesFound.toString() + "\t"
+        + rulesFired.toString() + "\t" + tmpRes;
     return results;
   }
 

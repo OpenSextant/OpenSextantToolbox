@@ -21,7 +21,6 @@
  **/
 package org.opensextant.regex.geo;
 
-
 import java.util.Comparator;
 
 import org.opensextant.regex.PostProcessorBase;
@@ -29,8 +28,8 @@ import org.opensextant.regex.RegexAnnotation;
 
 /**
  * The Class GeoPostProcessor.<br>
- * This class extends PostProcessorBase to provide a PostProcessor that selects the "best" Geocoord annotation, where "best"
- * means the Geocoord annotation with the most likely interpretation as determined by the GeocoordComparator . 
+ * This class extends PostProcessorBase to provide a PostProcessor that selects the "best" Geocoord annotation, where
+ * "best" means the Geocoord annotation with the most likely interpretation as determined by the GeocoordComparator .
  */
 public class GeoPostProcessor extends PostProcessorBase {
 

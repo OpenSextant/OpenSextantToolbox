@@ -70,7 +70,7 @@ public class MGRSParser {
     // look for alternate interpretations
     List<String> variants = findVariants(zone, quad, en);
 
-    //get the MGRS for each possibility and add to results
+    // get the MGRS for each possibility and add to results
     for (String var : variants) {
       if (isOK(var)) {
         MGRS tmp = null;
@@ -101,7 +101,7 @@ public class MGRSParser {
   }
 
   private static boolean isOK(String txt) {
-// TODO add reject patterns
+    // TODO add reject patterns
     // possible reject patterns
     // 12 DEG 1234 - obscure lat/lon
     // 23 JAN 1900 - dates

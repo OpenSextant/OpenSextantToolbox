@@ -38,8 +38,8 @@ import org.slf4j.LoggerFactory;
 /**
  * This PR is used as a diagnostic tool. It collects a histogram (word counts) of the specified annotation type *
  */
-@CreoleResource(name = "OpenSextant HistogramPR", comment = "Diagnostic tool for collecting a histogram based" +
-    " on selected annotations")
+@CreoleResource(name = "OpenSextant HistogramPR", comment = "Diagnostic tool for collecting a histogram based"
+    + " on selected annotations")
 public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
   private static final long serialVersionUID = 1L;
   private File outputDir = null;

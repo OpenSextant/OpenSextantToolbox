@@ -41,7 +41,7 @@ public class GeoNormalizer implements Normalizer {
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
-      if( log.isDebugEnabled()){
+      if (log.isDebugEnabled()) {
         annoFeatures.put(elemName, elemenValue);
       }
     }
@@ -51,7 +51,7 @@ public class GeoNormalizer implements Normalizer {
     String ruleName = r.getRuleName();
 
     if (family.equals(DD_FAMILY)) {
-      
+
       Ordinate lat = null;
       Ordinate lon = null;
       try {
@@ -96,7 +96,7 @@ public class GeoNormalizer implements Normalizer {
     }
 
     if (family.equals(MGRS_FAMILY)) {
-      
+
       List<MGRS> mgrsCandidates = null;
       try {
         mgrsCandidates = MGRSParser.parseMGRS(elementsFound);
@@ -132,10 +132,9 @@ public class GeoNormalizer implements Normalizer {
       try {
         utm = UTMParser.parseUTM(elementsFound);
       } catch (Exception e) {
-        log.debug("Couldn't normalize " + anno.toString() + " UTM parser exception:" + e.getMessage() );
+        log.debug("Couldn't normalize " + anno.toString() + " UTM parser exception:" + e.getMessage());
       }
-      
-      
+
       if (utm != null) {
         Geodetic2DPoint pt = utm.getGeodetic();
         Geocoord geo = new Geocoord(pt.getLatitudeAsDegrees(), pt.getLongitudeAsDegrees());
