@@ -5,7 +5,10 @@ Build file for OpenSextantToolbox.
 
 	<!-- include properties -->
 	<property file="build.properties" />
-
+	
+	<!--set the time stamps -->
+	<tstamp />
+	
 	<!-- Project level properties -->
 	<property name="project.name" value="OpenSextantToolbox" />
 	<property name="version" value="2.1" />
@@ -383,19 +386,19 @@ Build file for OpenSextantToolbox.
 
 
 	<!-- zip and post the generated release to the distro site -->
-	<target name="post" depends = "release">
+	<target name="post" depends = "">
 
-		<!-- delete existing release zip -->
-		<delete file="${basedir}/opensextant-toolbox-${version}.zip" />
+		<!-- delete existing release zip if there -->
+		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip" />
 
 		<!-- zip up the finished release -->
-		<zip destfile="${basedir}/opensextant-toolbox-${version}.zip">
+		<zip destfile="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip">
 			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}"/>
 		</zip>
 
 		<!--  upload to site -->
 		<ftp server="${post.site}" remotedir="${post.dir}" userid="${post.user}" password="${post.password}">
-			<fileset file="${basedir}/opensextant-toolbox-${version}.zip" />
+			<fileset file="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip" />
 		</ftp>
 
 	</target>
