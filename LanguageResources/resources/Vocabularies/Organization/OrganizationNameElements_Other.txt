@@ -64,6 +64,8 @@ organizations
 partnership
 partnerships
 populace
+relief agencies
+relief agency
 religious group
 religious groups
 sect
@@ -82,5 +84,3 @@ tribes
 tribunal
 tribunals
 volunteers
-relief agency
-relief agencies

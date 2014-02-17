@@ -110,19 +110,19 @@ son-in-law
 son-in-laws
 sons
 spouse
+step father
+step fathers
+step mother
+step mothers
+step-father
+step-fathers
+step-mother
+step-mothers
+stepfather
+stepfathers
+stepmother
+stepmothers
 uncle
 uncles
 wife
 wives
-step mother
-step father
-step mothers
-step fathers
-step-mother
-step-father
-step-mothers
-step-fathers
-stepmother
-stepfather
-stepmothers
-stepfathers

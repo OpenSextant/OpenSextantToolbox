@@ -120,6 +120,8 @@ news agency
 news and observer
 news journal
 news of the world
+news service
+news services
 news tribune
 newsday
 nihon keizai shimbun
@@ -213,5 +215,3 @@ yanzhao metropolis daily
 yediot ahronot
 yedioth ahronoth
 yomiuri shimbun
-news service
-news services

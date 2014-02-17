@@ -62,6 +62,8 @@ failure
 failures
 firing
 firings
+handover
+handovers
 incident
 incidents
 increase
@@ -109,13 +111,11 @@ situation
 situations
 standoff
 standoffs
-treatment
-treatments
-victories
-victory
 takeover
 takeovers
-handover
-handovers
+treatment
+treatments
 turnover
 turnovers
+victories
+victory

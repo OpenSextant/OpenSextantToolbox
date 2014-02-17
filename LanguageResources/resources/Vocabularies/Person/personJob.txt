@@ -828,6 +828,8 @@ crewman
 crewmember
 crewmembers
 crewmen
+crime kingpin
+crime kingpins
 crime lord
 crime lords
 criminal
@@ -1034,6 +1036,8 @@ drudge
 drudges
 drug dealer
 drug dealers
+drug kingpin
+drug kingpins
 drug lord
 drug lords
 drug trafficker
@@ -2763,6 +2767,10 @@ rifleman
 rigger
 riggers
 right-hand man
+ring leader
+ring leaders
+ringleader
+ringleaders
 riveter
 riveters
 rivetter
@@ -3392,6 +3400,8 @@ trooper
 troopers
 trouble shooter
 trouble shooters
+troublemaker
+troublemakers
 troubleshooter
 troubleshooters
 tsarina
@@ -3639,13 +3649,3 @@ yachtswoman
 yardmaster
 yardmasters
 zionists
-drug kingpin
-crime kingpin
-drug kingpins
-crime kingpins
-ringleader
-ring leader
-ringleaders
-ring leaders
-troublemaker
-troublemakers

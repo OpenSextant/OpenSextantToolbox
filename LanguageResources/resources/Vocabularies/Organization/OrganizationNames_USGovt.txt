@@ -395,7 +395,6 @@ u.s. botanic garden
 u.s. capitol police
 u.s. capitol visitor center
 u.s. central command
-u.s. immigration and customs service
 u.s. citizenship and immigration services
 u.s. coast guard
 u.s. commission of fine arts
@@ -412,6 +411,7 @@ u.s. fleet forces command
 u.s. geological survey
 u.s. house of representatives
 u.s. immigration and customs enforcement
+u.s. immigration and customs service
 u.s. international trade commission
 u.s. joint forces command
 u.s. marine corps
@@ -462,8 +462,8 @@ united states european command
 united states fleet forces command
 united states geological survey
 united states house of representatives
-united states immigration and customs service
 united states immigration and customs enforcement
+united states immigration and customs service
 united states international trade commission
 united states joint forces command
 united states marine corps

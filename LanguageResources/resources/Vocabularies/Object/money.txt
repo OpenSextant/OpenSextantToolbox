@@ -17,6 +17,8 @@ black markets
 bribe
 bribes
 budget
+budget cut
+budget cuts
 budgets
 buy
 buys
@@ -139,6 +141,8 @@ stocks
 tariff
 tariffs
 tax
+tax cut
+tax cuts
 tax return
 tax returns
 taxes
@@ -150,7 +154,3 @@ wages
 wealth
 wire transfer
 wire transfers
-tax cut
-tax cuts
-budget cut
-budget cuts
