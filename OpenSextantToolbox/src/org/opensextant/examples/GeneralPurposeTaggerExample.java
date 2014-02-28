@@ -30,6 +30,7 @@ import gate.Gate;
 import gate.util.persistence.PersistenceManager;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -93,8 +94,9 @@ public class GeneralPurposeTaggerExample {
     for (File f : files) {
 
       // create a GATE document from the file contents
-      String contents = FileUtils.readFileToString(f, "UTF-8");
-      Document doc = Factory.newDocument(contents);
+      String f$ = f.getAbsolutePath();
+      URL url = new URL("file://" + f$);
+      Document doc = Factory.newDocument(url);
       doc.setName(f.getName());
 
       // or create a GATE document directly from the file
@@ -145,7 +147,6 @@ public class GeneralPurposeTaggerExample {
 
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
-      contents = null;
       f = null;
 
     } // end file loop
