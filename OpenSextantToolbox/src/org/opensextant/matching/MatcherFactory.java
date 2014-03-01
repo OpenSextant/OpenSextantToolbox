@@ -58,14 +58,14 @@ public class MatcherFactory {
   static Map<VocabMatcher, Boolean> vocabers = new WeakHashMap<VocabMatcher, Boolean>();
 
   // the fields of the geo match and query response
-  private static String gazetteerFieldNames = "id,place_id,name,lat,lon,geo,feat_class,feat_code,"
+  private static String gazetteerFieldNames = "id,place_id,name,name_expanded,lat,lon,geo,feat_class,feat_code,"
       + "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
-      + "conflate_key,name_bias,id_bias,name_type,name_type_system,partition";
+      + "name_bias,id_bias,name_type,name_type_system,partition,search_only";
 
   // the field names to load the gazetteer (same as match/query except for "geo" field which is created on load
-  private static String gazetteerFieldNamesLoader = "id,place_id,name,lat,lon,feat_class,feat_code,"
+  private static String gazetteerFieldNamesLoader = "id,place_id,name,name_expanded,lat,lon,feat_class,feat_code,"
       + "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
-      + "conflate_key,name_bias,id_bias,name_type,name_type_system,partition";
+      + "name_bias,id_bias,name_type,name_type_system,partition,search_only";
 
   // the fixed fields of the vocab match and response
   private static String vocabFieldNames = "id,phrase,category,taxonomy";
@@ -91,6 +91,7 @@ public class MatcherFactory {
     matchParams.set("matchText", false);
     matchParams.set("overlaps", "LONGEST_DOMINANT_RIGHT");
     matchParams.set("field", "name4matching");
+    matchParams.set(CommonParams.FQ, "search_only:false");
 
     searchParams.set(CommonParams.Q, "*:*");
     searchParams.set(CommonParams.FL, gazetteerFieldNames + ",score");
@@ -722,6 +723,9 @@ public class MatcherFactory {
 
     // create the basic Place
     Place place = new Place(getString(gazEntry, "place_id"), getString(gazEntry, "name"));
+
+    // add the expanded name
+    place.setExpandedPlaceName(getString(gazEntry, "name_expanded"));
 
     // set name type and nameTypeSystem
     place.setNameType(internString(getString(gazEntry, "name_type")));

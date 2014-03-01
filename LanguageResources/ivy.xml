@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ivy-module version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="org.opensextant" module="OpenSextantLanguageResources"
+		status="test" />
+
+	<publications>
+		<artifact name="opensextant-lang-resource" type="language-resource" ext="zip" />
+	</publications>
+
+	<dependencies>
+		<!-- Get the OpenSextant gazetteer data -->
+		<dependency org="org.opensextant" name="OpenSextantGazetteer" rev="latest.integration"  />
+	</dependencies>
+
+</ivy-module>

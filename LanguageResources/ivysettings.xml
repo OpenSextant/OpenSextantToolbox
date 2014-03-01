@@ -1,8 +1,7 @@
 <ivysettings>
-	<settings defaultResolver="External" overwriteMode="newer" />
+	<settings defaultResolver="local" overwriteMode="newer" />
 	<!-- location of nexus snapshots repo -->
-	<property name="nexus-snapshots"
-		value="https://oss.sonatype.org/content/repositories/snapshots" />
+	<property name="nexus-snapshots" value="https://oss.sonatype.org/content/repositories/snapshots" />
 
 	<!-- include default definitions for "local" and "shared" resolvers -->
 	<include url="${ivy.default.settings.dir}/ivysettings-shared.xml" />
@@ -13,6 +12,5 @@
 			<ibiblio name="maven2" m2compatible="true" />
 			<ibiblio name="nexus" m2compatible="true" root="${nexus-snapshots}" />
 		</chain>
-
 	</resolvers>
 </ivysettings>

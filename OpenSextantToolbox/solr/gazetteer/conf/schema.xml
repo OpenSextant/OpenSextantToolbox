@@ -11,9 +11,7 @@
 	language governing permissions and limitations under the License. -->
 
 
-<!-- NOTE:this schema is for both matching and querying using the OpenSextant  code -->
-<!-- if you only need to do matching (and maybe "name" only gazetteer queries)  try substituting "schema.xml" -->
-<!-- which requires substantially less disk space -->
+<!-- NOTE:this schema is for both matching and querying using the OpenSextant code -->
 <schema name="gazetteer" version="1.5">
 
 	<!--"Primary Key" field -->
@@ -29,8 +27,11 @@
 		<!-- place name -->
 		<field name="name" type="name_idx" stored="true" required="true" />
 
-        <field name="name4matching" type="name4matchingType" stored="false"/>
-        <copyField source="name" dest="name4matching" />
+		<!-- expanded place name (for abbreviated and coded names -->
+		<field name="name_expanded" type="string" stored="true" indexed="false" />
+
+		<field name="name4matching" type="name4matchingType" stored="false"/>
+		<copyField source="name" dest="name4matching" />
 
 		<!-- geo = XY coordinate in the form 'lat,lon'. Created by update-script.js 
 			during loading -->
@@ -83,6 +84,9 @@
 
 		<!-- portion of gazetteer (used to select gazetteer subset on loading) -->
 		<field name="partition" type="ignored" />
+		
+		<!-- should this record be returned in matches or just for queries (searches)? -->
+		<field name="search_only" type="boolean" indexed ="true"/>
 
 		<!-- version required by and supplied by Solr -->
 		<field name="_version_" type="long" stored="true" indexed="false" />
@@ -94,6 +98,9 @@
 		<!-- The StrField type is not analyzed, but indexed/stored verbatim. -->
 		<fieldType name="string" class="solr.StrField"
 			sortMissingLast="true" />
+
+  		<!-- boolean type: "true" or "false" -->
+  		<fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"/>
 
 		<!-- Default numeric field types -->
 		<fieldType name="int" class="solr.TrieIntField"
@@ -129,7 +136,7 @@
 
 
 		<fieldType name="name4matchingType" class="solr.TextField"
-			positionIncrementGap="100" postingsFormat="Memory" omitTermFreqAndPositions="true" omitNorms="true">            
+			positionIncrementGap="100" postingsFormat="Memory" omitTermFreqAndPositions="true" omitNorms="true">
 			<analyzer type="index">
 				<charFilter class="solr.MappingCharFilterFactory" mapping="contraction-filter.txt" />
 				<tokenizer class="solr.ClassicTokenizerFactory" />

@@ -69,10 +69,11 @@ public class SearcherTest {
 
     // parameters used in the sample searches
     String genericQuery = "source:ADHOC";
-    String nameQuery = "Bogata";
-    Double lat = 36.95024;
-    Double lon = 72.92037;
-    Double distance = 10.0; // kilometers
+    //String genericQuery = "search_only:false";
+    String nameQuery = "Kabul";
+    Double lat = 34.51667;
+    Double lon = 69.18333;
+    Double distance = 50.0; // kilometers
 
     // do a simple name search using both fuzzy and not fuzzy matching
     System.out.println("Doing name search");
@@ -105,7 +106,7 @@ public class SearcherTest {
     placesFound = s.searchByQueryString(genericQuery);
     System.out.println("Found " + placesFound.size() + " places using query= \"" + genericQuery + "\"");
     for (Place p : placesFound) {
-      System.out.println("\t" + p);
+      System.out.println("\t" + p + " (" + p.getGeocoord() + ")" );
     }
 
     // make sure all gets written

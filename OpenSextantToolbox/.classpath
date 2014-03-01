@@ -2,18 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/GATE/gate-core.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/annotations.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/commons-codec.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/commons-io.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/commons-lang.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/geodesy.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/joda-convert.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/joda-time.jar" sourcepath="/joda-time/src"/>
-	<classpathentry kind="lib" path="lib/Solr/solr-core.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/solr-solrj.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/solr-text-tagger.jar"/>
-	<classpathentry kind="lib" path="lib/GATE/commons-codec.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ant-launcher.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ant.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/aopalliance.jar"/>
@@ -21,6 +9,7 @@
 	<classpathentry kind="lib" path="lib/GATE/apache-mime4j-dom.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/bcmail-jdk15.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/bcprov-jdk15.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/commons-codec.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/commons-compress.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/commons-io.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/commons-lang.jar"/>
@@ -29,6 +18,7 @@
 	<classpathentry kind="lib" path="lib/GATE/fontbox.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-asm.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-compiler-jdt.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/gate-core.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ivy.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/java-getopt.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/jaxen.jar"/>
@@ -54,43 +44,54 @@
 	<classpathentry kind="lib" path="lib/GATE/xmlunit.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/xpp3.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/xstream.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/commons-cli.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/commons-codec.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/commons-fileupload.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/commons-io.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/commons-lang.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/guava.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/httpclient.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/httpcore.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/httpmime.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/javax.servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/jts.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-analyzers-common.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-analyzers-phonetic.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-codecs.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-core.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-grouping.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-highlighter.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-memory.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-misc.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-queries.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-queryparser.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-spatial.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/lucene-suggest.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/noggit.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/spatial4j.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/wstx-asl.jar"/>
-	<classpathentry kind="lib" path="lib/Solr/zookeeper.jar"/>
-	<classpathentry kind="lib" path="lib/Logging/jcl-over-slf4j.jar"/>
-	<classpathentry kind="lib" path="lib/Logging/log4j.jar"/>
-	<classpathentry kind="lib" path="lib/Logging/slf4j-api.jar"/>
-	<classpathentry kind="lib" path="lib/Logging/slf4j-log4j12.jar"/>
-	<classpathentry kind="lib" path="lib/JCarafe/commons-lang.jar"/>
-	<classpathentry kind="lib" path="lib/JCarafe/jackson-core-asl.jar"/>
-	<classpathentry kind="lib" path="lib/JCarafe/jackson-mapper-asl.jar"/>
-	<classpathentry kind="lib" path="lib/JCarafe/jcarafe-core_2.9.1.jar"/>
-	<classpathentry kind="lib" path="lib/JCarafe/sbinary_2.9.0.jar"/>
-	<classpathentry kind="lib" path="lib/JCarafe/scala-library.jar"/>
-	<classpathentry kind="lib" path="lib/Plugin/jitar.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/activation.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/annotations.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/commons-cli.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/commons-codec.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/commons-io.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/commons-lang.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/commons-lang3.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/geodesy.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/geronimo-jms_1.1_spec.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/guava.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/httpclient.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/httpcore.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/httpmime.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-core-asl.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-mapper-asl.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/javaee-api.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/javax.servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jcarafe-core_2.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jcl-over-slf4j.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jitar.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/joda-convert.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/joda-time.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jts.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/log4j.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-analyzers-common.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-analyzers-phonetic.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-codecs.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-core.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-grouping.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-highlighter.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-memory.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-misc.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-queries.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-queryparser.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-spatial.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/lucene-suggest.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/mail.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/noggit.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/sbinary_2.9.0.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/scala-library.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/slf4j-log4j12.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/solr-core.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/solr-solrj.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/solr-text-tagger.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/spatial4j.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/wstx-asl.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/zookeeper.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

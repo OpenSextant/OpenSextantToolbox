@@ -34,6 +34,7 @@ public class Place implements Comparable<Object>, Serializable {
 
   // Name metadata
   private String placeName;
+  private String expandedPlaceName; // only present for abbrev/codes
   private String nameType;
   private String nameTypeSystem;
   // private String script;
@@ -83,7 +84,14 @@ public class Place implements Comparable<Object>, Serializable {
 
   @Override
   public String toString() {
-    String output = this.placeName + "(" + this.getAdmin1() + "," + this.countryCode + "," + this.featureCode + ")";
+    String output = "";
+    if (this.expandedPlaceName != null) {
+      output = this.placeName + " (" + this.expandedPlaceName + ")" + "(" + this.getAdmin1() + "," + this.countryCode
+          + "," + this.featureCode + ")";
+    } else {
+      output = this.placeName + " (" + this.getAdmin1() + "," + this.countryCode + "," + this.featureCode + ")";
+    }
+
     return output;
   }
 
@@ -146,6 +154,14 @@ public class Place implements Comparable<Object>, Serializable {
 
   public void setPlaceName(String placeName) {
     this.placeName = placeName;
+  }
+
+  public String getExpandedPlaceName() {
+    return expandedPlaceName;
+  }
+
+  public void setExpandedPlaceName(String expandedPlaceName) {
+    this.expandedPlaceName = expandedPlaceName;
   }
 
   public String getCountryCode() {

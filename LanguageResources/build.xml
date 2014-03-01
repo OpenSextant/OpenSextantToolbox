@@ -3,28 +3,82 @@
 	<!-- include properties -->
 	<property file="build.properties" />
 
+	<!--set the time stamps -->
+	<tstamp />
+
+	<property name="version" value="2.1" />
+
+	<!-- directory to contain the created artifacts -->
+	<property name="build.dir" location="build" />
+
 	<property name="prebuilt.gaz.loc" value="http://opensextant.org/downloads/gazdata" />
-	<property name="prebuilt.gaz.name" value="latestGazetteer.zip" />
+	<property name="prebuilt.gaz.name" value="opensextant-gazetteer.zip" />
 
-	<target name="clean" depends="" />
+	<!--====================== Targets ============================-->
 
+	<!-- delete and re-create build dir -->
+	<target name="clean" depends="">
+		<delete dir="${build.dir}" />
+		<mkdir dir="${build.dir}" />
+		<tstamp />
+	</target>
+
+	<!-- set the proxy if behind a firewall (needed for ivy and get) -->
 	<target name="setProxy">
 		<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
 	</target>
 
+	<!-- get all the ivy defined dependencies -->
+	<target name="getDependencies" depends="setProxy,clean">
+		<ivy:retrieve pattern="${build.dir}/[artifact].[ext]" />
+		<ivy:report todir="${build.dir}/ivy-report" graph="false"/>
+		<unzip src="${build.dir}/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
+	</target>
+	
+	
 	<!-- fetch the prebuilt gazetteer data from opensextant.org -->
 	<target name="fetch.prebuilt.gaz" depends="setProxy">
 		<mkdir dir="${basedir}/resources/geoGazetteer" />
 		<echo> Retrieving prebuilt gazetteer from opensextant.org</echo>
 		<get src="${prebuilt.gaz.loc}/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
-	</target>
-
-	<!-- unzip the prebuilt gazetteer data set -->
-	<target name="unzip.prebuilt.gaz" depends="fetch.prebuilt.gaz">
 		<unzip src="${basedir}/resources/geoGazetteer/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
 	</target>
 
-	<target name="build" depends="unzip.prebuilt.gaz">
+	<!-- unzip the prebuilt gazetteer data set -->
+	<target name="unzip.prebuilt.gaz" depends="">
+		<unzip src="${basedir}/resources/geoGazetteer/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
+	</target>
+
+	<!-- zip all of the resources together -->
+	<target name="zip" depends="getDependencies">
+		<!-- zip up the finished release -->
+		<zip destfile="${build.dir}/opensextant-lang-resource.zip">
+			<zipfileset dir="${basedir}/docs" prefix="LanguageResources/docs" />
+			<zipfileset dir="${basedir}/GAPPs" prefix="LanguageResources/GAPPs" />
+			<zipfileset dir="${basedir}/resources" prefix="LanguageResources/resources" />
+			<zipfileset dir="${basedir}/testData" prefix="LanguageResources/testData" />
+			<zipfileset file="${basedir}/NOTICE.txt" prefix="LanguageResources" />
+			<zipfileset file="${basedir}/README.txt" prefix="LanguageResources" />
+		</zip>
+	</target>
+
+	<target name="build" depends="zip">
+	</target>
+
+	<!-- Publish the opensextant lang resources to the local Ivy repo-->
+	<target name="publish-local" depends="build">
+		<ivy:resolve />
+		<ivy:publish resolver="local" overwrite="true" forcedeliver="true" pubrevision="${version}.${DSTAMP}">
+			<artifacts pattern="${build.dir}/[artifact].[ext]" />
+		</ivy:publish>
+	</target>
+
+	<!-- Publish the opensextant lang resources to the shared Ivy repo-->
+	<target name="publish-shared" depends="build">
+		<ivy:resolve />
+		<ivy:publish resolver="shared" overwrite="true" update="true" pubrevision="${version}.${DSTAMP}">
+			<artifacts pattern="${build.dir}/[artifact].[ext]" />
+		</ivy:publish>
 	</target>
 
 </project>
