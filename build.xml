@@ -28,4 +28,13 @@
         </subant>
     </target>
 
+    <!--  publish all of the components -->
+    <target name="publish-local" depends="">
+        <subant target="publish-local">
+            <fileset dir="${toolbox.home}" includes="build.xml" />
+            <fileset dir="${lang.home}" includes="build.xml" />
+        </subant>
+    </target>
+	
+	
 </project>
