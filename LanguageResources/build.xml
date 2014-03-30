@@ -11,9 +11,8 @@
 	<!-- directory to contain the created artifacts -->
 	<property name="build.dir" location="build" />
 
-	<property name="prebuilt.gaz.loc" value="http://opensextant.org/downloads/gazdata" />
-	<property name="prebuilt.gaz.name" value="opensextant-gazetteer.zip" />
-
+	<property name="publish.gaz.name" value="opensextant-gazetteer.zip" />
+	
 	<!--====================== Targets ============================-->
 
 	<!-- delete and re-create build dir -->
@@ -23,7 +22,7 @@
 		<tstamp />
 	</target>
 
-	<!-- set the proxy if behind a firewall (needed for ivy and get) -->
+	<!-- set the proxy if behind a firewall (needed for ivy) -->
 	<target name="setProxy">
 		<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
 	</target>
@@ -32,23 +31,9 @@
 	<target name="getDependencies" depends="setProxy,clean">
 		<ivy:retrieve pattern="${build.dir}/[artifact].[ext]" />
 		<ivy:report todir="${build.dir}/ivy-report" graph="false"/>
-		<unzip src="${build.dir}/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
+		<unzip src="${build.dir}/${publish.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
 	</target>
 	
-	
-	<!-- fetch the prebuilt gazetteer data from opensextant.org -->
-	<target name="fetch.prebuilt.gaz" depends="setProxy">
-		<mkdir dir="${basedir}/resources/geoGazetteer" />
-		<echo> Retrieving prebuilt gazetteer from opensextant.org</echo>
-		<get src="${prebuilt.gaz.loc}/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
-		<unzip src="${basedir}/resources/geoGazetteer/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
-	</target>
-
-	<!-- unzip the prebuilt gazetteer data set -->
-	<target name="unzip.prebuilt.gaz" depends="">
-		<unzip src="${basedir}/resources/geoGazetteer/${prebuilt.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
-	</target>
-
 	<!-- zip all of the resources together -->
 	<target name="zip" depends="getDependencies">
 		<!-- zip up the finished release -->

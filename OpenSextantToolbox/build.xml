@@ -68,8 +68,8 @@ Build file for OpenSextantToolbox.
 	<property name="solr.home" location="${basedir}/build/solr" />
 	
 	<!-- For testing we can use "MergedGazetteer_SMALL.txt", for production use MergedGazetteer.txt -->
-	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" /-->
-	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" />
+	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" />
+	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" /-->
 	
 	<!--property name="fieldnames.gaz" value="id,place_id,name,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,conflate_key,name_bias,id_bias,name_type,name_type_system,partition" /-->
 	<property name="index.vocab" value="${resources.home}/resources/Vocabularies/vocab.def" />
@@ -114,7 +114,8 @@ Build file for OpenSextantToolbox.
 
 
 	<!-- Properties for local GATE install -->
-	<property name="toolbox.plugin.dir" location="${gate.home}/plugins/OpenSextantToolbox" />
+	<property name="gate.plugin.dir" location="${gate.home}/plugins" />
+	<property name="toolbox.plugin.dir" location="${gate.plugin.dir}/OpenSextantToolbox" />
 
 
 	<!--====================== Targets ============================-->
@@ -564,25 +565,20 @@ Build file for OpenSextantToolbox.
 
 
 	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
-	<target name="toolbox.deploy" depends="">
-		<!-- create the target directory under GATE_HOME/plugins -->
-		<delete dir="${toolbox.plugin.dir}" />
-		<mkdir dir="${toolbox.plugin.dir}" />
-
-		<!-- copy over the plugins dir from release -->
-		<copy todir="${toolbox.plugin.dir}">
-			<fileset dir="${release.dir}/plugins/OpenSextantToolbox" />
-		</copy>
+	<target name="toolbox.deploy" depends="plugin">
+		<delete dir="${toolbox.plugin.dir}"/>
+		<!-- unzip the toolbox plugin zip into GATE_HOME/plugins -->
+		<unzip src="${build.dir}/opensextant-toolbox-plugin.zip" dest="${gate.plugin.dir}"/>
 
 		<!-- copy over the other jars libs from release -->
-		<copy todir="${toolbox.plugin.dir}/lib_extra">
-			<fileset dir="${release.dir}/lib/">
-				<include name="*.jar" />
-				<exclude name="**/GATE/**" />
-			</fileset>
-		</copy>
+			<copy todir="${toolbox.plugin.dir}/lib_extra">
+				<fileset dir="${lib.dir}/Standalone">
+					<include name="*.jar" />
+					<exclude name="**/GATE/**" />
+				</fileset>
+			</copy>
 
-		<echo> Remember to add -Dgate.class.path=./plugins/OpenSextantToolbox/lib_extra/* to your gate.l4j.ini or other start up script </echo>
+			<echo> Remember to add -Dgate.class.path=plugins/OpensextantToolbox/lib_extra/* to your gate.l4j.ini or other start up script </echo>
 
 	</target>
 </project>
