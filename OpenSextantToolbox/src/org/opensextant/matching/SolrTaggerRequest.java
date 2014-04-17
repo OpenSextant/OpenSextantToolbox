@@ -50,6 +50,8 @@ public class SolrTaggerRequest extends QueryRequest {
 
   @Override
   public Collection<ContentStream> getContentStreams() {
-    return Collections.singleton((ContentStream) new ContentStreamBase.StringStream(input));
+    ContentStreamBase.StringStream stream = new ContentStreamBase.StringStream(input);
+    stream.setContentType("application/octet-stream");
+    return Collections.singleton((ContentStream)stream);
   }
 }
