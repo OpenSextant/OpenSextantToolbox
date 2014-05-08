@@ -1,12 +1,16 @@
 ! PERIOD 1596
 " DQUOTE 8789
+“ DQUOTE 10
+” DQUOTE 10
 # DASH 10
-^ DASH 10
+^ DASH 10 NN 1
 | DASH 10
 $ NN 10
 % NN 10
 & CC 162
 ' TIC 317
+‘ TIC 1 DQUOTE 1
+’ TIC 1 DQUOTE 1
 '' DQUOTE 8789
 'd HVD 3 MD 2 DOD 1
 'll MD 10
@@ -16,6 +20,14 @@ $ NN 10
 't NOT 10
 'thirties NNS 1
 've HV 10
+’d HVD 3 MD 2 DOD 1
+’ll MD 10
+’m BEM 10
+’re BER 10
+’s POSS 20 BEZ 8 HVZ 4
+’t NOT 10
+’thirties NNS 1
+’ve HV 10
 ( OPENPAREN 2425
 ) CLOSEPAREN 2456
 * DASH 10
@@ -23,6 +35,8 @@ $ NN 10
 , COMMA 58333
 - DASH 3431
 -- DASH 3431
+– DASH 10
+— DASH 10
 -ing VBG 1
 -ism NN 2
 . PERIOD 49346
@@ -159,7 +173,7 @@ $ NN 10
 = DASH 1
 > DASH 1
 ? PERIOD 4692
-@ IN 1
+@ NN 10 IN 1 
 A NN 4 NP 1
 A-Z NP 5 NN 1
 A-bombs NN 1
@@ -2447,6 +2461,7 @@ Davy NP 3
 Dawn NP 1 NN 1
 Dawson NP 1
 De NP 55
+de NP 10
 De-Kooning NP 1
 DeCicco NP 1
 DeForest NP 1
@@ -9712,7 +9727,6 @@ Zurich NP 2
 Zworykin NP 2
 [ OPENPAREN 1
 ] CLOSEPAREN 1
-^ NN 1
 _ DASH 1
 ` APOS 10
 `` APOS 8837
@@ -11849,6 +11863,7 @@ avenging VBG 2
 avenue NN 46
 avenues NNS 5
 average JJ 64 NN 61 VB 5
+avg JJ 64 NN 61 VB 5
 averaged VBD 13
 averages NNS 10
 averaging VBG 8 NN 1
@@ -13261,6 +13276,7 @@ boundary NN 16
 bounded VBN 7 VBD 2
 bounding VBG 2
 boundless JJ 2
+boundaryless JJ 2
 bounds NNS 10
 bounty NN 3
 bouquet NN 4
@@ -15524,7 +15540,7 @@ column-shaped JJ 1
 columnist NN 5
 columnists NNS 2
 columns NNS 36
-com VB 1
+com NN 10 VB 1
 comas NNS 1
 comb NN 6
 combat NN 23 VB 4
@@ -37055,7 +37071,7 @@ savor NN 1
 savored VBD 2 VBN 1
 savoring VBG 3
 savory JJ 4
-savvy VB 1
+savvy VB 2 JJ 1
 saw VBD 338 VB 9 NN 5
 saw-horse NN 1
 sawdust NN 3
@@ -42044,6 +42060,7 @@ tiered JJ 1
 tiers NNS 3
 ties NNS 13 VBZ 2
 tiger NN 8
+tigers NNS 8
 tight JJ 22 RB 6
 tight-turn NN 1
 tighten VB 3
@@ -45682,5 +45699,13 @@ zoomed VBD 1
 zooming VBG 1
 zooms VBZ 1
 zorrillas NNS 1
+μg NN 1
+org	NN 1
+http NN 1
+url NN 1
+id NN 1
+tinyurl NN 1
+prefix NN 1
+postfix NN 1
 { OPENPAREN 10
 } CLOSEPAREN 10

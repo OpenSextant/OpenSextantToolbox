@@ -392,13 +392,13 @@
                 <entry>
                   <string>guesserNgramFileURL</string>
                   <gate.util.persistence.PersistenceManager-URLHolder>
-                    <urlString>$relpath$../resources/PartOfSpeech/ngrams-guesser.txt</urlString>
+                    <urlString>$relpath$../resources/PartOfSpeech/ngrams-main.txt</urlString>
                   </gate.util.persistence.PersistenceManager-URLHolder>
                 </entry>
                 <entry>
                   <string>guesserLexiconFileURL</string>
                   <gate.util.persistence.PersistenceManager-URLHolder>
-                    <urlString>$relpath$../resources/PartOfSpeech/lexicon-guesser.txt</urlString>
+                    <urlString>$relpath$../resources/PartOfSpeech/lexicon-main.txt</urlString>
                   </gate.util.persistence.PersistenceManager-URLHolder>
                 </entry>
                 <entry>
