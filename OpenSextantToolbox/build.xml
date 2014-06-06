@@ -68,8 +68,8 @@ Build file for OpenSextantToolbox.
 	<property name="solr.home" location="${basedir}/build/solr" />
 	
 	<!-- For testing we can use "MergedGazetteer_SMALL.txt", for production use MergedGazetteer.txt -->
-	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" />
-	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" /-->
+	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" /-->
+	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" />
 	
 	<!--property name="fieldnames.gaz" value="id,place_id,name,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,conflate_key,name_bias,id_bias,name_type,name_type_system,partition" /-->
 	<property name="index.vocab" value="${resources.home}/resources/Vocabularies/vocab.def" />
@@ -398,6 +398,10 @@ Build file for OpenSextantToolbox.
 	<!-- Copy over the some misc config stuff -->
 	<target name="release.misc">
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/log4j.properties" />
+		<copy todir="${release.dir}/etc" file="${basedir}/etc/service-config.properties" />
+		<copy todir="${release.dir}/scripts"  >
+			<fileset dir="${basedir}/scripts" />
+			</copy>
 		<copy todir="${release.dir}" file="${basedir}/gate/gate.xml" />
 		<copy todir="${release.dir}" file="${basedir}/gate/user-gate.xml" />
 		<copy todir="${release.dir}" file="${basedir}/examples.xml" />

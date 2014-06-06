@@ -93,5 +93,22 @@
 	<classpathentry kind="lib" path="lib/Standalone/spatial4j.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/wstx-asl.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/zookeeper.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-core.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-databind.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-csv.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-smile.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-xml.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-yaml.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-module-jaxb-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.fileupload.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.jackson.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.json.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/org.restlet.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/org.restlet.lib.org.restlet.lib.org.json.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/snakeyaml.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/stax-api.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/stax2-api.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/woodstox-core-asl.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
