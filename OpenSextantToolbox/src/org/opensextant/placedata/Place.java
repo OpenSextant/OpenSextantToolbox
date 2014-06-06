@@ -110,7 +110,7 @@ public class Place implements Comparable<Object>, Serializable {
    * Is this Place a Country?
    * @return - true if this is a country or "country-like" place
    */
-  public boolean isCountry() {
+  public boolean isACountry() {
     return featureCode.startsWith("PCL");
   }
 
@@ -118,7 +118,7 @@ public class Place implements Comparable<Object>, Serializable {
    * Is this Place a State or Province?
    * @return - true if this is a State, Province or other first level admin area
    */
-  public boolean isAdmin1() {
+  public boolean isAnAdmin1() {
     return "ADM1".equalsIgnoreCase(featureCode);
   }
 

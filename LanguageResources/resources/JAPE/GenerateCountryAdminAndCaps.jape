@@ -75,7 +75,7 @@ Rule: PCisDirection
 			//TODO replace this with a general ADMIN annotation with a level
 			for (Place p : pc.getPlaces()) {
 				// if it is a country,generate a Country annotation
-				if (p.isCountry()) {
+				if (p.isACountry()) {
 					//System.out.println("Found a country " + p.toString());
 					FeatureMap countryFeats = Factory.newFeatureMap();
 					countryFeats.put("string", pc.getPlaceName());
@@ -89,7 +89,7 @@ Rule: PCisDirection
 				}
 				
 				//if it is a state/province, generate a Admin1 annotation
-				if (p.isAdmin1()) {
+				if (p.isAnAdmin1()) {
 					//System.out.println("Found a ADM1 " + p.toString());
 					FeatureMap admFeats = Factory.newFeatureMap();
 					admFeats.put("string", pc.getPlaceName());
