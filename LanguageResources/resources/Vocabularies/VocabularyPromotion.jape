@@ -44,7 +44,13 @@ Rule: Promote
 		// minor  becomes hierarchy feature
 
 		if(minor != null ){
-		  fm.put("hierarchy",minor);
+			String[] subPieces = minor.split("\\.", 2);
+			if (subPieces.length == 2) {
+				String family = subPieces[0];
+				String hier = subPieces[1];
+				fm.put("hierarchy",hier);
+				fm.put("posFamily",family);
+			}
 		 }
    
 		// remove the now redundant major and minor types
