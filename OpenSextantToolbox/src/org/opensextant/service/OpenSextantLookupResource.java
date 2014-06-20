@@ -26,142 +26,140 @@ import org.restlet.resource.ServerResource;
 
 public class OpenSextantLookupResource extends ServerResource {
 
-	@Get()
-	public Representation doGet() {
+  @Get()
+  public Representation doGet() {
 
-		Request req = this.getRequest();
-		// get the submitted attributes
-		ConcurrentMap<String, Object> attrs = req.getAttributes();
-		String format = (String) attrs.get("format");
-		String placeName = (String) attrs.get("placename");
-		String country = (String) attrs.get("country");
-		String rawQuery = (String) attrs.get("query");
+    Request req = this.getRequest();
+    // get the submitted attributes
+    ConcurrentMap<String, Object> attrs = req.getAttributes();
+    String format = (String) attrs.get("format");
+    String placeName = (String) attrs.get("placename");
+    String country = (String) attrs.get("country");
+    String rawQuery = (String) attrs.get("query");
 
-		PlacenameSearcher s = MatcherFactory.getSearcher();
-		String query;
-		
-		if (rawQuery == null) {
-			query = "name:" + placeName;
-			if (country != null) {
-				query = query + " AND cc:" + country;
-			}
-		}else{
-			query = Reference.decode(rawQuery);
-		}
+    PlacenameSearcher s = MatcherFactory.getSearcher();
+    String query;
 
-		System.out.println("Query is" + query);
-		List<Place> placesFound = s.searchByQueryString(query);
-		System.out.println("Found " + placesFound.size() + " places");
+    if (rawQuery == null) {
+      query = "name:" + placeName;
+      if (country != null) {
+        query = query + " AND cc:" + country;
+      }
+    } else {
+      query = Reference.decode(rawQuery);
+    }
 
-		if (format.equalsIgnoreCase("json")) {
-			JacksonRepresentation<List<Place>> jackRep = new JacksonRepresentation<List<Place>>(
-					MediaType.APPLICATION_JSON, placesFound);
-			return jackRep;
-		}
+    System.out.println("Query is" + query);
+    List<Place> placesFound = s.searchByQueryString(query);
+    System.out.println("Found " + placesFound.size() + " places");
 
-		if (format.equalsIgnoreCase("csv")) {
-			StringBuffer buff = new StringBuffer();
+    if (format.equalsIgnoreCase("json")) {
+      JacksonRepresentation<List<Place>> jackRep = new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON,
+          placesFound);
+      return jackRep;
+    }
 
-			buff.append("PlaceName\tExpandedPlaceName\tNameType\tNameTypeSystem\tCountryCode\tAdmin1\tAdmin2\tFeatureClass\tFeatureCode\tLatitude\tLongitude\tSource\n");
+    if (format.equalsIgnoreCase("csv")) {
+      StringBuffer buff = new StringBuffer();
 
-			for (Place pl : placesFound) {
-				buff.append(ifNull(pl.getPlaceName()) + "\t");
-				buff.append(ifNull(pl.getExpandedPlaceName()) + "\t");
-				buff.append(ifNull(pl.getNameType()) + "\t");
-				buff.append(ifNull(pl.getNameTypeSystem()) + "\t");
-				buff.append(ifNull(pl.getCountryCode()) + "\t");
-				buff.append(ifNull(pl.getAdmin1()) + "\t");
-				buff.append(ifNull(pl.getAdmin2()) + "\t");
-				buff.append(ifNull(pl.getFeatureClass()) + "\t");
-				buff.append(ifNull(pl.getFeatureCode()) + "\t");
-				buff.append(ifNull(pl.getLatitude().toString()) + "\t");
-				buff.append(ifNull(pl.getLongitude().toString()) + "\t");
-				buff.append(ifNull(pl.getSource()) + "\t");
-				buff.append("\n");
-			}
+      buff.append("PlaceName\tExpandedPlaceName\tNameType\tNameTypeSystem\tCountryCode\tAdmin1\tAdmin2\tFeatureClass\tFeatureCode\tLatitude\tLongitude\tSource\n");
 
-			StringRepresentation rep = new StringRepresentation(buff.toString());
+      for (Place pl : placesFound) {
+        buff.append(ifNull(pl.getPlaceName()) + "\t");
+        buff.append(ifNull(pl.getExpandedPlaceName()) + "\t");
+        buff.append(ifNull(pl.getNameType()) + "\t");
+        buff.append(ifNull(pl.getNameTypeSystem()) + "\t");
+        buff.append(ifNull(pl.getCountryCode()) + "\t");
+        buff.append(ifNull(pl.getAdmin1()) + "\t");
+        buff.append(ifNull(pl.getAdmin2()) + "\t");
+        buff.append(ifNull(pl.getFeatureClass()) + "\t");
+        buff.append(ifNull(pl.getFeatureCode()) + "\t");
+        buff.append(ifNull(pl.getLatitude().toString()) + "\t");
+        buff.append(ifNull(pl.getLongitude().toString()) + "\t");
+        buff.append(ifNull(pl.getSource()) + "\t");
+        buff.append("\n");
+      }
 
-			return rep;
-		}
+      StringRepresentation rep = new StringRepresentation(buff.toString());
 
-		return new StringRepresentation("Unknown format:" + format);
+      return rep;
+    }
 
-	}
+    return new StringRepresentation("Unknown format:" + format);
 
-	@Put
-	public Representation doPut(Representation entity) throws Exception {
+  }
 
-		return handle(this.getRequest());
-	}
+  @Put
+  public Representation doPut(Representation entity) throws Exception {
 
-	@Post()
-	public Representation doPost(Representation entity) throws Exception {
+    return handle(this.getRequest());
+  }
 
-		return handle(this.getRequest());
-	}
+  @Post()
+  public Representation doPost(Representation entity) throws Exception {
 
-	private Representation handle(Request req) {
+    return handle(this.getRequest());
+  }
 
-		ConcurrentMap<String, Object> attrs = req.getAttributes();
-		Representation ent = req.getEntity();
+  private Representation handle(Request req) {
 
-		RestletFileUpload fileupload = new RestletFileUpload(
-				new DiskFileItemFactory());
-		List<FileItem> fileItems = null;
-		try {
-			fileItems = fileupload.parseRepresentation(ent);
-		} catch (FileUploadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    ConcurrentMap<String, Object> attrs = req.getAttributes();
+    Representation ent = req.getEntity();
 
-		for (FileItem fileItem : fileItems) {
-			String fieldName = fileItem.getFieldName();
-			String contentType = fileItem.getContentType();
-			System.out.println("fieldname=" + fieldName);
-			System.out.println("contentType =" + contentType);
-			InputStream is = null;
-			try {
-				is = fileItem.getInputStream();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (is != null) {
-				Representation in = new InputRepresentation(is);
-				try {
-					in.write(System.out);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
+    RestletFileUpload fileupload = new RestletFileUpload(new DiskFileItemFactory());
+    List<FileItem> fileItems = null;
+    try {
+      fileItems = fileupload.parseRepresentation(ent);
+    } catch (FileUploadException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
 
-		String meth = req.getMethod().getName();
-		String attrString = "";
-		for (String n : attrs.keySet()) {
-			attrString = attrString + "\n" + n + "=" + attrs.get(n).toString();
-		}
-		String extractType = (String) attrs.get("type");
-		String format = (String) attrs.get("format");
-		String content = (String) attrs.get("content");
+    for (FileItem fileItem : fileItems) {
+      String fieldName = fileItem.getFieldName();
+      String contentType = fileItem.getContentType();
+      System.out.println("fieldname=" + fieldName);
+      System.out.println("contentType =" + contentType);
+      InputStream is = null;
+      try {
+        is = fileItem.getInputStream();
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      if (is != null) {
+        Representation in = new InputRepresentation(is);
+        try {
+          in.write(System.out);
+        } catch (IOException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+      }
+    }
 
-		String retString = "You requested a " + meth
-				+ " Lookup with attributes= " + attrString;
+    String meth = req.getMethod().getName();
+    String attrString = "";
+    for (String n : attrs.keySet()) {
+      attrString = attrString + "\n" + n + "=" + attrs.get(n).toString();
+    }
+    String extractType = (String) attrs.get("type");
+    String format = (String) attrs.get("format");
+    String content = (String) attrs.get("content");
 
-		Representation ret = new StringRepresentation(retString);
+    String retString = "You requested a " + meth + " Lookup with attributes= " + attrString;
 
-		return ret;
-	}
+    Representation ret = new StringRepresentation(retString);
 
-	private String ifNull(String in) {
-		if (in == null) {
-			return "";
-		}
+    return ret;
+  }
 
-		return in;
-	}
+  private String ifNull(String in) {
+    if (in == null) {
+      return "";
+    }
+
+    return in;
+  }
 
 }

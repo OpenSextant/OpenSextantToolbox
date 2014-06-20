@@ -455,7 +455,7 @@ Build file for OpenSextantToolbox.
 
 	</target>
 
-	<!-- the following two targets asssume a release has been built but doesn't trigger one if it is not -->
+	<!-- the following targets asssume a release has been built but doesn't trigger one if it is not -->
 
 	<!-- run some simple examples -->
 	<target name="run.examples">
@@ -580,6 +580,7 @@ Build file for OpenSextantToolbox.
 					<include name="*.jar" />
 					<exclude name="**/GATE/**" />
 				</fileset>
+				<fileset file="${build.dir}/opensextant.jar" />
 			</copy>
 
 			<echo> Remember to add -Dgate.class.path=plugins/OpensextantToolbox/lib_extra/* to your gate.l4j.ini or other start up script </echo>

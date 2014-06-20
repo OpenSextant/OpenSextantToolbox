@@ -1,7 +1,7 @@
 <ivysettings>
 	<settings defaultResolver="External" overwriteMode="newer" />
 	<!--  location for Restlet stuff -->
-	<property name="nexus-restlet" value="http://maven.restlet.org" />
+	<property name="restlet-repo" value="http://maven.restlet.org" />
 	<!-- location of nexus snapshots repo -->
 	<property name="nexus-snapshots" value="https://oss.sonatype.org/content/repositories/snapshots" />
 
@@ -13,7 +13,7 @@
 		<chain name="External" dual="false">
 			<ibiblio name="maven2" m2compatible="true" />
 			<ibiblio name="nexus" m2compatible="true" root="${nexus-snapshots}" />
-			<ibiblio name="restlet" m2compatible="true" root="${nexus-restlet}" />
+			<ibiblio name="restlet" m2compatible="true" root="${restlet-repo}" />
 		</chain>
 
 	</resolvers>

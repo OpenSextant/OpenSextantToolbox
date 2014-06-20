@@ -30,206 +30,203 @@ import org.opensextant.service.OpenSextantExtractorResource;
 
 public class DocumentProcessorPool {
 
-	private Map<String, BlockingQueue<DocumentProcessor>> poolMap = new HashMap<String, BlockingQueue<DocumentProcessor>>();
+  private Map<String, BlockingQueue<DocumentProcessor>> poolMap = new HashMap<String, BlockingQueue<DocumentProcessor>>();
 
-	public DocumentProcessorPool(Properties prop) {
+  public DocumentProcessorPool(Properties prop) {
 
-		String gateHomeString = prop.getProperty("os.service.gate.home");
-		File gateHome = new File(gateHomeString);
+    String gateHomeString = prop.getProperty("os.service.gate.home");
+    File gateHome = new File(gateHomeString);
 
-		String gappHomeString = prop.getProperty("os.service.gapp.home");
-		File gappHome = new File(gappHomeString);
+    String gappHomeString = prop.getProperty("os.service.gapp.home");
+    File gappHome = new File(gappHomeString);
 
-		String[] apps = prop.getProperty("os.service.appnames").split(",");
+    String[] apps = prop.getProperty("os.service.appnames").split(",");
 
-		Gate.setGateHome(gateHome);
-		Gate.setUserConfigFile(new File(gateHome, "user-gate.xml"));
-		try {
-			Gate.init();
-		} catch (GateException e) {
-			e.printStackTrace();
-		}
-		
-		for (String app : apps) {
-			String gapp = prop.getProperty("os.service.app." + app + ".gapp");
-			int poolSize = Integer.parseInt(prop.getProperty("os.service.app."+ app + ".poolsize"));
+    Gate.setGateHome(gateHome);
+    Gate.setUserConfigFile(new File(gateHome, "user-gate.xml"));
+    try {
+      Gate.init();
+    } catch (GateException e) {
+      e.printStackTrace();
+    }
 
-			File gappFile = new File(gappHome, gapp);
+    for (String app : apps) {
+      String gapp = prop.getProperty("os.service.app." + app + ".gapp");
+      int poolSize = Integer.parseInt(prop.getProperty("os.service.app." + app + ".poolsize"));
 
-			this.addProcess(app, gappFile, poolSize);
+      File gappFile = new File(gappHome, gapp);
 
-		}
+      this.addProcess(app, gappFile, poolSize);
 
-	}
+    }
 
-	private void addProcess(String processName, File gappFile, int poolSize) {
+  }
 
-		CorpusController template = null;
+  private void addProcess(String processName, File gappFile, int poolSize) {
 
-		try {
-			template = (CorpusController) PersistenceManager
-					.loadObjectFromFile(gappFile);
-		} catch (PersistenceException e) {
-			e.printStackTrace();
-		} catch (ResourceInstantiationException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    CorpusController template = null;
 
-		ArrayBlockingQueue<DocumentProcessor> pool = new ArrayBlockingQueue<DocumentProcessor>(
-				poolSize);
+    try {
+      template = (CorpusController) PersistenceManager.loadObjectFromFile(gappFile);
+    } catch (PersistenceException e) {
+      e.printStackTrace();
+    } catch (ResourceInstantiationException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
-		DocumentProcessor dp = new DocumentProcessor(template);
-		pool.add(dp);
+    ArrayBlockingQueue<DocumentProcessor> pool = new ArrayBlockingQueue<DocumentProcessor>(poolSize);
 
-		for (int i = 0; i < poolSize - 1; i++) {
+    DocumentProcessor dp = new DocumentProcessor(template);
+    pool.add(dp);
 
-			try {
-				CorpusController tmp = (CorpusController) Factory
-						.duplicate(template);
-				DocumentProcessor dpTmp = new DocumentProcessor(tmp);
-				pool.add(dpTmp);
+    for (int i = 0; i < poolSize - 1; i++) {
 
-			} catch (ResourceInstantiationException e) {
-				e.printStackTrace();
-			}
+      try {
+        CorpusController tmp = (CorpusController) Factory.duplicate(template);
+        DocumentProcessor dpTmp = new DocumentProcessor(tmp);
+        pool.add(dpTmp);
 
-		}
+      } catch (ResourceInstantiationException e) {
+        e.printStackTrace();
+      }
 
-		poolMap.put(processName, pool);
+    }
 
-	}
+    poolMap.put(processName, pool);
 
-	private Document process(String name, Document doc) {
+  }
 
-		DocumentProcessor processor = null;
+  private Document process(String name, Document doc) {
 
-		try {
-			processor = poolMap.get(name).take();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    DocumentProcessor processor = null;
 
-		try {
-			processor.process(doc);
-		} finally {
-			poolMap.get(name).add(processor);
-		}
+    try {
+      processor = poolMap.get(name).take();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
 
-		return doc;
-	}
+    try {
+      processor.process(doc);
+    } finally {
+      poolMap.get(name).add(processor);
+    }
 
-	public void cleanup() {
-		for (String name : poolMap.keySet()) {
-			for (DocumentProcessor dp : poolMap.get(name)) {
-				dp.cleanup();
-			}
-		}
-	}
+    return doc;
+  }
 
-	public Set<String> getProcessNames() {
-		return poolMap.keySet();
-	}
+  public void cleanup() {
+    for (String name : poolMap.keySet()) {
+      for (DocumentProcessor dp : poolMap.get(name)) {
+        dp.cleanup();
+      }
+    }
+  }
 
-	public Set<String> getResultFormats() {
-		return OpenSextantExtractorResource.getFormats();
-	}
-	
-	public int available(String name) {
-		return poolMap.get(name).size();
-	}
+  public Set<String> getProcessNames() {
+    return poolMap.keySet();
+  }
 
-	public String toString() {
-		StringBuffer buff = new StringBuffer();
-		for (String name : poolMap.keySet()) {
-			buff.append(name + "\t");
-			buff.append(poolMap.get(name).size());
-			buff.append("\n");
-		}
-		return buff.toString();
-	}
+  public Set<String> getResultFormats() {
+    return OpenSextantExtractorResource.getFormats();
+  }
 
-	public DocumentBean process(String extractType, String content) {
-		Document gateDoc = null;
+  public int available(String name) {
+    return poolMap.get(name).size();
+  }
 
-		try {
-			gateDoc = Factory.newDocument(content);
-		} catch (ResourceInstantiationException e) {
-			e.printStackTrace();
-		}
+  public String toString() {
+    StringBuffer buff = new StringBuffer();
+    for (String name : poolMap.keySet()) {
+      buff.append(name + "\t");
+      buff.append(poolMap.get(name).size());
+      buff.append("\n");
+    }
+    return buff.toString();
+  }
 
-		return gateDocToBean(process(extractType, gateDoc));
-	}
+  public DocumentBean process(String extractType, String content) {
+    Document gateDoc = null;
 
-	public DocumentBean process(String extractType, File content) {
-		Document gateDoc = null;
+    try {
+      gateDoc = Factory.newDocument(content);
+    } catch (ResourceInstantiationException e) {
+      e.printStackTrace();
+    }
 
-		try {
-			gateDoc = Factory.newDocument(content.toURI().toURL());
-		} catch (ResourceInstantiationException e) {
-			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-		}
+    return gateDocToBean(process(extractType, gateDoc));
+  }
 
-		return gateDocToBean(process(extractType, gateDoc));
-	}
+  public DocumentBean process(String extractType, File content) {
+    Document gateDoc = null;
 
-	public DocumentBean process(String extractType, URL content) {
-		Document gateDoc = null;
+    try {
+      gateDoc = Factory.newDocument(content.toURI().toURL());
+    } catch (ResourceInstantiationException e) {
+      e.printStackTrace();
+    } catch (MalformedURLException e) {
+      e.printStackTrace();
+    }
 
-		try {
-			gateDoc = Factory.newDocument(content);
-		} catch (ResourceInstantiationException e) {
-			e.printStackTrace();
-		}
+    return gateDocToBean(process(extractType, gateDoc));
+  }
 
-		return gateDocToBean(process(extractType, gateDoc));
-	}
+  public DocumentBean process(String extractType, URL content) {
+    Document gateDoc = null;
 
-	private DocumentBean gateDocToBean(Document doc) {
+    try {
+      gateDoc = Factory.newDocument(content);
+    } catch (ResourceInstantiationException e) {
+      System.err.println("Couldnt create content from "+ content.toExternalForm());
+      return null;
+    }
 
-		Set<String> featureNameSet = new HashSet<String>();
-		featureNameSet.add("isEntity");
-		AnnotationSet entitySet = doc.getAnnotations()
-				.get(null, featureNameSet);
+    return gateDocToBean(process(extractType, gateDoc));
+  }
 
-		DocumentBean db = new DocumentBean();
-		db.setContent(doc.getContent().toString());
+  private DocumentBean gateDocToBean(Document doc) {
 
-		for (Annotation a : entitySet) {
-			Anno tmpAnno = new Anno(a);
+    Set<String> featureNameSet = new HashSet<String>();
+    featureNameSet.add("isEntity");
+    AnnotationSet entitySet = doc.getAnnotations().get(null, featureNameSet);
 
-			String type = a.getType();
-			tmpAnno.setStart(a.getStartNode().getOffset());
-			tmpAnno.setEnd(a.getEndNode().getOffset());
-			tmpAnno.setType(type);
-			tmpAnno.setMatchText(Utils.cleanStringFor(doc, a));
+    DocumentBean db = new DocumentBean();
+    db.setContent(doc.getContent().toString());
 
-			if (type.equalsIgnoreCase("PLACE")) {
-				FeatureMap fm = a.getFeatures();
+    for (Annotation a : entitySet) {
+      Anno tmpAnno = new Anno(a);
 
-				tmpAnno.getFeatures().put("place", fm.get("bestPlace"));
-				tmpAnno.getFeatures().put("hierarchy", fm.get("hierarchy"));
-				db.addAnno(tmpAnno);
-				continue;
-			}
+      String type = a.getType();
+      tmpAnno.setStart(a.getStartNode().getOffset());
+      tmpAnno.setEnd(a.getEndNode().getOffset());
+      tmpAnno.setType(type);
+      tmpAnno.setMatchText(Utils.cleanStringFor(doc, a));
 
-			if (type.equalsIgnoreCase("ENTITY")) {
-				continue;
-			}
+      if (type.equalsIgnoreCase("PLACE")) {
+        FeatureMap fm = a.getFeatures();
 
-			FeatureMap fm = a.getFeatures();
-			for (Entry<Object, Object> e : fm.entrySet()) {
-				String k = (String) e.getKey();
-				Object v = e.getValue();
-				tmpAnno.getFeatures().put(k, v);
-			}
-			db.addAnno(tmpAnno);
-		}
+        tmpAnno.getFeatures().put("place", fm.get("bestPlace"));
+        tmpAnno.getFeatures().put("hierarchy", fm.get("hierarchy"));
+        db.addAnno(tmpAnno);
+        continue;
+      }
 
-		return db;
-	}
+      if (type.equalsIgnoreCase("ENTITY")) {
+        continue;
+      }
+
+      FeatureMap fm = a.getFeatures();
+      for (Entry<Object, Object> e : fm.entrySet()) {
+        String k = (String) e.getKey();
+        Object v = e.getValue();
+        tmpAnno.getFeatures().put(k, v);
+      }
+      db.addAnno(tmpAnno);
+    }
+
+    return db;
+  }
 
 }
