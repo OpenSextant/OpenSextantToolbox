@@ -31,6 +31,7 @@ public class OpenSextantServer {
 
     // Start the component.
     component.start();
+    System.out.println("OpenSextant REST server is ready");
   }
 
 }

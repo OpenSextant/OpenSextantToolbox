@@ -139,6 +139,7 @@ public class DocumentProcessorPool {
 
   public String toString() {
     StringBuffer buff = new StringBuffer();
+    buff.append("Extractor\tNumber in pool\n");
     for (String name : poolMap.keySet()) {
       buff.append(name + "\t");
       buff.append(poolMap.get(name).size());

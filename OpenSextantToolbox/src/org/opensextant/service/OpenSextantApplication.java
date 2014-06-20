@@ -23,7 +23,15 @@ public class OpenSextantApplication extends Application {
   public synchronized Restlet createInboundRoot() {
 
     // initialize the pool with settings in the property file
+    System.out.println("Initializing pool of extractors");
     dpPool = new DocumentProcessorPool(this.prop);
+    System.out.println("Warming up extractor pool");
+    // warm up the pool
+    String content = "We drove to Kabul.";
+    for(String p : dpPool.getProcessNames()){
+      dpPool.process(p, content);
+    }
+
     System.out.println(dpPool.toString());
 
     // set up the routes
