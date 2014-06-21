@@ -11,7 +11,7 @@ To start the OpenSextant REST server
  	 change os.service.app.geo.poolsize to indicate how many geotagger extractors to start
  	 change os.service.app.general.poolsize to indicate how many general purpose extractors start 
  	 
- 2) (Windows) double clink <OpenSextantHome>/scripts/start.bat
+ 2) (Windows) double click <OpenSextantHome>/scripts/start.bat
  
 Two types of services available
  1) Extraction - process a document to extract places, people, organizations,...
@@ -35,7 +35,7 @@ curl -X POST http://localhost:8182/opensextant/extract/geo/csv -d "@../testdata/
 -- POST using a form
 curl -X POST http://localhost:8182/opensextant/extract/geo/csv -F "infile=@../testdata/ace.txt"
 -- POST using a form and specifying the file type of the uploaded file
-curl -X POST http://localhost:8182/opensextant/extract/geo/csv -F "infile=@../testdata/ace.htm;type=text/html"
+curl -X POST http://localhost:8182/opensextant/extract/geo/csv -F "infile=@../testdata/ace.pdf;type=application/pdf"
 
 -- POST a file by sending in a URL where the file is located (URL string used must be URL safe (i.e. space,/.: etc replace by %-codes )
 -- NOTE that the REST SERVER (not the machine making the request) must be able to fetch the URL

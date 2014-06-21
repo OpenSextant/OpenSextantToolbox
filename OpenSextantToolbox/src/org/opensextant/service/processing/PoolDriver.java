@@ -30,8 +30,8 @@ public class PoolDriver {
 
     DocumentProcessorPool dpPool = new DocumentProcessorPool(prop);
 
-    String content = " This is some test content";
-    DocumentBean result = dpPool.process("geo", content);
+    String content = " They were attacked with baseball bats";
+    DocumentBean result = dpPool.process("general", content);
 
     dump(result);
 

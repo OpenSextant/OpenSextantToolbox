@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -233,15 +234,25 @@ public class OpenSextantExtractorResource extends ServerResource {
 
       StringBuffer buff = new StringBuffer();
 
-      buff.append("MatchText\tType\tStart\tEnd\tSnippet\tPlaceName\tCountryCode\tFeatureClass\tFeatureCode\tLatitude\tLongitude\n");
+      buff.append("MatchText\tType\tHierarchy\tStart\tEnd\tSnippet\tDate\tPlaceName\tCountryCode\tFeatureClass\tFeatureCode\tLatitude\tLongitude\n");
 
       for (Anno a : db.getAnnoList()) {
         String t = a.getType();
+        Map<String, Object> fm = a.getFeatures();
+        Object h = fm.get("hierarchy");
 
-        buff.append(a.getMatchText() + "\t" + t + "\t" + a.getStart() + "\t" + a.getEnd() + "\t");
+        buff.append(a.getMatchText() + "\t" + t + "\t" + h + "\t" + a.getStart() + "\t" + a.getEnd() + "\t");
         buff.append(db.getSnippet(a, 25));
 
-        Map<String, Object> fm = a.getFeatures();
+
+        if (t.equalsIgnoreCase("Date")) {
+          Date dt = (Date) fm.get("date");
+          buff.append("\t");
+          buff.append(dt.toString() + "\t");
+        }else{
+          buff.append("\t");
+        }
+
         if (t.equalsIgnoreCase("PLACE")) {
           Place pl = (Place) fm.get("place");
           buff.append("\t");

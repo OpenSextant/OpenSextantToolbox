@@ -10,15 +10,11 @@ ant file to run OpenSextantToolbox Examples.
 	<path id="examples.runtime.classpath">
 		<fileset dir="${toobox.home}/lib" includes="**/*.jar" />
 		<fileset dir="${toobox.home}/lib/GATE" includes="**/*.jar" />
-		<fileset dir="${toobox.home}/lib/Solr" includes="**/*.jar" />
-		<fileset dir="${toobox.home}/lib/Logging" includes="**/*.jar" />
 	</path>
 
 	<!-- classpath to run the components that don't need GATE -->
 	<path id="examples.runtime.standalone.classpath">
 		<fileset dir="${toobox.home}/lib" includes="**/*.jar" />
-		<fileset dir="${toobox.home}/lib/Solr" includes="**/*.jar" />
-		<fileset dir="${toobox.home}/lib/Logging" includes="**/*.jar" />
 	</path>
 
 
