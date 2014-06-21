@@ -18,5 +18,7 @@ improvised explosive device
 improvised explosive devices
 land mine
 land mines
+mortar shell
+mortar shells
 torpedo
 torpedoes

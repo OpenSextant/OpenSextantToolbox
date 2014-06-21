@@ -1474,6 +1474,7 @@ guard of honor
 guard of honors
 guards
 guardsman
+guardsmen
 guerrilla
 guerrillas
 guest
@@ -2941,6 +2942,8 @@ senior vp
 senior vps
 sentries
 sentry
+separatist
+separatists
 sergeant
 sergeant at arms
 sergeant first class

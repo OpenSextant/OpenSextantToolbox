@@ -18,6 +18,8 @@ bombardment
 bombardments
 cease fire
 cease fires
+cease-fire
+cease-fires
 ceasefire
 ceasefires
 combat

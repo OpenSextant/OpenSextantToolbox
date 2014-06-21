@@ -4,6 +4,8 @@ bag
 baggage
 baggages
 bags
+ballot box
+ballot boxes
 barrel
 barrels
 basin

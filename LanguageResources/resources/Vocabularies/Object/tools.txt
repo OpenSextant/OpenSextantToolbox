@@ -11,6 +11,8 @@ pickaxes
 pipe cutter
 pipe cutters
 saws
+sledgehammer
+sledgehammers
 shovel
 shovels
 trenching tool

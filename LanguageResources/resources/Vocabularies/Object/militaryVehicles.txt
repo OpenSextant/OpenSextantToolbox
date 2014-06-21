@@ -7,6 +7,8 @@ armored car
 armored cars
 armored fighting vehicle
 armored fighting vehicles
+armored infantry vehicle
+armored infantry vehicles
 armored personnel carrier
 armored personnel carriers
 armored recovery vehicle
@@ -27,6 +29,8 @@ armoured vehicle
 armoured vehicle launched bridge
 armoured vehicle launched bridges
 armoured vehicles
+combat vehicle
+combat vehicles
 combat engineering vehicle
 combat engineering vehicles
 command and control vehicle

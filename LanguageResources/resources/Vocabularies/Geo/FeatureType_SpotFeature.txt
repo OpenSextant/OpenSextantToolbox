@@ -704,6 +704,8 @@ police post
 police posts
 police station
 police stations
+polling station
+polling stations
 port
 ports
 post
@@ -760,6 +762,8 @@ railroad terminal
 railroad terminals
 railroad yard
 railroad yards
+railway station
+railway stations
 railyard
 railyards
 ramp

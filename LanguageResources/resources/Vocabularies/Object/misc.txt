@@ -3,6 +3,8 @@ barricade
 barricades
 barrier
 barriers
+baseball bat
+baseball bats
 binoculars
 bronze medal
 bronze medals
