@@ -31,14 +31,14 @@ curl -X POST http://localhost:8182/opensextant/extract/geo/
 
 -- 3 different ways to POST a text file to the "geo" extractor and return CSV format
 -- simple POST
-curl -X POST http://localhost:8182/opensextant/extract/geo/csv -d "@../testdata/ace.txt"
+curl -X POST http://localhost:8182/opensextant/extract/geo/csv -T "../testdata/ace.txt"
 -- POST using a form
 curl -X POST http://localhost:8182/opensextant/extract/geo/csv -F "infile=@../testdata/ace.txt"
 -- POST using a form and specifying the file type of the uploaded file
 curl -X POST http://localhost:8182/opensextant/extract/geo/csv -F "infile=@../testdata/ace.pdf;type=application/pdf"
 
 -- POST a file by sending in a URL where the file is located (URL string used must be URL safe (i.e. space,/.: etc replace by %-codes )
--- NOTE that the REST SERVER (not the machine making the request) must be able to fetch the URL
+-- NOTE that the REST SERVER (not the machine making the request) must be able to fetch the URL (e.g. proxies set ...)
 curl -X POST "http://localhost:8182/opensextant/extract/geo/csv/url/http%3A%2F%2Fwww.cnn.com%2F2014%2F06%2F20%2Fworld%2Feurope%2Fukraine-crisis%2Findex.html?hpt=wo_c2
 
 --- send the data as part of the REST URL (probably not a good idea for large amounts of text) 
