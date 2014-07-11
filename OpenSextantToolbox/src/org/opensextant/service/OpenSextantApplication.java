@@ -28,7 +28,7 @@ public class OpenSextantApplication extends Application {
     System.out.println("Warming up extractor pool");
     // warm up the pool
     String content = "We drove to Kabul.";
-    for(String p : dpPool.getProcessNames()){
+    for (String p : dpPool.getProcessNames()) {
       dpPool.process(p, content);
     }
 
@@ -53,12 +53,29 @@ public class OpenSextantApplication extends Application {
     router.attach("/lookup/{format}/{placename}/{country}", OpenSextantLookupResource.class);
     router.attach("/lookup/{format}/{placename}/{country}/", OpenSextantLookupResource.class);
 
+    // admin stuff
+    router.attach("/admin", OpenSextantAdminResource.class);
+    router.attach("/admin/", OpenSextantAdminResource.class);
+    router.attach("/admin/{operation}", OpenSextantAdminResource.class);
+    router.attach("/admin/{operation}/", OpenSextantAdminResource.class);
+
     return router;
   }
 
   // accessor for the pool
   public DocumentProcessorPool getPool() {
     return this.dpPool;
+  }
+
+  /*
+   * (non-Javadoc)
+   * @see org.restlet.Application#stop()
+   */
+  @Override
+  public synchronized void stop() throws Exception {
+    // TODO Auto-generated method stub
+    this.dpPool.cleanup();
+    super.stop();
   }
 
 }

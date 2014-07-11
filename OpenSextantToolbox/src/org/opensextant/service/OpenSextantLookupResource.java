@@ -143,9 +143,9 @@ public class OpenSextantLookupResource extends ServerResource {
     for (String n : attrs.keySet()) {
       attrString = attrString + "\n" + n + "=" + attrs.get(n).toString();
     }
-    String extractType = (String) attrs.get("type");
-    String format = (String) attrs.get("format");
-    String content = (String) attrs.get("content");
+   // String extractType = (String) attrs.get("type");
+  //  String format = (String) attrs.get("format");
+   // String content = (String) attrs.get("content");
 
     String retString = "You requested a " + meth + " Lookup with attributes= " + attrString;
 

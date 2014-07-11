@@ -31,7 +31,9 @@ import org.opensextant.service.OpenSextantExtractorResource;
 public class DocumentProcessorPool {
 
   private Map<String, BlockingQueue<DocumentProcessor>> poolMap = new HashMap<String, BlockingQueue<DocumentProcessor>>();
-
+  private  long docsProcessedCount =0L;
+  private  long docsFailedCount =0L;
+  
   public DocumentProcessorPool(Properties prop) {
 
     String gateHomeString = prop.getProperty("os.service.gate.home");
@@ -76,26 +78,27 @@ public class DocumentProcessorPool {
       e.printStackTrace();
     }
 
-    ArrayBlockingQueue<DocumentProcessor> pool = new ArrayBlockingQueue<DocumentProcessor>(poolSize);
+    if (poolSize > 0) {
+      ArrayBlockingQueue<DocumentProcessor> pool = new ArrayBlockingQueue<DocumentProcessor>(poolSize);
 
-    DocumentProcessor dp = new DocumentProcessor(template);
-    pool.add(dp);
+      DocumentProcessor dp = new DocumentProcessor(template);
+      pool.add(dp);
 
-    for (int i = 0; i < poolSize - 1; i++) {
+      for (int i = 0; i < poolSize - 1; i++) {
 
-      try {
-        CorpusController tmp = (CorpusController) Factory.duplicate(template);
-        DocumentProcessor dpTmp = new DocumentProcessor(tmp);
-        pool.add(dpTmp);
+        try {
+          CorpusController tmp = (CorpusController) Factory.duplicate(template);
+          DocumentProcessor dpTmp = new DocumentProcessor(tmp);
+          pool.add(dpTmp);
 
-      } catch (ResourceInstantiationException e) {
-        e.printStackTrace();
+        } catch (ResourceInstantiationException e) {
+          e.printStackTrace();
+        }
+
       }
 
+      poolMap.put(processName, pool);
     }
-
-    poolMap.put(processName, pool);
-
   }
 
   private Document process(String name, Document doc) {
@@ -110,7 +113,10 @@ public class DocumentProcessorPool {
 
     try {
       processor.process(doc);
+    } catch (Exception e) {
+      docsFailedCount++;
     } finally {
+      docsProcessedCount++;
       poolMap.get(name).add(processor);
     }
 
@@ -135,6 +141,15 @@ public class DocumentProcessorPool {
 
   public int available(String name) {
     return poolMap.get(name).size();
+  }
+
+  public Map<String, Integer> available() {
+    Map<String, Integer> avail = new HashMap<String, Integer>();
+    for (String name : poolMap.keySet()) {
+      avail.put(name, available(name));
+    }
+
+    return avail;
   }
 
   public String toString() {
@@ -180,7 +195,7 @@ public class DocumentProcessorPool {
     try {
       gateDoc = Factory.newDocument(content);
     } catch (ResourceInstantiationException e) {
-      System.err.println("Couldnt create content from "+ content.toExternalForm());
+      System.err.println("Couldnt create content from " + content.toExternalForm());
       return null;
     }
 
@@ -227,7 +242,23 @@ public class DocumentProcessorPool {
       db.addAnno(tmpAnno);
     }
 
+    // cleanup resources
+    Factory.deleteResource(doc);
     return db;
+  }
+
+  /**
+   * @return the docsProcessedCount
+   */
+  public  long getDocsProcessedCount() {
+    return docsProcessedCount;
+  }
+
+  /**
+   * @return the docsFailedCount
+   */
+  public  long getDocsFailedCount() {
+    return docsFailedCount;
   }
 
 }

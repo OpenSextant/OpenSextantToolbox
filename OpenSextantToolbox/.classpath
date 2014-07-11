@@ -110,5 +110,6 @@
 	<classpathentry kind="lib" path="lib/Standalone/stax-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/stax2-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/woodstox-core-asl.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/geojson-jackson.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

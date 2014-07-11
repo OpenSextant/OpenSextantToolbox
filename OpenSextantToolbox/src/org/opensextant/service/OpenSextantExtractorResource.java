@@ -17,6 +17,9 @@ import java.util.concurrent.ConcurrentMap;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.geojson.Feature;
+import org.geojson.FeatureCollection;
+import org.geojson.Point;
 import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
 import org.opensextant.service.processing.Anno;
@@ -42,6 +45,7 @@ public class OpenSextantExtractorResource extends ServerResource {
   static Set<String> formats = new HashSet<String>();
   static {
     formats.add("json");
+    formats.add("geojson");
     formats.add("xml");
     formats.add("csv");
   }
@@ -145,10 +149,9 @@ public class OpenSextantExtractorResource extends ServerResource {
     for (FileItem fileItem : fileItems) {
 
       if (fileItem.getFieldName().equalsIgnoreCase(filename)) {
-        InputStream is = null;
+        // InputStream is = null;
         URL url = null;
-        String ct = fileItem.getContentType();
-        // @SuppressWarnings("unused")
+        // String ct = fileItem.getContentType();
         String fn = fileItem.getName();
 
         try {
@@ -207,9 +210,9 @@ public class OpenSextantExtractorResource extends ServerResource {
     if (dpPool.getProcessNames().contains(extractType)) {
       DocumentBean doc = dpPool.process(extractType, content);
 
-      if(doc != null){
+      if (doc != null) {
         return convertResult(doc, resultFormat);
-      }else{
+      } else {
         return new StringRepresentation("Couldnt extract content from:" + content.toExternalForm());
       }
 
@@ -222,6 +225,51 @@ public class OpenSextantExtractorResource extends ServerResource {
 
     if (resultFormat.equalsIgnoreCase("json")) {
       JacksonRepresentation<DocumentBean> jackRep = new JacksonRepresentation<DocumentBean>(db);
+      return jackRep;
+    }
+
+    if (resultFormat.equalsIgnoreCase("geojson")) {
+      FeatureCollection coll = new FeatureCollection();
+
+      for (Anno a : db.getAnnoList()) {
+        Feature ft = new Feature();
+        String t = a.getType();
+        Map<String, Object> fm = a.getFeatures();
+        Object h = fm.get("hierarchy");
+
+        ft.setProperty("matchtext", a.getMatchText());
+        ft.setProperty("entitytype", t);
+        ft.setProperty("hierarchy", h);
+        ft.setProperty("start", a.getStart());
+        ft.setProperty("end", a.getEnd());
+        ft.setProperty("snippet", db.getSnippet(a, 25));
+        ft.setGeometry(null);
+
+        if (t.equalsIgnoreCase("Date")) {
+          Date dt = (Date) fm.get("date");
+          ft.setProperty("date", dt.toString());
+        }
+
+        if (t.equalsIgnoreCase("PLACE")) {
+          Place pl = (Place) fm.get("place");
+          ft.setProperty("placeName", pl.getPlaceName());
+          ft.setProperty("countrycode", pl.getCountryCode());
+          ft.setProperty("featureclass", pl.getFeatureClass());
+          ft.setProperty("featurecode", pl.getFeatureCode());
+          Point pt = new Point(pl.getLongitude(), pl.getLatitude());
+          ft.setGeometry(pt);
+        }
+
+        if (t.equalsIgnoreCase("GEOCOORD")) {
+          Geocoord geo = (Geocoord) fm.get("geo");
+          Point pt = new Point(geo.getLongitude(), geo.getLatitude());
+          ft.setGeometry(pt);
+        }
+
+        coll.add(ft);
+      }
+
+      JacksonRepresentation<FeatureCollection> jackRep = new JacksonRepresentation<FeatureCollection>(coll);
       return jackRep;
     }
 
@@ -244,12 +292,11 @@ public class OpenSextantExtractorResource extends ServerResource {
         buff.append(a.getMatchText() + "\t" + t + "\t" + h + "\t" + a.getStart() + "\t" + a.getEnd() + "\t");
         buff.append(db.getSnippet(a, 25));
 
-
         if (t.equalsIgnoreCase("Date")) {
           Date dt = (Date) fm.get("date");
           buff.append("\t");
           buff.append(dt.toString() + "\t");
-        }else{
+        } else {
           buff.append("\t");
         }
 

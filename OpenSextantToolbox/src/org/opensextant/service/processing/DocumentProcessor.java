@@ -18,7 +18,7 @@ public class DocumentProcessor {
 
   public synchronized void cleanup() {
     Factory.deleteResource(controller);
-    if (corpus == null) {
+    if (corpus != null) {
       Factory.deleteResource(corpus);
     }
   }

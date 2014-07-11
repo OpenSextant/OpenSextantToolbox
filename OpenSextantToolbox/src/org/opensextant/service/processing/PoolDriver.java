@@ -8,6 +8,10 @@ import java.util.Properties;
 
 public class PoolDriver {
 
+  private PoolDriver() {
+
+  }
+
   /**
    * @param args
    */

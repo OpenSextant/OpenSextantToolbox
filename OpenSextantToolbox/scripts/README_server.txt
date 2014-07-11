@@ -13,11 +13,13 @@ To start the OpenSextant REST server
  	 
  2) (Windows) double click <OpenSextantHome>/scripts/start.bat
  
-Two types of services available
+Three types of services available
  1) Extraction - process a document to extract places, people, organizations,...
     available at http://<hostname>:8182/opensextant/extract
  2) Lookups - query the geospatial gazetteer for place names by name, country and other attributes
 	available at http://<hostname>:8182/opensextant/lookup
+ 3) Administrive - get info on health of service and shutdown	
+    available at http://<hostname>:8182/opensextant/admin
 	
  Examples of using the OpenSextant REST server (replace "localhost" with actual hostname if calling from another machine)
 
@@ -66,3 +68,9 @@ cc 				- ISO 2 character country codes
 name_type 		- what type of name. Valid values are "name", "code" and "abbreviation"
 geo 			- the point location (lat/lon) for the named place
 
+ ------------Administrative Calls ---------
+-- Get a health report, returns status (green, yellow, red), number of docs processes or failed since startup and how many processors are available (i.e. not currently doing extraction)  
+curl -X GET http://localhost:8182/opensextant/admin/health
+
+-- shutdown the server (after a slight delay)
+curl -X GET http://localhost:8182/opensextant/admin/shutdown

@@ -9,6 +9,10 @@ import org.restlet.data.Protocol;
 
 public class OpenSextantServer {
 
+  private OpenSextantServer() {
+
+  }
+
   public static void main(String[] args) throws Exception {
 
     Properties prop = new Properties();
@@ -28,6 +32,7 @@ public class OpenSextantServer {
 
     // set the topmost route
     component.getDefaultHost().attach("/opensextant", app);
+    app.getContext().getAttributes().put("component", component);
 
     // Start the component.
     component.start();
