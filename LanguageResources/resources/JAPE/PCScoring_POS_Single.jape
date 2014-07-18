@@ -28,13 +28,14 @@
 
 Imports: {
 import org.opensextant.placedata.PlaceCandidate;
+import org.opensextant.placedata.Geocoord;
 }
 
 
 Phase: PCScoring_POS_Single
 Input: Token  FeatureType Country CountryCode 
 LocationPrepStrong LocationPrepWeak LocationPrepNeedsVerb LocationVerb LocationVerbNeedsPrep Person PersonTitle PersonVerb
-LocationContextPhrase geocoord CardinalDirection Organization placecandidate
+LocationContextPhrase GEOCOORD CardinalDirection Organization placecandidate
 Options: control = all
 
 
@@ -304,34 +305,46 @@ Rule: RegisteredPC
 //Wazi 1234N 01234W
 Rule: PCwithGeocoordPlain
 (
-	({placecandidate}):pc ({geocoord}):geo
+	({placecandidate}):pc ({GEOCOORD}):geo
 ):phrase
 -->
 {
 	gate.AnnotationSet pcSet = bindings.get("pc");
 	gate.Annotation pc = pcSet.iterator().next();
 	
+	gate.AnnotationSet geoSet = bindings.get("geo");
+	gate.Annotation geo = geoSet.iterator().next();
+	gate.FeatureMap geoFeatures = geo.getFeatures();
+	Geocoord geoObj = (Geocoord) geoFeatures.get("geo");
+	
 	gate.FeatureMap pcFeatures = pc.getFeatures();
 	PlaceCandidate pcObj = (PlaceCandidate) pcFeatures.get("placeCandidate");
 
 	pcObj.addRuleAndConfidence(ruleName(), 1.0 );
+	pcObj.addGeocoordEvidence(ruleName(), 1.0, geoObj);
 }
 
 //-------------------------------------------------------------
 //Wazi 1234N 01234W
 Rule: PCwithGeocoordParens
 (
-	({placecandidate}):pc {Token.string ==~ "\\("} ({geocoord}):geo
+	({placecandidate}):pc {Token.string ==~ "\\("} ({GEOCOORD}):geo
 ):phrase
 -->
 {
 	gate.AnnotationSet pcSet = bindings.get("pc");
 	gate.Annotation pc = pcSet.iterator().next();
 	
+	gate.AnnotationSet geoSet = bindings.get("geo");
+	gate.Annotation geo = geoSet.iterator().next();
+	gate.FeatureMap geoFeatures = geo.getFeatures();
+	Geocoord geoObj = (Geocoord) geoFeatures.get("geo");
+	
 	gate.FeatureMap pcFeatures = pc.getFeatures();
 	PlaceCandidate pcObj = (PlaceCandidate) pcFeatures.get("placeCandidate");
 
 	pcObj.addRuleAndConfidence(ruleName(), 1.0 );
+	pcObj.addGeocoordEvidence(ruleName(), 1.0, geoObj);
 }
 
 //-------------------------------------------------------------
@@ -339,36 +352,47 @@ Rule: PCwithGeocoordParens
 Rule: PCwithGeocoordAndPunct
 (
 	({placecandidate}):pc 
-	  ( {Token.string ==~ "[(|\\[]"} ) ({Token.string ==~ "geo|mgrs|mgr|geocoord|GEO|MGR|MGRS|GEOCOORD"} ( {Token.string ==~ "[:;]"})? )? ({geocoord}):geo
+	  ( {Token.string ==~ "[(|\\[]"} ) ({Token.string ==~ "geo|mgrs|mgr|geocoord|GEO|MGR|MGRS|GEOCOORD"} ( {Token.string ==~ "[:;]"})? )? ({GEOCOORD}):geo
 ):phrase
 -->
 {
 	gate.AnnotationSet pcSet = bindings.get("pc");
 	gate.Annotation pc = pcSet.iterator().next();
 	
+	gate.AnnotationSet geoSet = bindings.get("geo");
+	gate.Annotation geo = geoSet.iterator().next();
+	gate.FeatureMap geoFeatures = geo.getFeatures();
+	Geocoord geoObj = (Geocoord) geoFeatures.get("geo");
+	
 	gate.FeatureMap pcFeatures = pc.getFeatures();
 	PlaceCandidate pcObj = (PlaceCandidate) pcFeatures.get("placeCandidate");
 
 	pcObj.addRuleAndConfidence(ruleName(), 1.0 );
+	pcObj.addGeocoordEvidence(ruleName(), 1.0, geoObj);
 }
 
 //-------------------------------------------------------------
 // Wazi (1234N 01234W), Iraq
 Rule: PCwithGeocoordAndCountry
 (
-	({placecandidate}):pc ({Token.string ==~ "[(|\\[]"})? ({Token.string ==~ "geo|mgrs|mgr|GEO|MGR|MGRS"})?({geocoord}):geo ({Token.string ==~ "[)|\\]]"})?({Token.string ==~ ","})?({Country}):c
+	({placecandidate}):pc ({Token.string ==~ "[(|\\[]"})? ({Token.string ==~ "geo|mgrs|mgr|GEO|MGR|MGRS"})?({GEOCOORD}):geo ({Token.string ==~ "[)|\\]]"})?({Token.string ==~ ","})?({Country}):c
 ):phrase
 -->
 {
 	gate.AnnotationSet pcSet = bindings.get("pc");
 	gate.Annotation pc = pcSet.iterator().next();
 	
+	gate.AnnotationSet geoSet = bindings.get("geo");
+	gate.Annotation geo = geoSet.iterator().next();
+	gate.FeatureMap geoFeatures = geo.getFeatures();
+	Geocoord geoObj = (Geocoord) geoFeatures.get("geo");
+	
 	gate.FeatureMap pcFeatures = pc.getFeatures();
 	PlaceCandidate pcObj = (PlaceCandidate) pcFeatures.get("placeCandidate");
 
 	pcObj.addRuleAndConfidence(ruleName(), 1.0 );
+	pcObj.addGeocoordEvidence(ruleName(), 1.0, geoObj);
 }
-
 
 
 //-------------------------------------------------------------
