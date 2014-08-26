@@ -433,13 +433,7 @@ Build file for OpenSextantToolbox.
 		<antcall target="release.gaz" />
 		<antcall target="release.examples.src" />
 		<antcall target="release.misc" />
-	</target>
-
-
-
-	<!-- zip and post the generated release to the distro site -->
-	<target name="post" depends = "">
-
+		
 		<!-- delete existing release zip if there -->
 		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip" />
 
@@ -447,12 +441,16 @@ Build file for OpenSextantToolbox.
 		<zip destfile="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip">
 			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}"/>
 		</zip>
+	</target>
+
+
+	<!-- zip and post the generated release to the distro site -->
+	<target name="post" depends = "release">
 
 		<!--  upload to site -->
-		<ftp server="${post.site}" remotedir="${post.dir}" userid="${post.user}" password="${post.password}">
+		<!--ftp server="${post.site}" remotedir="${post.dir}" userid="${post.user}" password="${post.password}">
 			<fileset file="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip" />
-		</ftp>
-
+		</ftp-->
 	</target>
 
 	<!-- the following targets asssume a release has been built but doesn't trigger one if it is not -->
@@ -569,7 +567,8 @@ Build file for OpenSextantToolbox.
 
 
 	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
-	<target name="toolbox.deploy" depends="plugin">
+	<!-- NOTE: this target presumes a release has been built but doesnt trigger one -->
+	<target name="toolbox.deploy" depends="">
 		<delete dir="${toolbox.plugin.dir}"/>
 		<!-- unzip the toolbox plugin zip into GATE_HOME/plugins -->
 		<unzip src="${build.dir}/opensextant-toolbox-plugin.zip" dest="${gate.plugin.dir}"/>
@@ -583,7 +582,7 @@ Build file for OpenSextantToolbox.
 				<fileset file="${build.dir}/opensextant.jar" />
 			</copy>
 
-			<echo> Remember to add -Dgate.class.path=plugins/OpensextantToolbox/lib_extra/* to your gate.l4j.ini or other start up script </echo>
+			<echo> Remember to add -Dgate.class.path=GATE_HOME/plugins/OpensextantToolbox/lib_extra/*  and -Dsolr.home=WHERE.YOU.UNZIPPED.THE.RELEASE/solr to your gate.l4j.ini or other start up script </echo>
 
 	</target>
 </project>
