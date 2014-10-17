@@ -56,6 +56,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
   String notPlaceAnnotationName = "NOT_place";
   String noOpionPlaceAnnotationName = "NO_OPINION_place";
   String featureName = "placeCandidate";
+  String assessName = "Assessment";
   Boolean convertToLower;
   // Log object
   private static Logger log = LoggerFactory.getLogger(PlaceNameStatisticsPR.class);
@@ -109,11 +110,14 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
       }
       // if name not previously seen, add entry to stats Map
       if (!placeNameStats.containsKey(placename)) {
-        Long[] tmp = {0L, 0L, 0L};
+        Long[] tmp = {0L, 0L, 0L, 0L, 0L, 0L, 0L};
         placeNameStats.put(placename, tmp);
       }
       // get the confidence score
       double score = pc.getPlaceConfidenceScore();
+
+      String assess = (String) anno.getFeatures().get(assessName);
+
       // increment stats based on the confidence score
       Long[] tmp = placeNameStats.get(placename);
       // if is a place
@@ -128,6 +132,23 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
       if (score == 0.0) {
         tmp[2]++;
       }
+
+      if (assess != null && assess.startsWith("TP")) {
+        tmp[3]++;
+      }
+
+      if (assess != null && assess.startsWith("TN")) {
+        tmp[4]++;
+      }
+
+      if (assess != null && assess.startsWith("FP")) {
+        tmp[5]++;
+      }
+
+      if (assess != null && assess.startsWith("FN")) {
+        tmp[6]++;
+      }
+
       placeNameStats.put(placename, tmp);
     } // end placeCandidate annotation loop
       // write out interim stats files
@@ -188,7 +209,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     }
     // write header
     try {
-      vocabWriter.write("word\tPlaceCount\tNotPlaceCount\tNoOpinionCount\tTotalCount\tPlacePercentage");
+      vocabWriter.write("word\tPlaceCount\tNotPlaceCount\tNoOpinionCount\tTP\tTN\tFP\tFN\tTotalCount\tPlacePercentage");
       vocabWriter.newLine();
     } catch (IOException e) {
       log.error("Couldnt write to " + vocabFile.getName(), e);
@@ -220,6 +241,14 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
         vocabWriter.write(count[1].toString());
         vocabWriter.write("\t");
         vocabWriter.write(count[2].toString());
+        vocabWriter.write("\t");
+        vocabWriter.write(count[3].toString());
+        vocabWriter.write("\t");
+        vocabWriter.write(count[4].toString());
+        vocabWriter.write("\t");
+        vocabWriter.write(count[5].toString());
+        vocabWriter.write("\t");
+        vocabWriter.write(count[6].toString());
         vocabWriter.write("\t");
         vocabWriter.write(total.toString());
         vocabWriter.write("\t");
