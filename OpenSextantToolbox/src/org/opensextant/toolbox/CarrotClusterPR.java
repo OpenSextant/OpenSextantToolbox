@@ -36,7 +36,9 @@ import gate.util.OffsetComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.carrot2.clustering.kmeans.BisectingKMeansClusteringAlgorithm;
 import org.carrot2.clustering.lingo.LingoClusteringAlgorithm;
@@ -61,20 +63,18 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
   String inputASName; // The name of the input AnnotationSet
   String outputASName; // The name of the output AnnotationSet
   String sentenceAnnoName; // the annotation to examine,usually "Sentence"
-
-  String subAnnotationName;
-  // String phoneticFeatureName; // the phonetic feature on tokenAnnoType to
-  // create
-  String clusterAlgo; // algorithm/method used to produce the phonetic form
-  // the thing that does all the work
-  Controller controller;
+  String subAnnotationName;// annotations within sentenceAnnotation to use
+  String clusterAlgo; // algorithm/method used to produce the clusters
+  Controller controller; // the thing that does all the work
 
   // Log object
   static Logger log = LoggerFactory.getLogger(CarrotClusterPR.class);
+
   private void initialize() {
 
     // controller = ControllerFactory.createSimple();
     controller = ControllerFactory.createCachingPooling(IClusteringAlgorithm.class);
+
   }
 
   /**
@@ -103,57 +103,66 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
     // If no output Annotation set was given, append to the input AS
     AnnotationSet annotSet = (outputASName == null || outputASName.equals("")) ? document.getAnnotations() : document
         .getAnnotations(outputASName);
-    // get the tokens
+    // get the annotations to cluster
     AnnotationSet sentSet = annotSet.get(sentenceAnnoName);
 
     // create a set of Carrot documents from the specific annotations
     ArrayList<Document> documents = new ArrayList<Document>();
     for (Annotation an : sentSet) {
-
       String id = an.getId().toString();
+      // if sub annotations are specified, concatenate them into pseudo sentence
       if (subAnnotationName != null && !subAnnotationName.isEmpty()) {
-        AnnotationSet npSet = annotSet.get(subAnnotationName, an.getStartNode().getOffset(), an.getEndNode()
+        AnnotationSet subAnnoSet = annotSet.get(subAnnotationName, an.getStartNode().getOffset(), an.getEndNode()
             .getOffset());
 
-        if (npSet != null && !npSet.isEmpty()) {
-          List<Annotation> anList = new ArrayList<Annotation>(npSet);
+        if (subAnnoSet != null && !subAnnoSet.isEmpty()) {
+          List<Annotation> anList = new ArrayList<Annotation>(subAnnoSet);
           Collections.sort(anList, new OffsetComparator());
-          String tmp = "";
+          String pseudoSentence = "";
           for (Annotation np : anList) {
-            tmp = tmp + " ____ " + gate.Utils.cleanStringFor(document, np);
+            pseudoSentence = pseudoSentence + " ____ " + gate.Utils.cleanStringFor(document, np);
           }
-          an.getFeatures().put("stringToSend", tmp);
-          documents.add(new Document(null, tmp, null, LanguageCode.ENGLISH, id));
+          an.getFeatures().put("stringToSend", pseudoSentence);
+          documents.add(new Document(null, pseudoSentence, null, LanguageCode.ENGLISH, id));
         }
       } else {
-        String tmp = gate.Utils.cleanStringFor(document, an);
-        documents.add(new Document(null, tmp, null, LanguageCode.ENGLISH, id));
+        String annoText = gate.Utils.cleanStringFor(document, an);
+        documents.add(new Document(null, annoText, null, LanguageCode.ENGLISH, id));
       }
 
     }
-    // do the clustering
-
+    // do the clustering, using specified algorithm
     ProcessingResult result = null;
+    Map<String, Object> attributes = new HashMap<String, Object>();
+    attributes.put("documents", documents);
+
     if (clusterAlgo.equalsIgnoreCase("stc")) {
-      result = controller.process(documents, null, STCClusteringAlgorithm.class);
+      attributes.put("STCClusteringAlgorithm.scoreWeight", 0.5);
+      result = controller.process(attributes, STCClusteringAlgorithm.class);
     } else if (clusterAlgo.equalsIgnoreCase("kmeans")) {
-      result = controller.process(documents, null, BisectingKMeansClusteringAlgorithm.class);
-    } else {
-      result = controller.process(documents, null, LingoClusteringAlgorithm.class);
+      result = controller.process(attributes, BisectingKMeansClusteringAlgorithm.class);
+    } else {// default
+      attributes.put("LingoClusteringAlgorithm.scoreWeight", 0.5);
+      result = controller.process(attributes, LingoClusteringAlgorithm.class);
     }
 
     // attach cluster info to document and to annotations
     List<Cluster> clusters = result.getClusters();
 
+    // System.out.println(result.getAttributes());
+
     List<String> labels = new ArrayList<String>();
     for (Cluster cl : clusters) {
+      // System.out.println(cl.getLabel() + "->" + cl.getAttributes());
       labels.add(cl.getLabel());
       for (Document d : cl.getDocuments()) {
         int id = Integer.parseInt(d.getStringId());
         Annotation a = document.getAnnotations().get(id);
-        a.getFeatures().put("label", cl.getLabel());
+        // add lable to annotation
+        a.getFeatures().put("cluster label", cl.getLabel());
       }
     }
+    // add list of labels to document
     document.getFeatures().put("clusterLabels", labels);
 
   } // end execute
