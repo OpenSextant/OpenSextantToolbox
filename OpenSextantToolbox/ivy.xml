@@ -103,6 +103,8 @@
 		<dependency org="net.sf.carafe.jcarafe" name="jcarafe-core_2.9.1"
 			rev="0.9.8.3.RC4" conf="Standalone->*" />
 
+		<dependency org="org.carrot2" name="carrot2-mini" rev="3.9.3" conf="Standalone->*" />
+
 		<!-- all the logging stuff -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"
 			conf="Standalone->*" />

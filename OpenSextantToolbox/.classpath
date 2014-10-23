@@ -111,5 +111,11 @@
 	<classpathentry kind="lib" path="lib/Standalone/stax2-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/woodstox-core-asl.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/geojson-jackson.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/attributes-binder.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/carrot2-mini.jar" />
+	<classpathentry kind="lib" path="lib/Standalone/hppc.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/mahout-collections.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/mahout-math.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/simple-xml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
