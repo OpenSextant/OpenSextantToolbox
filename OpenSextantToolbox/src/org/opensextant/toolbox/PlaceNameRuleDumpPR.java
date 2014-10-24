@@ -134,34 +134,34 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     long end = anno.getEndNode().getOffset();
     AnnotationSet exactSet = truth.getStrict(start, end);
     AnnotationSet containedSet = truth.getContained(start, end);
-    AnnotationSet coveredSet = truth.getCovering(this.placeAnnotationName, start, end);
-    AnnotationSet overlapSet = truth.get(this.placeAnnotationName, start, end);
+    AnnotationSet coveredSet = truth.getCovering("PLACE", start, end);
+    AnnotationSet overlapSet = truth.get("PLACE", start, end);
 
     boolean isPlace = true;
-  //  String placename = gate.Utils.cleanStringFor(document, anno);
+//    String placename = gate.Utils.cleanStringFor(document, anno);
 
     if (score <= 0) {
       isPlace = false;
     }
 
-    if (exactSet.size() == 1) {
+    if (exactSet.size() == 1  ) {
 
       if (isPlace) {
         anno.getFeatures().put(assessName, "TP");
       } else {
-        anno.getFeatures().put(assessName, "FN");
+        anno.getFeatures().put(assessName, "FN-exact");
       }
       Annotation exactAnno = exactSet.iterator().next();
       exactAnno.getFeatures().put("MATCHED", true);
 
     }
 
-    if (exactSet.size() != 1 && (containedSet.size() > 0 || coveredSet.size() > 0)   || overlapSet.size() >0 ) {
+    if (exactSet.size() != 1 && (containedSet.size() > 0 || coveredSet.size() > 0   || overlapSet.size() >0 ) ){
 
       if (isPlace) {
         anno.getFeatures().put(assessName, "TP-Overlap");
       } else {
-        anno.getFeatures().put(assessName, "FN");
+        anno.getFeatures().put(assessName, "FN-Overlap");
       }
 
       for (Annotation a : containedSet) {
@@ -178,7 +178,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     }
 
-    if (exactSet.size() == 0 && containedSet.size() == 0 && coveredSet.size() == 0) {
+    if (exactSet.size() == 0 && containedSet.size() == 0 && coveredSet.size() == 0 && overlapSet.size() == 0) {
 
       if(isPlace){
         anno.getFeatures().put(assessName, "FP");
@@ -188,8 +188,8 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     }
 
-  //  String result = (String) anno.getFeatures().get(assessName); 
-   // log.info( placename + " (" + result + ") is place:" +isPlace +" Exact matches:" + exactSet.size() + " Contained matches:" +containedSet.size() + " Covered matches:" + coveredSet.size() );
+//    String result = (String) anno.getFeatures().get(assessName); 
+ //   log.info( placename + " (" + result + ") is place:" +isPlace +" Exact matches:" + exactSet.size() + " Contained matches:" +containedSet.size() + " Covered matches:" + coveredSet.size() + " Overlap matches:" + overlapSet.size()  );
 
     
   }
