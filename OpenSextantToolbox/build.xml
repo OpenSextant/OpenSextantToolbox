@@ -208,7 +208,7 @@ Build file for OpenSextantToolbox.
 		<antcall target="clean.gaz" />
 		<antcall target="create.solr.home" />
 		<antcall target="load.gazetteer" />
-		<antcall target="load.vocabulary.index" />
+		<!--antcall target="load.vocabulary.index" /-->
 	</target>
 
 	<!-- create the empty solr home directory -->
@@ -254,7 +254,7 @@ Build file for OpenSextantToolbox.
 	</target>
 
 	<!-- Load the vocabulary data into Solr (from a vocab index file)-->
-	<target name="load.vocabulary.index">
+	<!--target name="load.vocabulary.index">
 		<java classname="org.opensextant.matching.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx3G" />
 			<jvmarg value="-XX:MaxPermSize=256m" />
@@ -264,7 +264,7 @@ Build file for OpenSextantToolbox.
 			<arg value="INDEX" />
 			<arg value="${index.vocab}" />
 		</java>
-	</target>
+	</target-->
 
 	<!-- create JavaDoc directory -->
 	<target name="javadoc.prepare">
