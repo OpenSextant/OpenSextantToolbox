@@ -117,11 +117,11 @@ public class MGRSParser {
     // reject these patterns
     // 23 JAN 1900 - date
     // 23 JAN 73 - date
-    
+
     // TODO what about these?
     // 20PER1000 - ratio
     // 18DEG20 - part of an obscure lat/lon
-    
+
 
     // remove whitespace
     String tmp = txt.replaceAll("\\s", "");

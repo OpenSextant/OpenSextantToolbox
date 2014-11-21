@@ -55,8 +55,8 @@ public class GeoNormalizer implements Normalizer {
       Ordinate lat = null;
       Ordinate lon = null;
       try {
-        lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATE_TYPE.DD);
-        lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATE_TYPE.DD);
+        lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATETYPE.DD);
+        lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATETYPE.DD);
       } catch (Exception e) {
         log.debug("Couldn't normalize " + anno.toString() + " Ordinate Parser exception:" + e.getMessage());
       }
@@ -77,8 +77,8 @@ public class GeoNormalizer implements Normalizer {
       Ordinate lat = null;
       Ordinate lon = null;
       try {
-        lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATE_TYPE.DMS);
-        lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATE_TYPE.DMS);
+        lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATETYPE.DMS);
+        lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATETYPE.DMS);
       } catch (Exception e) {
         log.debug("Couldn't normalize " + anno.toString() + " Ordinate Parser exception:" + e.getMessage());
       }

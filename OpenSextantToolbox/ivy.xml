@@ -92,17 +92,14 @@
 		<dependency org="commons-io" name="commons-io" rev="2.4"
 			conf="Standalone->*" />
 
-		<!-- JSON parser used to talk to JCarafe CRF tagger -->
+		<!-- JSON parser used by the REST server -->
 		<dependency org="org.codehaus.jackson" name="jackson-mapper-asl"
 			rev="1.9.13" conf="Standalone->*" />
 
 		<!--  GeoJSON beans used in the REST server -->
 		<dependency org="de.grundid.opendatalab" name="geojson-jackson" rev="1.1" conf="Standalone->*"/>
 
-		<!-- JCarafe used by the CRF tagger in the plugin -->
-		<dependency org="net.sf.carafe.jcarafe" name="jcarafe-core_2.9.1"
-			rev="0.9.8.3.RC4" conf="Standalone->*" />
-
+		<!-- Carrot used in the cluster PR -->
 		<dependency org="org.carrot2" name="carrot2-mini" rev="3.9.3" conf="Standalone->*" />
 
 		<!-- all the logging stuff -->

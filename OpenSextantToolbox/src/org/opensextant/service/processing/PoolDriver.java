@@ -29,7 +29,7 @@ public class PoolDriver {
     try {
       prop = new Properties();
       InputStream input = new FileInputStream(args[0]);
-      
+
       // load properties file
       prop.load(input);
     } catch (FileNotFoundException e) {
@@ -55,7 +55,7 @@ public class PoolDriver {
       System.out.println(f.getName());
       holdem.add(result);
     }
-    
+
     dpPool.cleanup();
     dpPool = null;
    // dump(result);

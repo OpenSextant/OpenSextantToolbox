@@ -33,7 +33,7 @@ public class DocumentProcessorPool {
   private Map<String, BlockingQueue<DocumentProcessor>> poolMap = new HashMap<String, BlockingQueue<DocumentProcessor>>();
   private  long docsProcessedCount =0L;
   private  long docsFailedCount =0L;
-  
+
   public DocumentProcessorPool(Properties prop) {
 
     String gateHomeString = prop.getProperty("os.service.gate.home");

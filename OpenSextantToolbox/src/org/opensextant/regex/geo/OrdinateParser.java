@@ -42,7 +42,7 @@ public final class OrdinateParser {
   // private static Logger log = LoggerFactory.getLogger(Ordinate.class);
 
   // the two type of Ordinates
-  public enum ORDINATE_TYPE {
+  public enum ORDINATETYPE {
     DD, DMS
   };
   // the two axes
@@ -82,7 +82,7 @@ public final class OrdinateParser {
 
   }
 
-  public static Ordinate parse(Map<String, String> elements, AXIS ax, OrdinateParser.ORDINATE_TYPE type) {
+  public static Ordinate parse(Map<String, String> elements, AXIS ax, OrdinateParser.ORDINATETYPE type) {
 
     Ordinate ord = new Ordinate();
     ord.setType(type);

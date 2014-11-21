@@ -12,7 +12,6 @@ package org.opensextant.toolbox;
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Controller;
-import gate.FeatureMap;
 import gate.ProcessingResource;
 import gate.Resource;
 import gate.Utils;
@@ -99,8 +98,8 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     docCount++;
     log.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " " + placeAnnotationName + " annotations");
     log.info("(" + docCount + ") " + document.getName() + " has " + truthAnnoSet.size() + " " + "Truth" + " annotations");
-  
-    
+
+
     // loop over all placeCandidate annotations
     for (Annotation anno : placeCandAnnoSet) {
       anno.getFeatures().put(assessName, "UNK");
@@ -188,10 +187,10 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     }
 
-//    String result = (String) anno.getFeatures().get(assessName); 
+//    String result = (String) anno.getFeatures().get(assessName);
  //   log.info( placename + " (" + result + ") is place:" +isPlace +" Exact matches:" + exactSet.size() + " Contained matches:" +containedSet.size() + " Covered matches:" + coveredSet.size() + " Overlap matches:" + overlapSet.size()  );
 
-    
+
   }
 
   /**

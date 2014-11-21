@@ -46,6 +46,8 @@
 	<classpathentry kind="lib" path="lib/GATE/xstream.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/activation.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/annotations.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/attributes-binder.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/carrot2-mini.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/commons-cli.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/commons-codec.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/commons-fileupload.jar"/>
@@ -53,16 +55,25 @@
 	<classpathentry kind="lib" path="lib/Standalone/commons-lang.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/commons-lang3.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/geodesy.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/geojson-jackson.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/geronimo-jms_1.1_spec.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/guava.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/hppc.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/httpclient.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/httpcore.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/httpmime.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jackson-core-asl.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-core.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-databind.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-csv.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-smile.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-xml.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-yaml.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jackson-mapper-asl.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-module-jaxb-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/javaee-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/javax.servlet-api.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jcarafe-core_2.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jcl-over-slf4j.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jitar.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/joda-convert.jar"/>
@@ -81,41 +92,27 @@
 	<classpathentry kind="lib" path="lib/Standalone/lucene-queryparser.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/lucene-spatial.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/lucene-suggest.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/mahout-collections.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/mahout-math.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/mail.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/noggit.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/sbinary_2.9.0.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/scala-library.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/slf4j-api.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/slf4j-log4j12.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/solr-core.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/solr-solrj.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/solr-text-tagger.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/spatial4j.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/wstx-asl.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/zookeeper.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-annotations.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-core.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-databind.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-csv.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-smile.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-xml.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-yaml.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/jackson-module-jaxb-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.fileupload.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.jackson.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.json.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.lib.org.restlet.lib.org.json.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/simple-xml.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/slf4j-api.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/slf4j-log4j12.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/snakeyaml.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/solr-core.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/solr-solrj.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/solr-text-tagger.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/spatial4j.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/stax-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/stax2-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/woodstox-core-asl.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/geojson-jackson.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/attributes-binder.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/carrot2-mini.jar" />
-	<classpathentry kind="lib" path="lib/Standalone/hppc.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/mahout-collections.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/mahout-math.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/simple-xml.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/wstx-asl.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/zookeeper.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -34,7 +34,7 @@ public final class Ordinate {
   // private static Logger log = LoggerFactory.getLogger(Ordinate.class);
 
   // the ordinate type [DD,DMS]
-  private OrdinateParser.ORDINATE_TYPE type = OrdinateParser.ORDINATE_TYPE.DD;
+  private OrdinateParser.ORDINATETYPE type = OrdinateParser.ORDINATETYPE.DD;
 
   // the magnitude of this ordinate [0.0 to LAT_MAX/LON_MAX,null]
   private Double ordinateValue = null;
@@ -99,11 +99,11 @@ public final class Ordinate {
     this.ordinateValue += (seconds / 3600.0);
   }
 
-  public OrdinateParser.ORDINATE_TYPE getType() {
+  public OrdinateParser.ORDINATETYPE getType() {
     return type;
   }
 
-  public void setType(OrdinateParser.ORDINATE_TYPE type) {
+  public void setType(OrdinateParser.ORDINATETYPE type) {
     this.type = type;
   }
 

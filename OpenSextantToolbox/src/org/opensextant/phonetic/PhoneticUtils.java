@@ -21,7 +21,7 @@
  **/
 package org.opensextant.phonetic;
 
-import java.lang.Character.UnicodeBlock;
+import java.lang.Character.UnicodeScript;
 import java.text.Normalizer;
 import java.util.Set;
 import java.util.TreeSet;
@@ -2050,68 +2050,13 @@ public class PhoneticUtils {
     String tmpWord = word.replaceAll("\\P{L}", "");
     Set<String> scriptsSeen = new TreeSet<String>();
     char[] chars = tmpWord.toCharArray();
-    for (char c : chars) {
-      scriptsSeen.add(script(c));
+    for(int c=0; c< chars.length; c++){
+      int cp = Character.codePointAt(chars, c);
+      UnicodeScript scr = Character.UnicodeScript.of(cp);
+      scriptsSeen.add(scr.name());
     }
-    return scriptsSeen;
-  }
 
-  // simple substitute for "script" based on UniCode block
-  // TODO replace with Character.UnicodeScript when we move to Java 7
-  public static String script(char c) {
-    UnicodeBlock blk = Character.UnicodeBlock.of(c);
-    if (blk == null) {
-      return "NONE";
-    }
-    String blockName = blk.toString();
-    if (!blockName.contains("_")) {
-      return blockName;
-    }
-    if (blockName.contains("CJK")) {
-      return "CJK";
-    }
-    if (blockName.equals("BASIC_LATIN")) {
-      return "LATIN";
-    }
-    if (blockName.contains("_SYLLAB")) {
-      String[] pieces = blockName.split("_SYLLAB");
-      return pieces[0];
-    }
-    if (blockName.contains("_IDEOGRAMS")) {
-      String[] pieces = blockName.split("_IDEOGRAMS");
-      return pieces[0];
-    }
-    if (blockName.contains("MARKS")) {
-      return "MARKS";
-    }
-    if (blockName.contains("MATHEMATICAL")) {
-      return "MATH";
-    }
-    if (blockName.contains("PRIVATE")) {
-      return "PRIVATE";
-    }
-    if (blockName.contains("SURROGATES")) {
-      return "SURROGATES";
-    }
-    if (blockName.contains("BLOCK") || blockName.contains("BOX") || blockName.contains("MUSICAL")
-        || blockName.contains("LETTERLIKE") || blockName.contains("PICTURES")) {
-      return "SYMBOL";
-    }
-    if (blockName.contains("NUMBER")) {
-      return "NUMBER";
-    }
-    if (blockName.contains("OLD_ITALIC")) {
-      return "OLD_ITALIC";
-    }
-    if (blockName.contains("TAI_LE")) {
-      return "TAI_LE";
-    }
-    if (blockName.contains("TAI_XUAN_JING_SYMBOLS")) {
-      return "TAI_XUAN_JING";
-    }
-    // anything left take the first piece
-    String[] pieces = blockName.split("_");
-    return pieces[0];
+    return scriptsSeen;
   }
 
   /**
