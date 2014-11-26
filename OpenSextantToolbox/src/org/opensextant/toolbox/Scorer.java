@@ -236,9 +236,15 @@ public class Scorer {
   private double scoreFeatureType(PlaceEvidence evidence, Place place) {
     // get the two sets of feature type info (code and class)
     String evidenceFClass = evidence.getFeatureClass();
+    if(evidenceFClass != null){
+      evidenceFClass = evidenceFClass.replace("Geo.featureType.", "");
+    }
     String evidenceFCode = evidence.getFeatureCode();
     double weight = evidence.getWeight();
     String gazetteerFClass = place.getFeatureClass();
+    if(gazetteerFClass != null){
+      gazetteerFClass = gazetteerFClass.replace("Geo.featureType.", "");
+    }
     String gazetteerFCode = place.getFeatureCode();
     // no evidence, zero score
     if (evidenceFClass == null) {
@@ -256,16 +262,16 @@ public class Scorer {
       return featureTypeClassScore * weight;
     }
     // partial credit for the commonly confused classes of A,L and P
-    if (evidenceFClass.matches("[ALP]") && gazetteerFClass.matches("[ALP]")) {
+    if (evidenceFClass.matches("AdminRegion|Area|PopulatedPlace") && gazetteerFClass.matches("AdminRegion|Area|PopulatedPlace")) {
       return featureTypeConfusedScore * weight;
     }
     // partial credit for places used to describe spot features e.g.
     // "the Washington office"
-    if (evidenceFClass.matches("[S]") && gazetteerFClass.matches("[ALP]")) {
+    if (evidenceFClass.matches("SpotFeature") && gazetteerFClass.matches("AdminRegion|Area|PopulatedPlace")) {
       return featureTypeConfusedScore * weight;
     }
     // floor value for "important" gazetteer entries
-    if (gazetteerFClass.matches("[A]")) {
+    if (gazetteerFClass.matches("AdminRegion")) {
       return featureTypeConfusedScore * weight;
     }
     // must be incompatible class/code

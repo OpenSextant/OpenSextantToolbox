@@ -154,7 +154,7 @@ Rule: FeatureTypeOf_General
 //Wazi area of Wazito
 Rule: FeatureTypeOf_Area
 (
-		({placecandidate}):pc1 {FeatureType.featureClass =="L"} {Token.string ==~ "of|Of|OF"}({placecandidate}):pc2 
+		({placecandidate}):pc1 {FeatureType.hierarchy =="Geo.featureType.Area"} {Token.string ==~ "of|Of|OF"}({placecandidate}):pc2 
 ):phrase
 -->
 {
@@ -177,7 +177,7 @@ Rule: FeatureTypeOf_Area
 //Wazi district of Wazito
 Rule: FeatureTypeOf_Admin
 (
-		({placecandidate}):pc1 {FeatureType.featureClass =="A"} {Token.string ==~ "of|Of|OF"}({placecandidate}):pc2 
+		({placecandidate}):pc1 {FeatureType.hierarchy =="Geo.featureType.AdminRegion"} {Token.string ==~ "of|Of|OF"}({placecandidate}):pc2 
 ):phrase
 -->
 {

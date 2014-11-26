@@ -75,6 +75,9 @@ public class MatcherFactory {
   private static ModifiableSolrParams searchParams = new ModifiableSolrParams();
   private static ModifiableSolrParams vocabParams = new ModifiableSolrParams();
 
+  // mapping from gazetteer codes to hierachical expression used on the Place object
+  private static Map<String,String> featureCodeMap =  new HashMap<String,String>();
+
   // the matching request handler
   private static final String MATCH_REQUESTHANDLER = "/tag";
 
@@ -107,6 +110,21 @@ public class MatcherFactory {
     vocabParams.set("field", "phrase4matching");
 
   }
+
+  //set the values of the feature codes
+
+  static {
+    featureCodeMap.put("A", "Geo.featureType.AdminRegion");
+    featureCodeMap.put("P", "Geo.featureType.PopulatedPlace");
+    featureCodeMap.put("V", "Geo.featureType.Vegetation");
+    featureCodeMap.put("L", "Geo.featureType.Area");
+    featureCodeMap.put("U", "Geo.featureType.Undersea");
+    featureCodeMap.put("R", "Geo.featureType.Street");
+    featureCodeMap.put("T", "Geo.featureType.Hypso");
+    featureCodeMap.put("H", "Geo.featureType.Hydro");
+    featureCodeMap.put("S", "Geo.featureType.SpotFeature");
+  }
+
 
   /**
    * Configure this MatcherFctory
@@ -180,6 +198,8 @@ public class MatcherFactory {
         File solrXML = new File(homeLocation + File.separator + "solr.xml");
         CoreContainer solrContainer = new CoreContainer(homeLocation);
         solrContainer.load(homeLocation, solrXML);
+        // when we switch to solr > 4.3
+       // solrContainer.load();
         EmbeddedSolrServer serverGeo = new EmbeddedSolrServer(solrContainer, "gazetteer");
         EmbeddedSolrServer serverVocab = new EmbeddedSolrServer(solrContainer, "vocabulary");
         solrServerGeo = serverGeo;
@@ -738,8 +758,8 @@ public class MatcherFactory {
     place.setAdmin1(internString(getString(gazEntry, "adm1")));
     place.setAdmin2(internString(getString(gazEntry, "adm2")));
 
-    // set the feature class and code
-    place.setFeatureClass(internString(getString(gazEntry, "feat_class")));
+    // map and set the feature class and code
+    place.setFeatureClass(internString(featureCodeMap.get(getString(gazEntry, "feat_class"))));
     place.setFeatureCode(internString(getString(gazEntry, "feat_code")));
 
     // set the source

@@ -50,14 +50,10 @@ Rule: FeatureTypeAdjoin
 	PlaceCandidate pcObj = (PlaceCandidate) pcFeatures.get("placeCandidate");
 
 	gate.FeatureMap ftFeatures = ft.getFeatures();
-	String fClass = (String)ftFeatures.get("featureClass");
-	String fCode = (String)ftFeatures.get("featureCode");
+	String fClass = (String)ftFeatures.get("hierarchy");
 
 	pcObj.addRuleAndConfidence(ruleName(), 1.0 );
 	pcObj.addFeatureClassEvidence(ruleName(), 1.0, fClass);
-	if(fCode != null){
-	  pcObj.addFeatureCodeEvidence(ruleName(), 1.0, fCode);
-	}
 }
 
 // village of Wazi
@@ -78,13 +74,10 @@ Rule: FeatureTypePreposition
 
 	gate.FeatureMap ftFeatures = ft.getFeatures();
 
-	String fClass = (String)ftFeatures.get("featureClass");
-	String fCode = (String)ftFeatures.get("featureCode");
+	String fClass = (String)ftFeatures.get("hierarchy");
 
 	pcObj.addRuleAndConfidence(ruleName(), 1.0 );
 	pcObj.addFeatureClassEvidence(ruleName(), 1.0, fClass);
-	if(fCode != null){
-	  pcObj.addFeatureCodeEvidence(ruleName(), 1.0, fCode);
-	}
+
 }
 
