@@ -60,6 +60,14 @@
         </subant>
     </target>
 
+    <!--  build all of the components -->
+    <target name="test" depends="build">
+        <subant target="run.examples">
+            <fileset dir="${toolbox.home}" includes="build.xml" />
+        </subant>
+    </target>
+	
+	
     <!--  publish all of the components -->
     <target name="publish-local" depends="">
         <subant target="publish-local">
