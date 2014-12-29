@@ -56,10 +56,10 @@
 		</dependency>
 	
 		<!--  Restlet stuff used by the opensextant REST service -->
-		<dependency org="org.restlet.jse" name="org.restlet" rev="2.2.1"  conf="Standalone->*"/>
-		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.2.1"  conf="Standalone->*"/>
-		<dependency org="org.restlet.jse" name="org.restlet.ext.json" rev="2.2.1" conf="Standalone->*" />
-		<dependency org="org.restlet.jse" name="org.restlet.ext.jackson" rev="2.2.1"  conf="Standalone->*"/>
+		<dependency org="org.restlet.jse" name="org.restlet" rev="2.2.3"  conf="Standalone->*"/>
+		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.2.3"  conf="Standalone->*"/>
+		<dependency org="org.restlet.jse" name="org.restlet.ext.json" rev="2.2.3" conf="Standalone->*" />
+		<dependency org="org.restlet.jse" name="org.restlet.ext.jackson" rev="2.2.3"  conf="Standalone->*"/>
 
 		<!-- JTS is used for geospatial stuff in Solr -->
 		<dependency org="com.vividsolutions" name="jts" rev="1.13"

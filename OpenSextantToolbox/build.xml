@@ -460,7 +460,7 @@ Build file for OpenSextantToolbox.
 		<antcall target="example.geotagger" />
 		<antcall target="example.generalPurposeTagger" />
 		<antcall target="example.placeNameMatcher" />
-		<antcall target="example.vocabMatcher" />
+		<!--antcall target="example.vocabMatcher" /-->
 		<antcall target="example.placeNameSearch" />
 		<antcall target="example.dateRegexMatcher" />
 		<antcall target="example.geoRegexMatcher" />
