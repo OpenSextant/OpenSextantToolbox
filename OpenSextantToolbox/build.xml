@@ -478,7 +478,7 @@ Build file for OpenSextantToolbox.
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dgate.home=${release.dir}" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\solr" />
+			<env key="solr.home" value="${release.dir}/solr" />
 			<arg value="${test.gapp.geotagger}" />
 			<arg value="${test.testdocs.dir}" />
 		</java>
@@ -493,7 +493,7 @@ Build file for OpenSextantToolbox.
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dgate.home=${release.dir}" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\solr" />
+			<env key="solr.home" value="${release.dir}/solr" />
 			<arg value="${test.gapp.generalPurpose}" />
 			<arg value="${test.testdocs.dir}" />
 		</java>
@@ -507,8 +507,8 @@ Build file for OpenSextantToolbox.
 		<java classname="org.opensextant.examples.MatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\solr" />
-			<!--arg value="${release.dir}\Gazetteer\solr" /-->
+			<env key="solr.home" value="${release.dir}/solr" />
+			<!--arg value="${release.dir}/Gazetteer/solr" /-->
 			<arg value="${test.matcher.file}" />
 		</java>
 	</target>
@@ -521,10 +521,10 @@ Build file for OpenSextantToolbox.
 		<java classname="org.opensextant.examples.VocabMatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<!--jvmarg value="-Dsolr.home=${release.dir}\solr" /-->
-			<env key="solr.home" value="${release.dir}\solr" />
+			<!--jvmarg value="-Dsolr.home=${release.dir}/solr" /-->
+			<env key="solr.home" value="${release.dir}/solr" />
 			<arg value="${test.testdocs.dir}/test.txt" />
-			<!--arg value="${release.dir}\solr" /-->
+			<!--arg value="${release.dir}/solr" /-->
 		</java>
 	</target>
 
@@ -536,8 +536,8 @@ Build file for OpenSextantToolbox.
 		<java classname="org.opensextant.examples.SearcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}\solr" />
-			<!--arg value="${release.dir}\Gazetteer\solr" /-->
+			<env key="solr.home" value="${release.dir}/solr" />
+			<!--arg value="${release.dir}/Gazetteer/solr" /-->
 		</java>
 	</target>
 	<target name="example.dateRegexMatcher">
