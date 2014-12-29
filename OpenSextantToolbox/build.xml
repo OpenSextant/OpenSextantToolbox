@@ -159,7 +159,7 @@ Build file for OpenSextantToolbox.
 	</target>
 
 	<!-- get all the ivy defined dependencies -->
-	<target name="getDependencies" depends="setProxy,clean">
+	<target name="getDependencies" depends="clean">
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" />
 		<ivy:report todir="${build.dir}/ivy-report" graph="false"/>
 	</target>
