@@ -55,9 +55,8 @@
 
     <!--  build all of the components -->
     <target name="build" depends="">
-        <subant target="build">
+        <subant target="release">
             <fileset dir="${toolbox.home}" includes="build.xml" />
-            <!--fileset dir="${lang.home}" includes="build.xml" /-->
         </subant>
     </target>
 
