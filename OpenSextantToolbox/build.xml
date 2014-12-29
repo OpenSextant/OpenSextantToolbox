@@ -99,14 +99,14 @@ Build file for OpenSextantToolbox.
 
 
 	<!-- location of the test data -->
-	<property name="test.testdocs.dir" location="${release.dir}/LanguageResources/testData/TestDocs" />
-	<property name="test.matcher.file" location="${release.dir}/LanguageResources/testData/MatcherTestData/matcherTest.txt" />
-	<property name="test.dateTest.file" location="${release.dir}/LanguageResources/testData/RegexTestData/dateTime_test.csv" />
-	<property name="test.geoTest.file" location="${release.dir}/LanguageResources/testData/RegexTestData/geocoord_test.csv" />
+	<property name="test.testdocs.dir" location="${release.dir}/LanguageResources/TestData/testDocs" />
+	<property name="test.matcher.file" location="${release.dir}/LanguageResources/TestData/MatcherTestData/matcherTest.txt" />
+	<property name="test.dateTest.file" location="${release.dir}/LanguageResources/TestData/RegexTestData/dateTime_test.csv" />
+	<property name="test.geoTest.file" location="${release.dir}/LanguageResources/TestData/RegexTestData/geocoord_test.csv" />
 
 
 	<!-- location of the GAPP and pattern files -->
-	<property name="test.gapp.geotagger" location="${release.dir}/LanguageResources/GAPPs/OpenSextant_geotagger.gapp" />
+	<property name="test.gapp.geotagger" location="${release.dir}/LanguageResources/GAPPs/OpenSextant_Geotagger.gapp" />
 	<property name="test.gapp.generalPurpose" location="${release.dir}/LanguageResources/GAPPs/OpenSextant_GeneralPurpose.gapp" />
 
 	<property name="test.patterns.date" location="${release.dir}/LanguageResources/resources/patterns/datetime_patterns2.cfg" />
