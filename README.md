@@ -1,6 +1,8 @@
 OpenSextantToolbox
 ==================
 
+[![Build Status](https://travis-ci.org/OpenSextant/OpenSextantToolbox.svg?branch=master)](https://travis-ci.org/OpenSextant/OpenSextantToolbox)
+
 A GATE based geotagger
 
 Based on the GATE open source text processing framework (http://gate.ac.uk), the OpenSextant Toolbox includes a set 
