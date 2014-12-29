@@ -9,9 +9,42 @@
     <property name="lang.home" location="./LanguageResources" />
     <property name="toolbox.home" location="./OpenSextantToolbox" />
 
+	
+	<property name="ivy.install.version" value="2.1.0-rc2" />
+	  <condition property="ivy.home" value="${env.IVY_HOME}">
+	    <isset property="env.IVY_HOME" />
+	  </condition>
+	<property name="ivy.home" value="${basedir}/.ant" />
+	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	
+	
+	
     <!--====================== Targets ============================-->
 
-    
+
+	<target name="download-ivy" unless="offline">
+
+	  <mkdir dir="${ivy.jar.dir}"/>
+	  <!-- download Ivy from maven central -->
+	  <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+	       dest="${ivy.jar.file}"
+	       usetimestamp="true"/>
+	</target>
+
+	<target name="init-ivy" depends="download-ivy">
+	<!-- try to load ivy here from ivy home -->
+	  <path id="ivy.lib.path">
+	    <fileset dir="${ivy.jar.dir}"
+	             includes="*.jar"/>
+
+	  </path>
+	  <taskdef resource="org/apache/ivy/ant/antlib.xml"
+	           uri="antlib:org.apache.ivy.ant"
+	           classpathref="ivy.lib.path"/>
+	</target>
+	
+	
     <!-- clean all of the components -->
     <target name="clean" depends="">
         <subant target="clean">
@@ -24,7 +57,7 @@
     <target name="build" depends="">
         <subant target="build">
             <fileset dir="${toolbox.home}" includes="build.xml" />
-            <fileset dir="${lang.home}" includes="build.xml" />
+            <!--fileset dir="${lang.home}" includes="build.xml" /-->
         </subant>
     </target>
 
