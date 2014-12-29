@@ -1,4 +1,5 @@
 language: java
 
 before_install: ant init-ivy
-script: ant build
+install: ant release
+script: ant run.examples
