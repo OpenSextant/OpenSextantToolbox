@@ -35,6 +35,7 @@
 			conf="GATE->*">
 			<!-- need to exclude older lucene jar, conflicts with solr -->
 			<exclude name="lucene-core" />
+			<exclude name="stax2-api" />
 			<!-- exclude logging stuff -->
 			<exclude name="commons-logging" />
 			<exclude name="log4j" />
