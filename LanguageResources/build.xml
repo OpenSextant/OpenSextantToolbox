@@ -41,7 +41,7 @@
 			<zipfileset dir="${basedir}/docs" prefix="LanguageResources/docs" />
 			<zipfileset dir="${basedir}/GAPPs" prefix="LanguageResources/GAPPs" />
 			<zipfileset dir="${basedir}/resources" prefix="LanguageResources/resources" />
-			<zipfileset dir="${basedir}/testData" prefix="LanguageResources/testData" />
+			<zipfileset dir="${basedir}/testData" prefix="LanguageResources/TestData" />
 			<zipfileset file="${basedir}/NOTICE.txt" prefix="LanguageResources" />
 			<zipfileset file="${basedir}/README.txt" prefix="LanguageResources" />
 		</zip>

@@ -27,7 +27,7 @@ ant file to run OpenSextantToolbox Examples.
 	<property name="test.patterns.geo" location="${toobox.home}/LanguageResources/resources/patterns/geocoord_regex.cfg" />
 
 	<!-- location of the test data and test results directory-->
-	<property name="test.testdocs.dir" location="${toobox.home}/LanguageResources/TestData/TestDocs" />
+	<property name="test.testdocs.dir" location="${toobox.home}/LanguageResources/TestData/testDocs" />
 	<property name="test.matcher.file" location="${toobox.home}/LanguageResources/TestData/MatcherTestData/matcherTest.txt" />
 	<property name="test.dateTest.file" location="${toobox.home}/LanguageResources/TestData/RegexTestData/dateTime_test.csv" />
 	<property name="test.geoTest.file" location="${toobox.home}/LanguageResources/TestData/RegexTestData/geocoord_test.csv" />
