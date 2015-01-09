@@ -2,3 +2,9 @@ language: java
 
 before_install: ant init-ivy
 script: ant test
+
+jdk:
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk6
+  - openjdk7
