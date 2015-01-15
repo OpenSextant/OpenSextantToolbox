@@ -19,7 +19,11 @@
 	<classpathentry kind="lib" path="lib/GATE/gate-asm.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-compiler-jdt.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-core.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/hamcrest-core.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ivy.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/jackson-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/jackson-core.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/jackson-databind.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/java-getopt.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/jaxen.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/jdom.jar"/>
@@ -73,7 +77,6 @@
 	<classpathentry kind="lib" path="lib/Standalone/jackson-module-jaxb-annotations.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jackson-module-jsonSchema.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/javaee-api.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/javax.servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jcl-over-slf4j.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jitar.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/joda-convert.jar"/>
