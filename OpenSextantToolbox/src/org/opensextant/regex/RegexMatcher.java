@@ -60,7 +60,11 @@ public class RegexMatcher {
       return matches;
     }
 
+ //   long startTime = 0L;
+ //   long endTime = 0L;
+
     for (RegexRule r : rules) {
+  //    startTime= System.nanoTime();
       String t = r.getEntityType();
       Normalizer normer = r.getNormalizer();
       // Do the matching, looping over the rules
@@ -85,6 +89,9 @@ public class RegexMatcher {
           matches.add(tmp);
         }
       }
+    //  endTime = System.nanoTime();
+    //  double dur = (endTime-startTime)/1000000.0;
+    //  log.debug("Regex rule " + r.getEntityType() + ":" + r.getRuleFamily() + "-" + r.getRuleName() + " took " + dur + " millisecs for " + input.length() + " chars");
     }
 
     // run the matches through the postprocessor(s) if any specified

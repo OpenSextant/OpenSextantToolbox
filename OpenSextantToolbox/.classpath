@@ -35,7 +35,6 @@
 	<classpathentry kind="lib" path="lib/GATE/spring-aop.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/spring-beans.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/spring-core.jar"/>
-	<classpathentry kind="lib" path="lib/GATE/stax2-api.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/tika-core.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/tika-parsers.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/woodstox-core-lgpl.jar"/>
@@ -72,6 +71,7 @@
 	<classpathentry kind="lib" path="lib/Standalone/jackson-dataformat-yaml.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jackson-mapper-asl.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jackson-module-jaxb-annotations.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/jackson-module-jsonSchema.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/javaee-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/javax.servlet-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/jcl-over-slf4j.jar"/>
@@ -100,7 +100,7 @@
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.jackson.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.json.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/org.restlet.lib.org.restlet.lib.org.json.jar"/>
+	<classpathentry kind="lib" path="lib/Standalone/org.restlet.lib.org.json.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/simple-xml.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/slf4j-log4j12.jar"/>

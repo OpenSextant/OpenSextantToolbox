@@ -48,20 +48,12 @@ Build file for OpenSextantToolbox.
 	<path id="compile.classpath">
 		<fileset dir="${lib.dir}/GATE" includes="**/*.jar" />
 		<fileset dir="${lib.dir}/Standalone" includes="**/*.jar" />
-		<!--fileset dir="${lib.dir}/GATE" includes="**/*.jar" /-->
-		<!--fileset dir="${lib.dir}/Solr" includes="**/*.jar" /-->
-		<!--fileset dir="${lib.dir}/Plugin" includes="**/*.jar" /-->
-		<!--fileset dir="${lib.dir}/JCarafe" includes="**/*.jar" /-->
-		<!--fileset dir="${lib.dir}/Logging" includes="**/*.jar" /-->
 	</path>
 
 	<!-- Classpath to run solr gazetteer loader -->
 	<path id="solr.runtime.classpath">
 		<fileset dir="${build.dir}" includes="opensextant.jar" />
 		<fileset dir="${lib.dir}/Standalone" includes="**/*.jar" />
-		<!--fileset dir="${lib.dir}/Solr" includes="**/*.jar" /-->
-		<!--fileset dir="${lib.dir}/Logging" includes="**/*.jar" /-->
-		<!--fileset file="${lib.dir}/log4j.properties" /-->
 	</path>
 
 	<!-- Properties for creating/loading the Solr gazetteer -->
@@ -83,18 +75,11 @@ Build file for OpenSextantToolbox.
 	<!-- Classpath to run example code which uses GATE -->
 	<path id="examples.runtime.classpath">
 		<fileset dir="${release.dir}/lib" includes="**/*.jar" />
-		<!--fileset dir="${release.dir}/lib/GATE" includes="**/*.jar" /-->
-		<!--fileset dir="${release.dir}/lib/Solr" includes="**/*.jar" /-->
-		<!--fileset dir="${release.dir}/lib/Logging" includes="**/*.jar" /-->
-		<!--fileset file="${release.dir}/etc/log4j.properties" /-->
 	</path>
 
 	<!-- classpath to run the components that don't need Gate -->
 	<path id="examples.runtime.standalone.classpath">
 		<fileset dir="${release.dir}/lib" includes="*.jar" />
-		<!--fileset dir="${release.dir}/lib/Solr" includes="**/*.jar" /-->
-		<!--fileset dir="${release.dir}/lib/Logging" includes="**/*.jar" /-->
-		<!--fileset file="${release.dir}/etc/log4j.properties" /-->
 	</path>
 
 
@@ -157,12 +142,15 @@ Build file for OpenSextantToolbox.
 	</target>
 
 	<!-- set the proxy if behind a firewall (needed for ivy) -->
+	<!-- the host and proxy values are set in the build.properties file -->
 	<target name="setProxy">
 		<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
 	</target>
 
 	<!-- get all the ivy defined dependencies -->
-	<target name="getDependencies" depends="clean">
+	<!-- NOTE: if you are build from behind a proxy add "setProxy"
+	 to the "depends" parameter--> 
+	<target name="getDependencies" depends="setProxy,clean">
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" />
 		<ivy:report todir="${build.dir}/ivy-report" graph="false"/>
 	</target>
