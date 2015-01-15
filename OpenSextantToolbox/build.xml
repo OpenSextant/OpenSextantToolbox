@@ -143,14 +143,15 @@ Build file for OpenSextantToolbox.
 
 	<!-- set the proxy if behind a firewall (needed for ivy) -->
 	<!-- the host and proxy values are set in the build.properties file -->
-	<!--target name="setProxy"-->
-		<!--setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" /-->
-	<!--/target-->
+	<!-- omit from build.properties if no proxy -->
+	<target name="setProxy">
+		<property name="proxy.host" value="" />
+		<property name="proxy.port" value="80" />	
+		<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
+	</target>
 
 	<!-- get all the ivy defined dependencies -->
-	<!-- NOTE: if you are build from behind a proxy add "setProxy"
-	 to the "depends" parameter--> 
-	<target name="getDependencies" depends="clean">
+	<target name="getDependencies" depends="setProxy,clean">
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" />
 		<ivy:report todir="${build.dir}/ivy-report" graph="true"/>
 	</target>
