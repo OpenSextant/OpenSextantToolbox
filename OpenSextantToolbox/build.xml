@@ -13,7 +13,7 @@ Build file for OpenSextantToolbox.
 	<property name="project.name" value="OpenSextantToolbox" />
 	<property name="version" value="2.1" />
 	<property name="releaseStatus" value="integration" />
-	<property name="java_target_version" value="1.8" />
+	<property name="java_target_version" value="1.7" />
 
 	<!-- Source directory - contains the Java source files for this project -->
 	<property name="src.dir" location="src" />
@@ -159,7 +159,7 @@ Build file for OpenSextantToolbox.
 
 	<!-- compile the source  -->
 	<target name="compile" depends="setup,getDependencies">
-		<javac classpathref="compile.classpath" srcdir="${src.dir}" destdir="${build.dir}" debug="true" debuglevel="lines,source" source="${java_target_version}"  target="${java_target_version}" encoding="utf-8" />
+		<javac classpathref="compile.classpath" srcdir="${src.dir}" destdir="${build.dir}" debug="true" debuglevel="lines,source" source="${java_target_version}"  encoding="utf-8" />
 	</target>
 
 	<!-- create the JAR files -->
