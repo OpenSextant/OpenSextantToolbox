@@ -23,7 +23,7 @@
 	<dependencies>
 
 		<!-- Get the GATE core -->
-		<dependency org="uk.ac.gate" name="gate-core" rev="7.1"
+		<dependency org="uk.ac.gate" name="gate-core" rev="8.0"
 			conf="GATE->*">
 			<!-- need to exclude older lucene jar, conflicts with solr -->
 			<exclude name="lucene-core" />
@@ -49,10 +49,10 @@
 		</dependency>
 	
 		<!--  Restlet stuff used by the opensextant REST service -->
-		<dependency org="org.restlet.jse" name="org.restlet" rev="2.2.3"  conf="Standalone->*"/>
-		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.2.3"  conf="Standalone->*"/>
-		<dependency org="org.restlet.jse" name="org.restlet.ext.json" rev="2.2.3" conf="Standalone->*" />
-		<dependency org="org.restlet.jse" name="org.restlet.ext.jackson" rev="2.2.3"  conf="Standalone->*"/>
+		<dependency org="org.restlet.jse" name="org.restlet" rev="2.3.0"  conf="Standalone->*"/>
+		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.3.0"  conf="Standalone->*"/>
+		<dependency org="org.restlet.jse" name="org.restlet.ext.json" rev="2.3.0" conf="Standalone->*" />
+		<dependency org="org.restlet.jse" name="org.restlet.ext.jackson" rev="2.3.0"  conf="Standalone->*"/>
 
 		<!-- JTS is used for geospatial stuff in Solr -->
 		<dependency org="com.vividsolutions" name="jts" rev="1.13"
@@ -63,7 +63,7 @@
 			rev="3.0.1" conf="Standalone->*" />
 
 		<!-- the plugin uses joda time for date/time normalization -->
-		<dependency org="joda-time" name="joda-time" rev="2.2"
+		<dependency org="joda-time" name="joda-time" rev="2.7"
 			conf="Standalone->*" />
 
 		<!-- the plugin uses geodesy for geocoord normalization -->
@@ -93,7 +93,7 @@
 		<dependency org="de.grundid.opendatalab" name="geojson-jackson" rev="1.1" conf="Standalone->*"/>
 
 		<!-- Carrot used in the cluster PR -->
-		<dependency org="org.carrot2" name="carrot2-mini" rev="3.9.3" conf="Standalone->*" />
+		<dependency org="org.carrot2" name="carrot2-mini" rev="3.9.4" conf="Standalone->*" />
 
 		<!-- all the logging stuff -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"
