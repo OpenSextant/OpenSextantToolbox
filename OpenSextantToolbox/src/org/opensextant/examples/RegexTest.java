@@ -143,6 +143,7 @@ public class RegexTest {
       List<RegexAnnotation> annos = reger.match(testText);
       // examine the results and return a line to be sent to the results file
       String results = score(entityType, posOrNeg, testText, annos);
+      annos.clear();
       try {
         // write the original line and the results to the results file
         resWriter.write(line + "\t" + results);

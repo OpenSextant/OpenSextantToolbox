@@ -140,6 +140,8 @@ public class PlacenameMatcher {
       candidates.add(pc);
     }
 
+    // clear out the place id map
+    placeIDMap.clear();
     return candidates;
 
   }

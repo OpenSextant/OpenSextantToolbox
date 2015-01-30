@@ -132,6 +132,7 @@ public class GeotaggerExample {
         Geocoord coord = (Geocoord) fm.get("geo");
         double lat = coord.getLatitude();
         double lon = coord.getLongitude();
+        fm.clear();
         System.out.println("\t\t" + text + "->" + lat + "," + lon);
       }
 
@@ -148,7 +149,7 @@ public class GeotaggerExample {
         Geocoord coord = pl.getGeocoord();
         double lat = coord.getLatitude();
         double lon = coord.getLongitude();
-
+        fm.clear();
         // could also see lots more details: alternative places, scores, evidence ...
         // by getting the placeCandidate object attached
         // PlaceCandidate pcObj = (PlaceCandidate) fm.get("placeCandidate");
@@ -161,8 +162,11 @@ public class GeotaggerExample {
 
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
+      doc = null;
      // contents = null;
       f = null;
+      geocoordResults = null;
+      placeNameResults = null;
 
     } // end file loop
 

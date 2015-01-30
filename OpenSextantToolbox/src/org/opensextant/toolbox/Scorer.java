@@ -98,6 +98,8 @@ public class Scorer {
         // pc.incrementPlaceScore(p, biasWeight * prior);
       }
     }
+    // empty out the document evidence list
+    this.docEvidList.clear();
   }
 
   /**

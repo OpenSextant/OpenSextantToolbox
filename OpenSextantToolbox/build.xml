@@ -11,9 +11,9 @@ Build file for OpenSextantToolbox.
 
 	<!-- Project level properties -->
 	<property name="project.name" value="OpenSextantToolbox" />
-	<property name="version" value="2.1" />
+	<property name="version" value="2.2" />
 	<property name="releaseStatus" value="integration" />
-	<property name="java_target_version" value="1.7" />
+	<property name="java_target_version" value="1.8" />
 
 	<!-- Source directory - contains the Java source files for this project -->
 	<property name="src.dir" location="src" />
