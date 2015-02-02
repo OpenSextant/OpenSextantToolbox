@@ -3,7 +3,7 @@
 	<!--  location for Restlet stuff -->
 	<property name="restlet-repo" value="http://maven.restlet.org" />
 	<!-- location of nexus snapshots repo -->
-	<property name="nexus-snapshots" value="https://oss.sonatype.org/content/repositories/snapshots" />
+	<!--property name="nexus-snapshots" value="https://oss.sonatype.org/content/repositories/snapshots" /-->
 
 	<!-- include default definitions for "local" and "shared" resolvers -->
 	<include url="${ivy.default.settings.dir}/ivysettings-shared.xml" />
@@ -13,7 +13,7 @@
 		<chain name="External" dual="false">
 			<ibiblio name="restlet" m2compatible="true" root="${restlet-repo}" />	
 			<ibiblio name="maven2" m2compatible="true" />
-			<ibiblio name="nexus" m2compatible="true" root="${nexus-snapshots}" />
+			<!--ibiblio name="nexus" m2compatible="true" root="${nexus-snapshots}" /-->
 		</chain>
 
 	</resolvers>

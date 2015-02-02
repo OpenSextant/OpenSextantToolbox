@@ -46,6 +46,7 @@
 			<!-- big and not needed -->
 			<exclude name="lucene-analyzers-kuromoji" />
 			<exclude name="lucene-analyzers-morfologik" />
+			<exclude org = "org.eclipse.jetty.orbit" name="javax.servlet" />
 		</dependency>
 	
 		<!--  Restlet stuff used by the opensextant REST service -->
