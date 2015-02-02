@@ -23,7 +23,7 @@
 	<dependencies>
 
 		<!-- Get the GATE core -->
-		<dependency org="uk.ac.gate" name="gate-core" rev="7.1"
+		<dependency org="uk.ac.gate" name="gate-core" rev="8.0"
 			conf="GATE->*">
 			<!-- need to exclude older lucene jar, conflicts with solr -->
 			<exclude name="lucene-core" />
@@ -36,7 +36,7 @@
 
 		<!-- Get the Solr Text Tagger, which brings along the rest of Solr -->
 		<dependency org="org.opensextant" name="solr-text-tagger"
-			rev="2.0-SNAPSHOT" conf="Standalone->*">
+			rev="2.0" conf="Standalone->*">
 			<!-- exclude logging stuff -->
 			<exclude name="logback-core" />
 			<exclude name="logback-classic" />
@@ -63,7 +63,7 @@
 			rev="3.0.1" conf="Standalone->*" />
 
 		<!-- the plugin uses joda time for date/time normalization -->
-		<dependency org="joda-time" name="joda-time" rev="2.2"
+		<dependency org="joda-time" name="joda-time" rev="2.6"
 			conf="Standalone->*" />
 
 		<!-- the plugin uses geodesy for geocoord normalization -->

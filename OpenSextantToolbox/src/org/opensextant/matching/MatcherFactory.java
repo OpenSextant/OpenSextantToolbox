@@ -1,7 +1,6 @@
 package org.opensextant.matching;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -194,21 +193,21 @@ public class MatcherFactory {
       solrServerGeo = server;
       solrServerVocab = server;
     } else { // must be local, use EmbeddedSolrServer
-      try {
-        File solrXML = new File(homeLocation + File.separator + "solr.xml");
-        CoreContainer solrContainer = new CoreContainer(homeLocation);
-        solrContainer.load(homeLocation, solrXML);
+     // try {
+     // File solrXML = new File(homeLocation + File.separator + "solr.xml");
+      CoreContainer solrContainer = new CoreContainer(homeLocation);
+        //solrContainer.load(homeLocation, solrXML);
         // when we switch to solr > 4.3
-       // solrContainer.load();
-        EmbeddedSolrServer serverGeo = new EmbeddedSolrServer(solrContainer, "gazetteer");
-        EmbeddedSolrServer serverVocab = new EmbeddedSolrServer(solrContainer, "vocabulary");
-        solrServerGeo = serverGeo;
-        solrServerVocab = serverVocab;
-      } catch (FileNotFoundException e) {
+      solrContainer.load();
+      EmbeddedSolrServer serverGeo = new EmbeddedSolrServer(solrContainer, "gazetteer");
+      EmbeddedSolrServer serverVocab = new EmbeddedSolrServer(solrContainer, "vocabulary");
+      solrServerGeo = serverGeo;
+      solrServerVocab = serverVocab;
+     // } catch (FileNotFoundException e) {
         // this should never happen since we check before calling
-        log.error("Could not find solr home when initializing MatcherFactory:" + homeLocation, e);
-        return;
-      }
+       // log.error("Could not find solr home when initializing MatcherFactory:" + homeLocation, e);
+       // return;
+      //}
     }
 
     // see if solr servers are really there
