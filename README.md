@@ -14,7 +14,7 @@ Building OpenSextant from source
 
 Prerequisites
 
-	1. Java 7
+	1. Java 8 (Relase 2.1 is the last release to work with Java 7)
 	2. the Kettle ETL software (see the Gazetter project for details)
 
 1) Get the two projects from github
