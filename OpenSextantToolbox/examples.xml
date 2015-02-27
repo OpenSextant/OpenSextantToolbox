@@ -150,5 +150,26 @@ ant file to run OpenSextantToolbox Examples.
 
 	</target>
 
+	
+<target name="run.serviceclient">	
+	<echo />
+	<echo>--------------------------------------------------</echo>
+	<echo>Running the Service Client Example</echo>
+	<echo>--------------------------------------------------</echo>
+	<!-- run the geocoord regex example -->
+	<java classname="org.opensextant.service.processing.ServiceDriver" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+		<!-- add some memory -->
+		<jvmarg value="-Xmx500M" />
+		<!-- point to the log config file -->
+		<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+		<!-- directory containing the test doc -->
+		<arg value="${test.testdocs.dir}" />
+		<!-- host of the extractor service -->
+		<arg value="localhost" />
+		<!-- number of submitter threads-->
+		<arg value="6" />
+	</java>
+
+</target>
 
 </project>

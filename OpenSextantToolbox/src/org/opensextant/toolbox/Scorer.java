@@ -23,6 +23,7 @@ package org.opensextant.toolbox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
@@ -73,6 +74,12 @@ public class Scorer {
   // feature class/code similarity scores
   double featureTypeClassScore = 0.8;
   double featureTypeConfusedScore = 0.2;
+
+  static Pattern adminLikePattern = Pattern.compile("AdminRegion|Area|PopulatedPlace");
+  static Pattern adminPattern = Pattern.compile("AdminRegion");
+  static Pattern spotPattern = Pattern.compile("SpotFeature");
+  static Pattern geoPrefixPattern = Pattern.compile("^Geo.featureType.");
+
   // admin structure similarity scores
   double countryOnlyScore = 0.9;
   double countryDifferentAdminScore = .75;
@@ -236,16 +243,20 @@ public class Scorer {
    * @return
    */
   private double scoreFeatureType(PlaceEvidence evidence, Place place) {
+
     // get the two sets of feature type info (code and class)
     String evidenceFClass = evidence.getFeatureClass();
-    if(evidenceFClass != null){
-      evidenceFClass = evidenceFClass.replace("Geo.featureType.", "");
+    if (evidenceFClass != null) {
+      evidenceFClass = geoPrefixPattern.matcher(evidenceFClass).replaceFirst("");
+      // evidenceFClass = evidenceFClass.replaceFirst("^Geo.featureType.", "");
     }
     String evidenceFCode = evidence.getFeatureCode();
     double weight = evidence.getWeight();
+
     String gazetteerFClass = place.getFeatureClass();
-    if(gazetteerFClass != null){
-      gazetteerFClass = gazetteerFClass.replace("Geo.featureType.", "");
+    if (gazetteerFClass != null) {
+      gazetteerFClass = geoPrefixPattern.matcher(gazetteerFClass).replaceFirst("");
+      // gazetteerFClass = gazetteerFClass.replaceFirst("^Geo.featureType.", "");
     }
     String gazetteerFCode = place.getFeatureCode();
     // no evidence, zero score
@@ -264,16 +275,17 @@ public class Scorer {
       return featureTypeClassScore * weight;
     }
     // partial credit for the commonly confused classes of A,L and P
-    if (evidenceFClass.matches("AdminRegion|Area|PopulatedPlace") && gazetteerFClass.matches("AdminRegion|Area|PopulatedPlace")) {
+    if (adminLikePattern.matcher(evidenceFClass).matches() && adminLikePattern.matcher(gazetteerFClass).matches()) {
       return featureTypeConfusedScore * weight;
     }
     // partial credit for places used to describe spot features e.g.
     // "the Washington office"
-    if (evidenceFClass.matches("SpotFeature") && gazetteerFClass.matches("AdminRegion|Area|PopulatedPlace")) {
+    if (spotPattern.matcher(evidenceFClass).matches() && adminLikePattern.matcher(gazetteerFClass).matches()) {
       return featureTypeConfusedScore * weight;
     }
+
     // floor value for "important" gazetteer entries
-    if (gazetteerFClass.matches("AdminRegion")) {
+    if (adminPattern.matcher(gazetteerFClass).matches()) {
       return featureTypeConfusedScore * weight;
     }
     // must be incompatible class/code

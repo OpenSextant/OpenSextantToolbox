@@ -390,6 +390,7 @@ Build file for OpenSextantToolbox.
 	<!-- Copy over the some misc config stuff -->
 	<target name="release.misc">
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/log4j.properties" />
+		<copy todir="${release.dir}/etc" file="${basedir}/etc/restletlog.properties" />
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/service-config.properties" />
 		<copy todir="${release.dir}/scripts"  >
 			<fileset dir="${basedir}/scripts" />
@@ -557,6 +558,29 @@ Build file for OpenSextantToolbox.
 	</target>
 
 
+	<target name="example.serviceClient">	
+		<echo />
+		<echo>--------------------------------------------------</echo>
+		<echo>Running the Service Client Example</echo>
+		<echo>--------------------------------------------------</echo>
+		<!-- run the geocoord regex example -->
+		<java classname="org.opensextant.service.processing.ServiceDriver" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+			<!-- add some memory -->
+			<jvmarg value="-Xmx500M" />
+			<!-- point to the log config file -->
+			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<!-- directory containing the test doc -->
+			<arg value="${test.testdocs.dir}" />
+			<!-- host of the extractor service -->
+			<arg value="localhost" />
+			<!-- number of submitter threads-->
+			<arg value="12" />
+		</java>
+
+	</target>
+	
+	
+	
 
 	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
 	<!-- NOTE: this target presumes a release has been built but doesnt trigger one -->
