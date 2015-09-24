@@ -149,20 +149,14 @@ public class OpenSextantExtractorResource extends ServerResource {
     for (FileItem fileItem : fileItems) {
 
       if (fileItem.getFieldName().equalsIgnoreCase(filename)) {
-        // InputStream is = null;
-        URL url = null;
-        // String ct = fileItem.getContentType();
         String fn = fileItem.getName();
-
         try {
 
           File tmpFile = File.createTempFile("ossvr", fn);
+          tmpFile.deleteOnExit();
           fileItem.write(tmpFile);
-          // System.out.println("Saving temp file:" + tmpFile.getName());
           return tmpFile.toURI().toURL();
 
-          // is = fileItem.getInputStream();
-          // url = StreamUrl("http://infile", is, ct);
         } catch (MalformedURLException e) {
           e.printStackTrace();
           return null;
@@ -170,11 +164,10 @@ public class OpenSextantExtractorResource extends ServerResource {
           e.printStackTrace();
           return null;
         } catch (Exception e) {
-          // TODO Auto-generated catch block
           e.printStackTrace();
+          return null;
         }
 
-        return url;
       }
 
     }// end fileitems loop
@@ -209,6 +202,13 @@ public class OpenSextantExtractorResource extends ServerResource {
 
     if (dpPool.getProcessNames().contains(extractType)) {
       DocumentBean doc = dpPool.process(extractType, content);
+
+      // clean up temp file if used
+      if(content.getProtocol().equalsIgnoreCase("file")){
+        String tempFilePath = content.getPath();
+        File tmpFile = new File(tempFilePath);
+        tmpFile.delete();
+      }
 
       if (doc != null) {
         return convertResult(doc, resultFormat);

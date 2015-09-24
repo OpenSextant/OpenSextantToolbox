@@ -12,6 +12,7 @@ To start the OpenSextant REST server
  	 change os.service.app.general.poolsize to indicate how many general purpose extractors start 
  	 
  2) (Windows) double click <OpenSextantHome>/scripts/start.bat
+    (Linux) run start.sh  (see also "InstallAsService.txt")
  
 Three types of services available
  1) Extraction - process a document to extract places, people, organizations,...
