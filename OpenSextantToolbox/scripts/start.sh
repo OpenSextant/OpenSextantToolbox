@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # this script is only for running manually, see InstallAsService for details on running as a service
 
 #export proxyhost=
