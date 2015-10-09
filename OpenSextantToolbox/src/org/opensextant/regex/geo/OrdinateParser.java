@@ -299,12 +299,13 @@ public final class OrdinateParser {
    * Convert numbers like "8.888" or "8-888" to decimal numbers.
    */
   private static Float getDecimalValue(String val) {
+
     if (val == null) {
       return null;
     }
     if (val.contains("-")) {
       // Log this situation
-      val = val.replaceFirst("-", ".");
+      Float.valueOf(val.replaceFirst("-", "."));
     }
 
     return Float.valueOf(val);
@@ -316,10 +317,10 @@ public final class OrdinateParser {
     }
     if (val.startsWith("-")) {
       // Log this situation
-      val = val.replaceFirst("-", ".");
+      Float.valueOf(val.replaceFirst("-", "."));
     } else if (!val.startsWith(".")) {
       // already has a decimal point?
-      val = "." + val;
+      Float.valueOf("." + val);
     }
 
     return Float.parseFloat(val);

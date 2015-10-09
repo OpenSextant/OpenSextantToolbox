@@ -96,6 +96,10 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
     return this.weight == tmp.weight;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
     return super.hashCode();

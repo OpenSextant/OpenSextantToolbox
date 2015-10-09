@@ -70,16 +70,13 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
   double upperCaseThresh = 0.90;
   double sentenceRatioThresh = 1.0;
 
-  private void initialize() {
-  }
-
   /**
    * @return
    * @throws ResourceInstantiationException
    */
   @Override
   public Resource init() throws ResourceInstantiationException {
-    initialize();
+
     return this;
   }
 
@@ -88,7 +85,7 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
    */
   @Override
   public void reInit() throws ResourceInstantiationException {
-    initialize();
+
   }
 
   /**

@@ -30,10 +30,6 @@ public class OpenSextantAdminResource extends ServerResource {
     operations.add("shutdown");
   }
 
-  @Override
-  protected void doInit() {
-    super.doInit();
-  }
   /** Get a reference to the in the Application. */
 
   @Post

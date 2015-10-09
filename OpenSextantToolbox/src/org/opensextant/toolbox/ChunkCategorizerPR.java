@@ -91,15 +91,17 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
 
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
+    LOGGER.info("Chunker Categorizer aborted");
   }
 
   @Override
   public void controllerExecutionFinished(Controller arg0) throws ExecutionException {
+    LOGGER.info("Chunk Categorizer finished");
   }
 
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
-
+    LOGGER.info("Chunker Categorizer started");
   }
 
   public String getAnnotationName() {

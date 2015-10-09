@@ -114,6 +114,10 @@ public class Place implements Comparable<Object>, Serializable {
     return false;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
     return super.hashCode();

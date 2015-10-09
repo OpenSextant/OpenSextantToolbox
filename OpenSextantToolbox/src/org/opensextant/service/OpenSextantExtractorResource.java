@@ -186,18 +186,6 @@ public class OpenSextantExtractorResource extends ServerResource {
     }
   }
 
-  @SuppressWarnings("unused")
-  private Representation extract(String extractType, String resultFormat, File content) {
-
-    if (dpPool.getProcessNames().contains(extractType)) {
-      DocumentBean result = dpPool.process(extractType, content);
-
-      return convertResult(result, resultFormat);
-    } else {
-      return new StringRepresentation("Unknown extraction type:" + extractType);
-    }
-  }
-
   private Representation extract(String extractType, String resultFormat, URL content) {
 
     if (dpPool.getProcessNames().contains(extractType)) {

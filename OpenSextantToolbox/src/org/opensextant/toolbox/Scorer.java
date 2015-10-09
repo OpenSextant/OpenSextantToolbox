@@ -115,17 +115,19 @@ public class Scorer {
     // TODO if there is evidence but no country and admin evidence
     // use document level evidence
     // if no evidence from candidate, use document level evidence
+
+    List<PlaceEvidence> tmpEvidList = evidList;
     if (evidList.isEmpty()) {
       if (!docEvidList.isEmpty()) {
 
-        evidList = docEvidList;
+        tmpEvidList = docEvidList;
       } else {
         // no local or document level evidence
         return 0.0;
       }
     }
     // for each bit of evidence
-    for (PlaceEvidence ev : evidList) {
+    for (PlaceEvidence ev : tmpEvidList) {
       // compare the evidence to the place
       double singleScore = score(ev, p);
       // running product of the scores
@@ -133,7 +135,7 @@ public class Scorer {
       // running sum of the scores
       sumScore = sumScore + singleScore;
     }
-    return sumScore / evidList.size();
+    return sumScore / tmpEvidList.size();
   }
 
   /**

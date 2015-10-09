@@ -64,6 +64,10 @@ public class ScoredPlace implements Comparable<Object> {
     return o instanceof ScoredPlace && getScore() - ((ScoredPlace) o).getScore() <= 0.0;
   }
 
+  /*
+   * (non-Javadoc)
+   * @see java.lang.Object#hashCode()
+   */
   @Override
   public int hashCode() {
     return super.hashCode();

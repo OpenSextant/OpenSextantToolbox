@@ -135,10 +135,6 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
   }
   /** End execute(). */
 
-  @Override
-  public void cleanup() {
-  }
-
   public URL getLexiconFileURL() {
     return lexiconFileURL;
   }

@@ -34,8 +34,6 @@ import gate.creole.metadata.Optional;
 import gate.creole.metadata.RunTime;
 
 import org.opensextant.phonetic.Phoneticizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This GATE ProcessingResource implements a tagger which adds a "phonetically" reduced string to tokens as a feature.
@@ -58,8 +56,6 @@ public class PhoneticTaggerPR extends AbstractLanguageAnalyser implements Proces
   // the thing that does all the phonetic work
   transient Phoneticizer phoner = null;
 
-  // Log object
-  private static final Logger LOGGER = LoggerFactory.getLogger(PhoneticTaggerPR.class);
   private void initialize() {
     phoner = new Phoneticizer();
   }

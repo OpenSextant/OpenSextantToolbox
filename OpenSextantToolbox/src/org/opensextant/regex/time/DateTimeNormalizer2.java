@@ -231,38 +231,40 @@ public class DateTimeNormalizer2 implements Normalizer {
   /** Some hackery to convert some values to those that Joda recognizes. */
   private String cleanValues(String elemName, String elemValue) {
 
+    String cleanValue = elemValue;
     // strip trailing periods on abbreviated months and add "SEPT" as valid abbrev
     if ("MMM".equals(elemName)) {
-      elemValue = elemValue.replaceFirst("\\.$", "").replaceFirst("(?i:sept)", "Sep");
+      cleanValue = cleanValue.replaceFirst("\\.$", "").replaceFirst("(?i:sept)", "Sep");
     }
 
     // strip leading apostrophe/tic from abbreviated year
     if ("YY".equals(elemName)) {
-      elemValue = elemValue.replaceFirst("^['`]", "");
+      cleanValue = cleanValue.replaceFirst("^['`]", "");
     }
 
     // strip trailing ordinals from days
     if ("dd".equals(elemName)) {
-      elemValue = elemValue.replaceFirst("(st|nd|rd|th|ST|ND|RD|TH)$", "");
+      cleanValue = cleanValue.replaceFirst("(st|nd|rd|th|ST|ND|RD|TH)$", "");
     }
 
     // strip periods from abbreviated eras
     if ("G".equals(elemName)) {
-      elemValue = elemValue.replaceAll("\\.", "").toUpperCase();
+      cleanValue = cleanValue.replaceAll("\\.", "").toUpperCase();
     }
 
     // convert Z,ZULU and UTC timezones to GMT
     if ("z".equals(elemName)
-        && ("Z".equalsIgnoreCase(elemValue) || "ZULU".equalsIgnoreCase(elemValue) || "UTC".equalsIgnoreCase(elemValue))) {
-      elemValue = "GMT";
+        && ("Z".equalsIgnoreCase(cleanValue) || "ZULU".equalsIgnoreCase(cleanValue) || "UTC"
+            .equalsIgnoreCase(cleanValue))) {
+      cleanValue = "GMT";
     }
 
     // strip periods from am/pm eras
     if ("a".equals(elemName)) {
-      elemValue = elemValue.replaceAll("\\.", "").toUpperCase();
+      cleanValue = cleanValue.replaceAll("\\.", "").toUpperCase();
     }
 
-    return elemValue;
+    return cleanValue;
   }
 
 }

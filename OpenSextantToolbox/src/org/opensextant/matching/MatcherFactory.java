@@ -706,7 +706,7 @@ public class MatcherFactory {
    */
   protected static String internString(String in) {
     if (in != null) {
-      in = in.intern();
+      return in.intern();
     }
     return in;
   }
