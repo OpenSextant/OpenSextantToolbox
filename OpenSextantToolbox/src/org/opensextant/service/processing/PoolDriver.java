@@ -42,15 +42,12 @@ public class PoolDriver {
 
     DocumentProcessorPool dpPool = new DocumentProcessorPool(prop);
 
-    File inDir =  new File(args[1]);
+    File inDir = new File(args[1]);
 
-    Collection<File> filesToProcess = FileUtils.listFiles(inDir,
-        FileFilterUtils.trueFileFilter(),
+    Collection<File> filesToProcess = FileUtils.listFiles(inDir, FileFilterUtils.trueFileFilter(),
         FileFilterUtils.trueFileFilter());
 
- 
-
-    for(File f : filesToProcess){
+    for (File f : filesToProcess) {
       DocumentBean result = dpPool.process("general", f);
       System.out.println(f.getName());
       holdem.add(result);

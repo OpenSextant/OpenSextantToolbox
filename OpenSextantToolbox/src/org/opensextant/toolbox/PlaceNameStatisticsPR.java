@@ -87,8 +87,8 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     // get all of the annotations of interest
     AnnotationSet placeCandAnnoSet = document.getAnnotations().get(this.placeAnnotationName);
     docCount++;
-    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " " + placeAnnotationName
-        + " annotations");
+    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " "
+        + placeAnnotationName + " annotations");
     // loop over all placeCandidate annotations
     for (Annotation anno : placeCandAnnoSet) {
       PlaceCandidate pc = (PlaceCandidate) anno.getFeatures().get(featureName);
@@ -148,7 +148,8 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
       openFiles();
       writeStats();
     }
-  } /** End execute. */
+  }
+  /** End execute. */
 
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {

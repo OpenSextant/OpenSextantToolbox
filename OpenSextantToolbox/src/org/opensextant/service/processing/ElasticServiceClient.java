@@ -40,11 +40,10 @@ public class ElasticServiceClient extends ServiceClient {
     ClientResource storeResource = new ClientResource(storeRef);
     storeResource.setNext(client);
 
-   
     try {
       InputRepresentation extractRep = new InputRepresentation(extractResult.getStream(), MediaType.TEXT_PLAIN);
     } catch (IOException e) {
-      LOGGER.warn("Could not handle result",e);
+      LOGGER.warn("Could not handle result", e);
     }
 
   }

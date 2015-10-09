@@ -62,7 +62,8 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
   private void initialize() {
     // initialize the regex matcher
     reger = new RegexMatcher(patternFile);
-  } /** End initialize. */
+  }
+  /** End initialize. */
 
   @Override
   public Resource init() throws ResourceInstantiationException {

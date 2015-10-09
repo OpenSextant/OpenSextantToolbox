@@ -89,7 +89,8 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     for (Annotation anno : annoSet) {
       writeAnnotation(anno);
     } // end annotation loop
-  } /** End execute. */
+  }
+  /** End execute. */
 
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
@@ -164,7 +165,7 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
         } else {
           vocabWriter.write("");
         }
-		vocabWriter.write("\t");
+        vocabWriter.write("\t");
       }
       vocabWriter.write(anno.getStartNode().getOffset().toString());
       vocabWriter.write("\t");

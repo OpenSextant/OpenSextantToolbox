@@ -33,13 +33,11 @@ import org.slf4j.LoggerFactory;
 public class DocumentProcessorPool {
 
   private Map<String, BlockingQueue<DocumentProcessor>> poolMap = new HashMap<String, BlockingQueue<DocumentProcessor>>();
-  private  long docsProcessedCount;
-  private  long docsFailedCount;
-  
- /** Log object. */
+  private long docsProcessedCount;
+  private long docsFailedCount;
+
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(DocumentProcessorPool.class);
-
-
 
   public DocumentProcessorPool(Properties prop) {
 
@@ -258,14 +256,14 @@ public class DocumentProcessorPool {
   /**
    * @return the docsProcessedCount
    */
-  public  long getDocsProcessedCount() {
+  public long getDocsProcessedCount() {
     return docsProcessedCount;
   }
 
   /**
    * @return the docsFailedCount
    */
-  public  long getDocsFailedCount() {
+  public long getDocsFailedCount() {
     return docsFailedCount;
   }
 

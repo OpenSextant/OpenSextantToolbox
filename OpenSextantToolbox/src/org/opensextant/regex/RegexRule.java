@@ -89,8 +89,7 @@ public class RegexRule {
 
   @Override
   public String toString() {
-    return this.entityType + "(" + getTaxo() + ") " + this.ruleFamily + "/" + this.ruleName + "->"
-        + this.patternString + "\t" + this.modifedPatternString + "\t" + this.elementMap + "\t"
-        + this.normalizer.getClass().getName();
+    return this.entityType + "(" + getTaxo() + ") " + this.ruleFamily + "/" + this.ruleName + "->" + this.patternString
+        + "\t" + this.modifedPatternString + "\t" + this.elementMap + "\t" + this.normalizer.getClass().getName();
   }
 }

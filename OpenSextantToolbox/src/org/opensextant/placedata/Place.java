@@ -307,7 +307,6 @@ public class Place implements Comparable<Object>, Serializable {
     this.geocoord = geocoord;
   }
 
-
   public String getNameTypeSystem() {
     return nameTypeSystem;
   }

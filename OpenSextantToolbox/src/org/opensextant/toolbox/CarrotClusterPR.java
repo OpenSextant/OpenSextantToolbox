@@ -65,7 +65,6 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
   String clusterAlgo; // algorithm/method used to produce the clusters
   transient Controller controller; // the thing that does all the work
 
-
   private void initialize() {
 
     controller = ControllerFactory.createCachingPooling(IClusteringAlgorithm.class);
@@ -144,7 +143,6 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
     // attach cluster info to document and to annotations
     List<Cluster> clusters = result.getClusters();
 
-
     List<String> labels = new ArrayList<String>();
     for (Cluster cl : clusters) {
       labels.add(cl.getLabel());
@@ -215,8 +213,6 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
   public void setSubAnnoName(String annoName) {
     this.subAnnotationName = annoName;
   }
-
-
 
   /**
    * @return

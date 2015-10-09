@@ -34,9 +34,7 @@ public class OpenSextantAdminResource extends ServerResource {
   protected void doInit() {
     super.doInit();
   }
-    /** Get a reference to the in the Application. */
-
-
+  /** Get a reference to the in the Application. */
 
   @Post
   @Put
@@ -67,12 +65,12 @@ public class OpenSextantAdminResource extends ServerResource {
       DocumentProcessorPool dpPool = ((OpenSextantApplication) getApplication()).getPool();
       Map<String, Integer> avail = dpPool.available();
 
-      long failCount  = dpPool.getDocsFailedCount();
+      long failCount = dpPool.getDocsFailedCount();
       long procCount = dpPool.getDocsProcessedCount();
 
       String stat = "green";
 
-      if(avail.isEmpty()){
+      if (avail.isEmpty()) {
         stat = "red";
       }
 

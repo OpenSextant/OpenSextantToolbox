@@ -36,18 +36,15 @@ import org.opensextant.geodesy.UTM;
  */
 public class UTMParser {
 
-
   /**
-   * Log object
-   * private static final Logger LOGGER = LoggerFactory.getLogger(UTMParser.class);
+   * Log object private static final Logger LOGGER = LoggerFactory.getLogger(UTMParser.class);
    */
   public static final char UTM_NORTH = 'N';
   public static final char UTM_SOUTH = 'S';
 
   private UTMParser() {
   }
-  
-  
+
   public static UTM parseUTM(Map<String, String> elements) {
 
     String z = elements.get("UTMZone");

@@ -30,12 +30,9 @@ public class RegexMatcher {
   Map<PostProcessor, Set<String>> posters = new HashMap<PostProcessor, Set<String>>();
 
   /**
-   * Future stuff: named groups useful?
-   * String namedGroup = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
-   * Pattern namedGroupPattern = Pattern.compile(namedGroup);
-
-   * the pattern of a DEFINE within a RULE e.g "<somePiece>"
-   * NOTE: should we look for existing (not DEFINEDd) capture groups
+   * Future stuff: named groups useful? String namedGroup = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>"; Pattern namedGroupPattern
+   * = Pattern.compile(namedGroup); the pattern of a DEFINE within a RULE e.g "<somePiece>" NOTE: should we look for
+   * existing (not DEFINEDd) capture groups
    */
   String elementRegex = "<[a-zA-Z0-9_]+>";
   Pattern elementPattern = Pattern.compile(elementRegex);
@@ -62,8 +59,6 @@ public class RegexMatcher {
       LOGGER.error("Tried to use RegexMatcher without initializing first");
       return matches;
     }
-
-
 
     for (RegexRule r : rules) {
       String t = r.getEntityType();
@@ -272,7 +267,8 @@ public class RegexMatcher {
     }
 
     isInited = true;
-  } /** End initialize. */
+  }
+  /** End initialize. */
 
   public void initialize(File patFile) {
     try {

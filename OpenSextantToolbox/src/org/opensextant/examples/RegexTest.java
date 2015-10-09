@@ -224,11 +224,11 @@ public class RegexTest {
       }
 
     } else // perfect result (doesnt matter what else is found)
-      if (!typesFound.contains(correctType)) {
-        assessment = "TN";
-      } else {
-        assessment = "FP";
-      }
+    if (!typesFound.contains(correctType)) {
+      assessment = "TN";
+    } else {
+      assessment = "FP";
+    }
 
     // check the match lengths to see if we got the whole thing
     boolean whole = correctMatchLength == maxMatchedLength;

@@ -52,6 +52,6 @@ public class SolrTaggerRequest extends QueryRequest {
   public Collection<ContentStream> getContentStreams() {
     ContentStreamBase.StringStream stream = new ContentStreamBase.StringStream(input);
     stream.setContentType("application/octet-stream");
-    return Collections.singleton((ContentStream)stream);
+    return Collections.singleton((ContentStream) stream);
   }
 }

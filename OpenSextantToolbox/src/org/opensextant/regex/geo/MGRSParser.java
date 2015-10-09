@@ -45,15 +45,13 @@ import org.slf4j.LoggerFactory;
  */
 public class MGRSParser {
 
-
-
   /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(MGRSParser.class);
 
   private static DateFormat df1 = new java.text.SimpleDateFormat("ddMMMyyyy");
   private static DateFormat df2 = new java.text.SimpleDateFormat("ddMMMyy");
   static final Pattern DELWS = Pattern.compile("\\s+");
-  
+
   static {
     // turn off lenient date parsing
     df1.setLenient(false);
@@ -62,7 +60,7 @@ public class MGRSParser {
 
   private MGRSParser() {
   }
-  
+
   public static List<MGRS> parseMGRS(Map<String, String> elements) {
 
     // get all of the pieces
@@ -72,7 +70,7 @@ public class MGRSParser {
 
     // the results
     List<MGRS> mgrs = new ArrayList<MGRS>();
-    
+
     // have all the pieces?
     if (zone == null || quad == null || en == null) {
       return mgrs;
@@ -88,7 +86,7 @@ public class MGRSParser {
         try {
           tmp = new MGRS(var);
         } catch (IllegalArgumentException e) {
-          LOGGER.warn("Could not parse MGRS:" + var,e);
+          LOGGER.warn("Could not parse MGRS:" + var, e);
         }
         if (tmp != null) {
           mgrs.add(tmp);
@@ -120,7 +118,6 @@ public class MGRSParser {
     // TODO what about these?
     // 20PER1000 - ratio
     // 18DEG20 - part of an obscure lat/lon
-
 
     // remove whitespace
     String tmp = txt.replaceAll("\\s", "");
@@ -157,12 +154,10 @@ public class MGRSParser {
     try {
       return Integer.parseInt(x);
     } catch (Exception e) {
-      LOGGER.error("Could parse integer:" ,e);
+      LOGGER.error("Could parse integer:", e);
       return -1;
     }
   }
-
-
 
   public static String deleteWhitespace(String t) {
     Matcher m = DELWS.matcher(t);

@@ -112,7 +112,8 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
     }
     // score and rank the Places in each PC according to the evidence
     scr.score(pcList);
-  } /** End execute. */
+  }
+  /** End execute. */
 
   public String getOutputAnnotationSet() {
     return outputAnnotationSet;

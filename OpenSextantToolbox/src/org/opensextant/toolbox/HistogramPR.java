@@ -113,7 +113,8 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
       openFiles();
       writeStats();
     }
-  } /** End execute. */
+  }
+  /** End execute. */
 
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {

@@ -110,10 +110,10 @@ public class PlacenameMatcher {
 
         // don't tag if place name is an abbrev and matchtext is all lower case
         if (!tagAbbrev && place.isAbbreviation() && isLower) {
-            isValid = false;
+          isValid = false;
           LOGGER.debug("Not tagging abbreviation:" + matchText);
-            break;
-          }
+          break;
+        }
 
         // don't add places already on candidate
         if (!seenPlaces.contains(place.getPlaceID())) {

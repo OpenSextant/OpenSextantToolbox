@@ -66,7 +66,6 @@ public abstract class PostProcessorBase implements PostProcessor {
     RegexAnnotation a = annos.get(0);
     currentGroup.add(a);
 
-
     // loop over all the rest of the annos
     for (int i = 1; i < annos.size(); i++) {
 

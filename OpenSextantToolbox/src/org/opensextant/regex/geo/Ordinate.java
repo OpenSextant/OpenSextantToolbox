@@ -31,10 +31,7 @@ import org.opensextant.regex.geo.OrdinateParser.AXIS;
 public final class Ordinate {
 
   /**
-   * Log object
-   * private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class);
-
-   * the ordinate type [DD,DMS]
+   * Log object private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class); the ordinate type [DD,DMS]
    */
   private OrdinateParser.ORDINATETYPE type = OrdinateParser.ORDINATETYPE.DD;
 
@@ -56,7 +53,9 @@ public final class Ordinate {
 
   public boolean isValid() {
 
-    return ordinateValue != null && hemi != 0 && axis != null && (axis != AXIS.LATITUDE || ordinateValue <= OrdinateParser.LAT_MAX) && (axis != AXIS.LONGITUDE || ordinateValue <= OrdinateParser.LON_MAX);
+    return ordinateValue != null && hemi != 0 && axis != null
+        && (axis != AXIS.LATITUDE || ordinateValue <= OrdinateParser.LAT_MAX)
+        && (axis != AXIS.LONGITUDE || ordinateValue <= OrdinateParser.LON_MAX);
 
   }
 

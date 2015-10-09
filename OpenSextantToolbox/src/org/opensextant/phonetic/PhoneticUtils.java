@@ -39,7 +39,6 @@ public class PhoneticUtils {
   /** TODO: convert bytes here to \\u patterns */
   static final Pattern CLEAN_WORD_PUNCT = Pattern.compile("[\"'.`\\u00B4\\u2018\\u2019]");
 
-  
   private PhoneticUtils() {
 
   }
@@ -2022,7 +2021,6 @@ public class PhoneticUtils {
     return out.toString();
   }
 
-
   /**
    * Remove any leading and trailing punctuation and some internal punctuation. Internal punctuation which indicates
    * conjunction of two tokens, e.g. a hyphen, should have caused a split into separate tokens at the tokenization
@@ -2051,7 +2049,7 @@ public class PhoneticUtils {
     String tmpWord = word.replaceAll("\\P{L}", "");
     Set<String> scriptsSeen = new TreeSet<String>();
     char[] chars = tmpWord.toCharArray();
-    for(int c=0; c< chars.length; c++){
+    for (int c = 0; c < chars.length; c++) {
       int cp = Character.codePointAt(chars, c);
       UnicodeScript scr = Character.UnicodeScript.of(cp);
       scriptsSeen.add(scr.name());
@@ -2059,6 +2057,5 @@ public class PhoneticUtils {
 
     return scriptsSeen;
   }
-
 
 }

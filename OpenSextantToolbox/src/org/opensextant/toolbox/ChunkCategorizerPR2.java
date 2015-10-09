@@ -132,7 +132,8 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     for (Annotation np : npSet) {
       createDerivedEntities(np, annotSet);
     }
-  } /** End execute. */
+  }
+  /** End execute. */
 
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
@@ -193,9 +194,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
   }
 
   /**
-   * Attache a CategorySequence,CategorySequence_Reduced and ProperSequence
-   * features to
-   * NounPhrase.
+   * Attache a CategorySequence,CategorySequence_Reduced and ProperSequence features to NounPhrase.
    */
   private void attachCategorySequence(Annotation np, AnnotationSet tokens) {
     Long start = np.getStartNode().getOffset();
@@ -230,8 +229,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
   }
 
   /**
-   * Categorize a nounPhrase based on its category sequence
-   * also populate the coref mapping.
+   * Categorize a nounPhrase based on its category sequence also populate the coref mapping.
    */
   private void categorize(Annotation np) {
     List<?> categories = (List<?>) np.getFeatures().get("CategorySequence");
@@ -358,8 +356,8 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
   }
 
   /**
-   * Thin out the annotation set by removing any annotation which is
-   * completely within but not identical (in length) to another.
+   * Thin out the annotation set by removing any annotation which is completely within but not identical (in length) to
+   * another.
    */
   private AnnotationSet thinAnnotations(AnnotationSet annoSet, String setName) {
     List<Annotation> survivorList = new ArrayList<Annotation>(annoSet);

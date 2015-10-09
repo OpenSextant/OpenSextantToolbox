@@ -55,9 +55,9 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
     // Load the model
     try {
       model = Model.readModel(new BufferedReader(new InputStreamReader(lexiconFileURL.openStream(), "UTF-8")),
-          new BufferedReader(new InputStreamReader(ngramFileURL.openStream(),"UTF-8")));
-      guesserModel = Model.readModel(new BufferedReader(new InputStreamReader(guesserLexiconFileURL.openStream(),"UTF-8")),
-          new BufferedReader(new InputStreamReader(guesserNgramFileURL.openStream(),"UTF-8")));
+          new BufferedReader(new InputStreamReader(ngramFileURL.openStream(), "UTF-8")));
+      guesserModel = Model.readModel(new BufferedReader(new InputStreamReader(guesserLexiconFileURL.openStream(),
+          "UTF-8")), new BufferedReader(new InputStreamReader(guesserNgramFileURL.openStream(), "UTF-8")));
     } catch (IOException e) {
       LOGGER.error("Unable to read the POS model!", e);
 
@@ -92,8 +92,8 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
   @Override
   public void execute() throws ExecutionException {
     if ("".equals(inputASName)) {
-		inputASName = null;
-	}
+      inputASName = null;
+    }
     AnnotationSet inputAS = (inputASName == null) ? document.getAnnotations() : document.getAnnotations(inputASName);
     // Get all of the sentences in document
     AnnotationSet sentenceSet = inputAS.get("Sentence");
@@ -132,7 +132,8 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
         annoList.get(i).getFeatures().put(featureName, tags.get(i + indexOffset));
       }
     } // end sentence iterator
-  } /** End execute(). */
+  }
+  /** End execute(). */
 
   @Override
   public void cleanup() {

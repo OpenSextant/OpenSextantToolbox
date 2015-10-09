@@ -41,16 +41,13 @@ public class Cantilever {
   /** The factor to weigh place confidence which has been propagated (< 1.0) */
   private static double confidencePropFactor = 0.75;
   /**
-   * The factor to weigh document level country information(< 1.0)
-   * private static double CountryPropFactor = 0.1;
-   * the factor to weigh document level admin1 information(< 1.0)
-   * private static double AdminPropFactor = 0.1;
-   * the inexact matcher used to find the "same" place
+   * The factor to weigh document level country information(< 1.0) private static double CountryPropFactor = 0.1; the
+   * factor to weigh document level admin1 information(< 1.0) private static double AdminPropFactor = 0.1; the inexact
+   * matcher used to find the "same" place
    */
   private static Phoneticizer phoner = new Phoneticizer();
   /** Which phonetic/inexact algorithm to use. */
   private static String phoneticAlgName = "SimplePhonetic0";
-
 
   /**
    * Iterate through a List of PlaceCandidates to determine is-place confidence scores and propagate place evidence.

@@ -61,7 +61,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
   private String annotationType;
 
   private boolean outputASNameSet = false;
-  
+
   // location of solr gazetteer
   private String gazetteerHome;
 
@@ -208,8 +208,6 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
   public void setAnnotationType(String annotationType) {
     this.annotationType = annotationType;
   }
-
-
 
   public String getGazHome() {
     return gazetteerHome;

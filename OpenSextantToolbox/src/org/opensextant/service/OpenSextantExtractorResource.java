@@ -58,7 +58,7 @@ public class OpenSextantExtractorResource extends ServerResource {
   DocumentProcessorPool dpPool;
 
   @Override
-  protected void doInit()  {
+  protected void doInit() {
     super.doInit();
     // get a reference to the pool in the Application
     dpPool = ((OpenSextantApplication) getApplication()).getPool();
@@ -204,7 +204,7 @@ public class OpenSextantExtractorResource extends ServerResource {
       DocumentBean doc = dpPool.process(extractType, content);
 
       // clean up temp file if used
-      if("file".equalsIgnoreCase(content.getProtocol())){
+      if ("file".equalsIgnoreCase(content.getProtocol())) {
         String tempFilePath = content.getPath();
         File tmpFile = new File(tempFilePath);
         tmpFile.delete();
@@ -286,9 +286,8 @@ public class OpenSextantExtractorResource extends ServerResource {
         Map<String, Object> fm = a.getFeatures();
         Object h = fm.get("hierarchy");
 
-        buff.append(a.getMatchText()).append("\t").append(t).append("\t")
-				.append(h).append("\t").append(a.getStart()).append("\t")
-				.append(a.getEnd()).append("\t");
+        buff.append(a.getMatchText()).append("\t").append(t).append("\t").append(h).append("\t").append(a.getStart())
+            .append("\t").append(a.getEnd()).append("\t");
         buff.append(db.getSnippet(a, 25));
 
         if ("Date".equalsIgnoreCase(t)) {

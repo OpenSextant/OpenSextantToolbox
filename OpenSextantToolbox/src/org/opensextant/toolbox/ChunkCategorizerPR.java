@@ -86,7 +86,8 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
         document.getAnnotations().add(a.getStartNode(), a.getEndNode(), "NOT_CATEGORIZED", a.getFeatures());
       }
     } // end annotation loop
-  } /** End execute. */
+  }
+  /** End execute. */
 
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
@@ -169,8 +170,7 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
   }
 
   /**
-   * Thin out the annotation set by removing
-   * a) any annotation which is completely within but not identical to another.
+   * Thin out the annotation set by removing a) any annotation which is completely within but not identical to another.
    */
   private AnnotationSet thinAnnotations(AnnotationSet annoSet) {
     List<Annotation> survivorList = new ArrayList<Annotation>(annoSet);

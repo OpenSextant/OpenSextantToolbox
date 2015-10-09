@@ -139,7 +139,6 @@ public class Geocoord implements java.io.Serializable {
     this.longitude = longitude;
   }
 
-
   @Override
   public String toString() {
     if (isValid) {

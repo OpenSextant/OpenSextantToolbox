@@ -59,8 +59,7 @@ public class OpenSextantLookupResource extends ServerResource {
     LOGGER.info("Found " + placesFound.size() + " places");
 
     if ("json".equalsIgnoreCase(format)) {
-      return new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON,
-          placesFound);
+      return new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON, placesFound);
     }
 
     if ("csv".equalsIgnoreCase(format)) {
@@ -92,7 +91,7 @@ public class OpenSextantLookupResource extends ServerResource {
   }
 
   @Put
-  public Representation doPut(){
+  public Representation doPut() {
 
     return handle(getRequest());
   }

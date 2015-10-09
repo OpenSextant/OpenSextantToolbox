@@ -56,7 +56,7 @@ public class GeoNormalizer implements Normalizer {
         lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATETYPE.DD);
         lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATETYPE.DD);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno + " Ordinate Parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " Ordinate Parser exception:", e);
       }
 
       if (lat != null && lon != null) {
@@ -78,7 +78,7 @@ public class GeoNormalizer implements Normalizer {
         lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATETYPE.DMS);
         lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATETYPE.DMS);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno + " Ordinate Parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " Ordinate Parser exception:", e);
       }
 
       if (lat != null && lon != null) {
@@ -99,7 +99,7 @@ public class GeoNormalizer implements Normalizer {
       try {
         mgrsCandidates = MGRSParser.parseMGRS(elementsFound);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno + " MGRS parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " MGRS parser exception:", e);
 
       }
 
@@ -130,7 +130,7 @@ public class GeoNormalizer implements Normalizer {
       try {
         utm = UTMParser.parseUTM(elementsFound);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno + " UTM parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " UTM parser exception:", e);
       }
 
       if (utm != null) {

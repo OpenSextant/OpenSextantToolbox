@@ -22,8 +22,8 @@ public class DateTimeNormalizer2 implements Normalizer {
   }
 
   /**
-   * Map containing all of the Joda defined formatting elements and their corresponding TimeResolutions
-   * NOTE: any element names appearing in a regex other than these will be ignored for normalization purposes
+   * Map containing all of the Joda defined formatting elements and their corresponding TimeResolutions NOTE: any
+   * element names appearing in a regex other than these will be ignored for normalization purposes
    */
   private static Map<String, TimeResolution> jodaNames = new HashMap<String, TimeResolution>();
   static {
@@ -220,10 +220,8 @@ public class DateTimeNormalizer2 implements Normalizer {
   }
 
   /**
-   * TODO decide on value for missing year
-   * if the pattern does not include some form of "YEAR", use
-   * current year?, Joda default year (2000),? year 0000?
-   * get a year value when none has been found
+   * TODO decide on value for missing year if the pattern does not include some form of "YEAR", use current year?, Joda
+   * default year (2000),? year 0000? get a year value when none has been found
    */
   private int getEstimatedYear() {
     DateTime now = new DateTime();

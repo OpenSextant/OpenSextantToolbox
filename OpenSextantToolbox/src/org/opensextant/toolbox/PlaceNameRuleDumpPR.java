@@ -86,9 +86,10 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     AnnotationSet placeCandAnnoSet = document.getAnnotations().get(this.placeAnnotationName);
     AnnotationSet truthAnnoSet = document.getAnnotations("Key").get("PLACE");
     docCount++;
-    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " " + placeAnnotationName + " annotations");
-    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + truthAnnoSet.size() + " " + "Truth" + " annotations");
-
+    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " "
+        + placeAnnotationName + " annotations");
+    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + truthAnnoSet.size() + " " + "Truth"
+        + " annotations");
 
     // loop over all placeCandidate annotations
     for (Annotation anno : placeCandAnnoSet) {
@@ -109,7 +110,8 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     } // end placeCandidate annotation loop
 
-  } /** End execute. */
+  }
+  /** End execute. */
 
   private void calcAssessment(Annotation anno, AnnotationSet truthAnnoSet) {
 
@@ -128,7 +130,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     boolean isPlace = score > 0;
 
-    if (exactSet.size() == 1  ) {
+    if (exactSet.size() == 1) {
 
       if (isPlace) {
         anno.getFeatures().put(assessName, "TP");
@@ -140,7 +142,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     }
 
-    if (exactSet.size() != 1 && (!containedSet.isEmpty() || !coveredSet.isEmpty()   || !overlapSet.isEmpty() ) ){
+    if (exactSet.size() != 1 && (!containedSet.isEmpty() || !coveredSet.isEmpty() || !overlapSet.isEmpty())) {
 
       if (isPlace) {
         anno.getFeatures().put(assessName, "TP-Overlap");
@@ -164,14 +166,13 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     if (exactSet.isEmpty() && containedSet.isEmpty() && coveredSet.isEmpty() && overlapSet.isEmpty()) {
 
-      if(isPlace){
+      if (isPlace) {
         anno.getFeatures().put(assessName, "FP");
-      }else{
+      } else {
         anno.getFeatures().put(assessName, "TN");
       }
 
     }
-
 
   }
 

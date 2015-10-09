@@ -29,8 +29,6 @@ import org.slf4j.LoggerFactory;
 
 public class MatcherFactory {
 
-
-
   /** The name of environment var and system property for solr. */
   private static String envParam = "solr.home";
 
@@ -38,8 +36,7 @@ public class MatcherFactory {
   private static String homeLocation;
 
   /**
-   * States of solr server and thus the MatcherFactory
-   * is solr accessed via URL (remote) or embedded?
+   * States of solr server and thus the MatcherFactory is solr accessed via URL (remote) or embedded?
    */
   private static boolean isRemote;
   /** Do we have a valid solr home? */
@@ -52,8 +49,7 @@ public class MatcherFactory {
   private static SolrServer solrServerVocab;
 
   /**
-   * All of the Matchers,Searchers and VocabMatchers the Factory has created
-   * weak references so they can be GC'ed.
+   * All of the Matchers,Searchers and VocabMatchers the Factory has created weak references so they can be GC'ed.
    */
   static Map<PlacenameMatcher, Boolean> matchers = new WeakHashMap<PlacenameMatcher, Boolean>();
   static Map<PlacenameSearcher, Boolean> searchers = new WeakHashMap<PlacenameSearcher, Boolean>();
@@ -78,7 +74,7 @@ public class MatcherFactory {
   private static ModifiableSolrParams vocabParams = new ModifiableSolrParams();
 
   /** Mapping from gazetteer codes to hierachical expression used on the Place object. */
-  private static Map<String,String> featureCodeMap =  new HashMap<String,String>();
+  private static Map<String, String> featureCodeMap = new HashMap<String, String>();
 
   /** The matching request handler. */
   private static final String MATCH_REQUESTHANDLER = "/tag";
@@ -129,8 +125,7 @@ public class MatcherFactory {
 
   private MatcherFactory() {
   }
-  
-  
+
   /**
    * Configure this MatcherFctory.
    * @param home

@@ -49,8 +49,8 @@ public class PlaceCandidate implements Serializable {
   private long end;
 
   /**
-   * --------------Place/NotPlace stuff ----------------------
-   * which rules have expressed a Place/NotPlace opinion on this PC.
+   * --------------Place/NotPlace stuff ---------------------- which rules have expressed a Place/NotPlace opinion on
+   * this PC.
    */
   private transient List<String> rules;
 
@@ -58,8 +58,7 @@ public class PlaceCandidate implements Serializable {
   private transient List<Double> placeConfidences;
 
   /**
-   * --------------Disambiguation stuff ----------------------
-   * the places along with their disambiguation scores.
+   * --------------Disambiguation stuff ---------------------- the places along with their disambiguation scores.
    */
   private transient Map<Place, Double> scoredPlaces;
 

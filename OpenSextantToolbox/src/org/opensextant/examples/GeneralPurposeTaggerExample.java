@@ -94,7 +94,7 @@ public class GeneralPurposeTaggerExample {
 
       // If your documents are text, HTML,XML,Word, PDF, ....
       // create a GATE document directly from the file
-      Document doc = Factory.newDocument(f.toURI().toURL(),"UTF-8");
+      Document doc = Factory.newDocument(f.toURI().toURL(), "UTF-8");
 
       // put the document in the corpus
       corpus.add(doc);
