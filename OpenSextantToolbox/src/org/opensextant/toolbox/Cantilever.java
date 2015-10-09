@@ -116,7 +116,7 @@ public class Cantilever {
         for (PlaceCandidate p : pcs) {
           // don't add zero confidences and only propagate to no
           // opinion pcs
-          if (totalPlaceConfidence != 0.0 && p.getPlaceConfidenceScore() == 0.0) {
+          if (Math.abs(totalPlaceConfidence) > 0.0001 && Math.abs(p.getPlaceConfidenceScore()) < 0.00001) {
             p.addRuleAndConfidence("CoRefConfidence", totalPlaceConfidence);
           }
           // if we have any evidence to propagate

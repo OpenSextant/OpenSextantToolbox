@@ -134,7 +134,7 @@ public class PlacenameMatcher {
       }
 
       // if the max name bias seen >0; add apriori evidence
-      if (nameBias != 0.0) {
+      if (nameBias > 0.0) {
         pc.addRuleAndConfidence(APRIORI_NAME_RULE, nameBias);
       }
       candidates.add(pc);

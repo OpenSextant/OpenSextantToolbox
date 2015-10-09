@@ -263,7 +263,7 @@ public class PlaceCandidate implements Serializable {
   public void setPlaceConfidenceScore(double score) {
     placeConfidences.clear();
     rules.clear();
-    if (score != 0.0) { // don't add a 0.0 strength rule
+    if (Math.abs(score) > 0.0) { // don't add a 0.0 strength rule
       this.addRuleAndConfidence("Calibrate", score);
     }
   }

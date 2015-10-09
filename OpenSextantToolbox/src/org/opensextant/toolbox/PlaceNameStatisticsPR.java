@@ -129,7 +129,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
         tmp[1]++;
       }
       // if no opinion
-      if (score == 0.0) {
+      if (Math.abs(score) < 0.0001) {
         tmp[2]++;
       }
 
