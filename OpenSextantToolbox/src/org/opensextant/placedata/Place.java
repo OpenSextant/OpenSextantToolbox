@@ -106,6 +106,23 @@ public class Place implements Comparable<Object>, Serializable {
     return this.placeID.compareTo(tmp.placeID);
   }
 
+  @Override
+  public boolean equals(Object other) {
+    if (!(other instanceof Place)) {
+      return false;
+    }
+    Place tmp = (Place) other;
+    if (tmp.placeID.equalsIgnoreCase(tmp.placeID)) {
+      return true;
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
+
   /**
    * Is this Place a Country?
    * @return - true if this is a country or "country-like" place

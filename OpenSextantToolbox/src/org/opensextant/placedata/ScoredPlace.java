@@ -28,6 +28,11 @@ public class ScoredPlace implements Comparable<Object> {
   Place place;
   double score;
 
+  public ScoredPlace(Place pl, double scr) {
+    this.place = pl;
+    this.score = scr;
+  }
+
   public Place getPlace() {
     return place;
   }
@@ -44,18 +49,24 @@ public class ScoredPlace implements Comparable<Object> {
     this.score = score;
   }
 
-  public ScoredPlace(Place pl, double scr) {
-    this.place = pl;
-    this.score = scr;
-  }
-
   @Override
   // compare by score
   public int compareTo(Object o) {
     if (o instanceof ScoredPlace) {
-      return -1 * Double.compare(this.getScore(), ((ScoredPlace) o).getScore());
+      return -1 * Double.compare(getScore(), ((ScoredPlace) o).getScore());
     } else {
       return 0;
     }
   }
+
+  @Override
+  public boolean equals(Object o) {
+    return o instanceof ScoredPlace && getScore() - ((ScoredPlace) o).getScore() <= 0.0;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
+
 }

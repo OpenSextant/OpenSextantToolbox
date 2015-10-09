@@ -86,7 +86,22 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
     return this.weight.compareTo(tmp.weight);
   }
 
-  // The getters and setters
+  @Override
+  public boolean equals(Object other) {
+    if (!(other instanceof PlaceEvidence)) {
+      return false;
+    }
+    PlaceEvidence tmp = (PlaceEvidence) other;
+
+    return this.weight == tmp.weight;
+  }
+
+  @Override
+  public int hashCode() {
+    return super.hashCode();
+  }
+
+  // The getters and setters.
   public String getPlaceName() {
     return placeName;
   }
