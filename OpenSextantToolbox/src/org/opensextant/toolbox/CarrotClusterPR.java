@@ -50,8 +50,6 @@ import org.carrot2.core.Document;
 import org.carrot2.core.IClusteringAlgorithm;
 import org.carrot2.core.LanguageCode;
 import org.carrot2.core.ProcessingResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This GATE ProcessingResource implements a
@@ -67,12 +65,9 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
   String clusterAlgo; // algorithm/method used to produce the clusters
   transient Controller controller; // the thing that does all the work
 
-  // Log object
-  private static final Logger LOGGER = LoggerFactory.getLogger(CarrotClusterPR.class);
 
   private void initialize() {
 
-    // controller = ControllerFactory.createSimple();
     controller = ControllerFactory.createCachingPooling(IClusteringAlgorithm.class);
 
   }
@@ -101,13 +96,13 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
   @Override
   public void execute() throws ExecutionException {
     // If no output Annotation set was given, append to the input AS
-    AnnotationSet annotSet = (outputASName == null || outputASName.equals("")) ? document.getAnnotations() : document
+    AnnotationSet annotSet = (outputASName == null || "".equals(outputASName)) ? document.getAnnotations() : document
         .getAnnotations(outputASName);
     // get the annotations to cluster
     AnnotationSet sentSet = annotSet.get(sentenceAnnoName);
 
     // create a set of Carrot documents from the specific annotations
-    ArrayList<Document> documents = new ArrayList<Document>();
+    List<Document> documents = new ArrayList<Document>();
     for (Annotation an : sentSet) {
       String id = an.getId().toString();
       // if sub annotations are specified, concatenate them into pseudo sentence
@@ -136,10 +131,10 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
     Map<String, Object> attributes = new HashMap<String, Object>();
     attributes.put("documents", documents);
 
-    if (clusterAlgo.equalsIgnoreCase("stc")) {
+    if ("stc".equalsIgnoreCase(clusterAlgo)) {
       attributes.put("STCClusteringAlgorithm.scoreWeight", 0.5);
       result = controller.process(attributes, STCClusteringAlgorithm.class);
-    } else if (clusterAlgo.equalsIgnoreCase("kmeans")) {
+    } else if ("kmeans".equalsIgnoreCase(clusterAlgo)) {
       result = controller.process(attributes, BisectingKMeansClusteringAlgorithm.class);
     } else {// default
       attributes.put("LingoClusteringAlgorithm.scoreWeight", 0.5);
@@ -149,11 +144,9 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
     // attach cluster info to document and to annotations
     List<Cluster> clusters = result.getClusters();
 
-    // System.out.println(result.getAttributes());
 
     List<String> labels = new ArrayList<String>();
     for (Cluster cl : clusters) {
-      // System.out.println(cl.getLabel() + "->" + cl.getAttributes());
       labels.add(cl.getLabel());
       for (Document d : cl.getDocuments()) {
         int id = Integer.parseInt(d.getStringId());
@@ -223,9 +216,7 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
     this.subAnnotationName = annoName;
   }
 
-  /*
-   * public String getPhoneticFeatureName() { return phoneticFeatureName; }
-   */
+
 
   /**
    * @return

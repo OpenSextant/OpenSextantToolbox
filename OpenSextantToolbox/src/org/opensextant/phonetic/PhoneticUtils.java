@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -34,6 +34,12 @@ import java.util.regex.Pattern;
 // + NOV 2012 -- heavily optimized REGEX patterns and StringBuilder.
 public class PhoneticUtils {
 
+  static final Pattern CLEAN_WORD_RIGHT = Pattern.compile("[^\\p{L}\\p{Nd}]+$");
+  static final Pattern CLEAN_WORD_LEFT = Pattern.compile("^[^\\p{L}\\p{Nd}]+");
+  /** TODO: convert bytes here to \\u patterns */
+  static final Pattern CLEAN_WORD_PUNCT = Pattern.compile("[\"'.`\\u00B4\\u2018\\u2019]");
+
+  
   private PhoneticUtils() {
 
   }
@@ -80,10 +86,10 @@ public class PhoneticUtils {
    * characters.
    */
 
-  public static final String foldToASCII(String word) {
+  public static String foldToASCII(String word) {
 
     char[] input = word.toCharArray();
-    StringBuffer out = new StringBuffer();
+    StringBuilder out = new StringBuilder();
 
     for (int pos = 0; pos < word.length(); ++pos) {
       final char c = input[pos];
@@ -2016,10 +2022,6 @@ public class PhoneticUtils {
     return out.toString();
   }
 
-  static final Pattern CLEAN_WORD_RIGHT = Pattern.compile("[^\\p{L}\\p{Nd}]+$");
-  static final Pattern CLEAN_WORD_LEFT = Pattern.compile("^[^\\p{L}\\p{Nd}]+");
-  // TODO: convert bytes here to \\u patterns
-  static final Pattern CLEAN_WORD_PUNCT = Pattern.compile("[\"'.`\\u00B4\\u2018\\u2019]");
 
   /**
    * Remove any leading and trailing punctuation and some internal punctuation. Internal punctuation which indicates
@@ -2029,8 +2031,7 @@ public class PhoneticUtils {
   public static String removePunctuation(String word) {
     // replace anything that is not a letter or digit, at the the start or
     // end, with a space, then trim.
-    // String tmp = word.replaceAll("^[^\\p{L}\\p{Nd}]+",
-    // " ").replaceAll("[^\\p{L}\\p{Nd}]+$", " ").trim();
+
     String tmp = CLEAN_WORD_LEFT.matcher(word).replaceAll(" ");
     tmp = CLEAN_WORD_RIGHT.matcher(tmp).replaceAll(" ");
     // remove some internal punctuation. To be removed: char hex
@@ -2045,7 +2046,7 @@ public class PhoneticUtils {
     return CLEAN_WORD_PUNCT.matcher(tmp).replaceAll("").trim();
   }
 
-  // what "scripts" are used in a string?
+  /** What "scripts" are used in a string? */
   public static Set<String> scripts(String word) {
     String tmpWord = word.replaceAll("\\P{L}", "");
     Set<String> scriptsSeen = new TreeSet<String>();
@@ -2059,17 +2060,5 @@ public class PhoneticUtils {
     return scriptsSeen;
   }
 
-  /**
-   * Perform a simple test.
-   */
-  public static void main(String[] args) throws Exception {
-    String[] testWords = {"Sa‘īd", "'Wombat", "Wombat'", "***[Image Bar", "99 luft Balloons...", "St. John U.S.S.R.",
-        "Jose-Enrique", "Al 'farqu Ha'na", "Bélow", "Colón", "Ås", "Bäck", "Ön", "Tōp", "Nõmme", "Çat", "Çavuş",
-        "Góry", "Onça", "Röd", "Armonía", "Poço", "Būm", "Våge", "", ""};
-    System.out.println("WORD\tNO PUNCT\tNO ACCENTS\tNO CASE\tFolded");
-    for (String wd : testWords) {
-      System.out.println(wd + " ->" + removePunctuation(wd) + "\t" + removeDiacritics(wd) + "\t" + removeCase(wd)
-          + "\t" + foldToASCII(wd));
-    }
-  }
+
 }

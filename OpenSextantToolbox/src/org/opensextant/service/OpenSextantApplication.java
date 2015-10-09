@@ -11,14 +11,14 @@ import org.slf4j.LoggerFactory;
 
 public class OpenSextantApplication extends Application {
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
 
-  // The pool of document processors. 
+  /** The pool of document processors. */
   DocumentProcessorPool dpPool;
 
-  // properties
-  Properties prop = null;
+  /** Properties. */
+  Properties prop;
 
   public OpenSextantApplication(Properties prop) {
     this.prop = prop;
@@ -67,18 +67,17 @@ public class OpenSextantApplication extends Application {
     return router;
   }
 
-  // accessor for the pool
+  /** Accessor for the pool. */
   public DocumentProcessorPool getPool() {
     return this.dpPool;
   }
 
-  /*
+  /**
    * (non-Javadoc)
    * @see org.restlet.Application#stop()
    */
   @Override
   public synchronized void stop() throws Exception {
-    // TODO Auto-generated method stub
     this.dpPool.cleanup();
     super.stop();
   }

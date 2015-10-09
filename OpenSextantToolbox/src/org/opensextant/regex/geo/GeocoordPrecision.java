@@ -1,4 +1,4 @@
-/**
+/*
  *
  *  Copyright 2009-2013 The MITRE Corporation.
  *
@@ -27,23 +27,23 @@
 package org.opensextant.regex.geo;
 
 /**
- * *
+ * *.
  * @author ubaldino
  */
 public class GeocoordPrecision {
   /**
-   * +/- # of Meters of error
+   * +/- # of Meters of error.
    */
-  public double precision = 0.0;
+  public double precision;
   /**
    * # of M/S/s digits in a D:M:S string for a lat or lon
    */
-  // public int precision_dms_digits = 0;
+
   /**
    * # of decimal places in D.ddd... string for a lat or lon
    */
-  // public int precision_dec_digits = 0;
-  public int digits = 0;
+
+  public int digits;
 
   /**
    * Augment number of digits in precision -- choose the maximum amount if in coord (a,b) if a has more digits of

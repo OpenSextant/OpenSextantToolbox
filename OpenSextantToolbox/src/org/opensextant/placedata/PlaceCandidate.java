@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -41,32 +41,36 @@ import java.util.Map;
 public class PlaceCandidate implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  // the place name as it appeared in the document
+  /** The place name as it appeared in the document. */
   private String placeName;
 
-  // the location this was found in the document
-  private long start = 0L;
-  private long end = 0L;
+  /** The location this was found in the document. */
+  private long start;
+  private long end;
 
-  // --------------Place/NotPlace stuff ----------------------
-  // which rules have expressed a Place/NotPlace opinion on this PC
+  /**
+   * --------------Place/NotPlace stuff ----------------------
+   * which rules have expressed a Place/NotPlace opinion on this PC.
+   */
   private transient List<String> rules;
 
-  // the confidence adjustments provided by the Place/NotPlace rules
+  /** The confidence adjustments provided by the Place/NotPlace rules. */
   private transient List<Double> placeConfidences;
 
-  // --------------Disambiguation stuff ----------------------
-  // the places along with their disambiguation scores
+  /**
+   * --------------Disambiguation stuff ----------------------
+   * the places along with their disambiguation scores.
+   */
   private transient Map<Place, Double> scoredPlaces;
 
-  // temporary lists to hold the ranked places and scores
+  /** Temporary lists to hold the ranked places and scores. */
   private transient List<Place> rankedPlaces;
   private transient List<Double> rankedScores;
 
-  // the list of PlaceEvidences accumulated from the document about this PC
+  /** The list of PlaceEvidences accumulated from the document about this PC. */
   private transient List<PlaceEvidence> evidence;
 
-  // basic constructor
+  /** Basic constructor. */
   public PlaceCandidate() {
     this.placeName = "";
     start = 0L;
@@ -80,26 +84,24 @@ public class PlaceCandidate implements Serializable {
   }
 
   // ---- the getters and setters ---------
-  //
   /**
    * Get the most highly ranked Place, or Null if empty list.
    */
   public Place getBestPlace() {
     sort();
-    List<Place> l = this.getPlaces();
+    List<Place> l = getPlaces();
     if (l.isEmpty()) {
       return null;
     }
     return l.get(0);
   }
 
-  //
   /**
    * Get the disambiguation score of the most highly ranked Place, or 0.0 if empty list.
    */
   public double getBestPlaceScore() {
     sort();
-    List<Double> l = this.getScores();
+    List<Double> l = getScores();
     if (l.isEmpty()) {
       return 0.0;
     }
@@ -110,7 +112,7 @@ public class PlaceCandidate implements Serializable {
    * Does our confidence indicate that this is actually a place?
    */
   public boolean isPlace() {
-    return (this.getPlaceConfidenceScore() > 0.0);
+    return getPlaceConfidenceScore() > 0.0;
   }
 
   public String getPlaceName() {
@@ -126,7 +128,7 @@ public class PlaceCandidate implements Serializable {
   }
 
   public void setStart(int start) {
-    this.start = new Long(start);
+    this.start = start;
   }
 
   public void setStart(Long start) {
@@ -138,7 +140,7 @@ public class PlaceCandidate implements Serializable {
   }
 
   public void setEnd(int end) {
-    this.end = new Long(end);
+    this.end = end;
   }
 
   public void setEnd(Long end) {
@@ -146,45 +148,42 @@ public class PlaceCandidate implements Serializable {
   }
 
   /**
-   * Get a ranked list of places
+   * Get a ranked list of places.
    */
   public List<Place> getPlaces() {
-    this.sort();
+    sort();
     return this.rankedPlaces;
   }
 
   /**
-   * Get a ranked list of scores
+   * Get a ranked list of scores.
    */
   public List<Double> getScores() {
-    this.sort();
+    sort();
     return this.rankedScores;
   }
 
-  // add a new place with a default score
+  /** Add a new place with a default score. */
   public void addPlace(Place place) {
-    this.addPlaceWithScore(place, 0.0);
+    addPlaceWithScore(place, 0.0);
   }
 
-  // add a new place with a specific score
+  /** Add a new place with a specific score. */
   public void addPlaceWithScore(Place place, double score) {
     this.scoredPlaces.put(place, score);
   }
 
-  // increment the score of an existing place
+  /** Increment the score of an existing place. */
   public void incrementPlaceScore(Place place, double score) {
     Double currentScore = this.scoredPlaces.get(place);
     if (currentScore != null) {
       this.scoredPlaces.put(place, currentScore + score);
-    } else {
-      // LOGGER.error("Tried to increment a score for a non-existent Place");
     }
   }
 
-  // set the score of an existing place
+  /** Set the score of an existing place. */
   public void setPlaceScore(Place place, double score) {
     if (!this.scoredPlaces.containsKey(place)) {
-      // LOGGER.error("Tried to increment a score for a non-existent Place");
       return;
     }
     this.scoredPlaces.put(place, score);
@@ -198,7 +197,7 @@ public class PlaceCandidate implements Serializable {
     return placeConfidences;
   }
 
-  // check if at least one of the Places has the given country code
+  /** Check if at least one of the Places has the given country code. */
   public boolean possibleCountry(String cc) {
     for (Place p : rankedPlaces) {
       if (p.getCountryCode() != null && p.getCountryCode().equalsIgnoreCase(cc)) {
@@ -208,7 +207,7 @@ public class PlaceCandidate implements Serializable {
     return false;
   }
 
-  // check if at least one of the Places has the given admin code
+  /** Check if at least one of the Places has the given admin code. */
   public boolean possibleAdmin(String adm, String cc) {
     // check the non-null admins first
     for (Place p : rankedPlaces) {
@@ -236,7 +235,7 @@ public class PlaceCandidate implements Serializable {
    * person,organization or other entity.
    */
   public double getPlaceConfidenceScore() {
-    if (placeConfidences.size() == 0) {
+    if (placeConfidences.isEmpty()) {
       return 0.0;
     }
     // average of placeConfidences
@@ -264,7 +263,7 @@ public class PlaceCandidate implements Serializable {
     placeConfidences.clear();
     rules.clear();
     if (Math.abs(score) > 0.0) { // don't add a 0.0 strength rule
-      this.addRuleAndConfidence("Calibrate", score);
+      addRuleAndConfidence("Calibrate", score);
     }
   }
 
@@ -272,7 +271,7 @@ public class PlaceCandidate implements Serializable {
     this.evidence.add(evidence);
   }
 
-  // some convenience methods to add evidence
+  /** Some convenience methods to add evidence. */
   public void addEvidence(String rule, double weight, String cc, String adm1, String fclass, String fcode, Geocoord geo) {
     PlaceEvidence ev = new PlaceEvidence();
     ev.setRule(rule);
@@ -340,7 +339,7 @@ public class PlaceCandidate implements Serializable {
     return this.evidence;
   }
 
-  /** Convenience method for determining the state of a PlaceCandidate */
+  /** Convenience method for determining the state of a PlaceCandidate. */
   public boolean hasPlaces() {
     return !this.scoredPlaces.isEmpty();
   }
@@ -359,16 +358,16 @@ public class PlaceCandidate implements Serializable {
     }
   }
 
-  // an overide of toString to get a meaningful representation of this PC
+  /** An overide of toString to get a meaningful representation of this PC. */
   @Override
   public String toString() {
-    String tmp = placeName + "(" + this.getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")" + "\n";
-    tmp = tmp + "Rules=" + this.rules.toString() + "\n";
-    tmp = tmp + "Evidence=" + this.evidence.toString() + "\n";
-    this.sort();
+    String tmp = placeName + "(" + getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")" + "\n";
+    tmp = tmp + "Rules=" + this.rules + "\n";
+    tmp = tmp + "Evidence=" + this.evidence + "\n";
+    sort();
     tmp = tmp + "Places=";
     for (int i = 0; i < this.rankedPlaces.size(); i++) {
-      tmp = tmp + this.rankedPlaces.get(i).toString() + "=" + this.rankedScores.get(i).toString() + "\n";
+      tmp = tmp + this.rankedPlaces.get(i) + "=" + this.rankedScores.get(i) + "\n";
     }
     return tmp;
   }

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *  Copyright 2009-2013 The MITRE Corporation.
  *
@@ -30,23 +30,25 @@ import org.opensextant.regex.geo.OrdinateParser.AXIS;
 
 public final class Ordinate {
 
-  // Log object
-  // private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class);
+  /**
+   * Log object
+   * private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class);
 
-  // the ordinate type [DD,DMS]
+   * the ordinate type [DD,DMS]
+   */
   private OrdinateParser.ORDINATETYPE type = OrdinateParser.ORDINATETYPE.DD;
 
-  // the magnitude of this ordinate [0.0 to LAT_MAX/LON_MAX,null]
-  private Double ordinateValue = null;
+  /** The magnitude of this ordinate [0.0 to LAT_MAX/LON_MAX,null] */
+  private Double ordinateValue;
 
-  // hemisphere [-1,0,1]
-  private int hemi = 0;
+  /** Hemisphere [-1,0,1]. */
+  private int hemi;
 
-  // axis [LATITUDE,LONGITUDE,null]
-  private OrdinateParser.AXIS axis = null;
+  /** Axis [LATITUDE,LONGITUDE,null]. */
+  private OrdinateParser.AXIS axis;
 
-  // the orginal text
-  private String text = null;
+  /** The orginal text. */
+  private String text;
 
   public Ordinate() {
 
@@ -54,20 +56,7 @@ public final class Ordinate {
 
   public boolean isValid() {
 
-    // check for elements being set to valid values
-    if (ordinateValue == null || hemi == 0 || axis == null) {
-      return false;
-    }
-
-    if (axis == AXIS.LATITUDE && ordinateValue > OrdinateParser.LAT_MAX) {
-      return false;
-    }
-
-    if (axis == AXIS.LONGITUDE && ordinateValue > OrdinateParser.LON_MAX) {
-      return false;
-    }
-
-    return true;
+    return ordinateValue != null && hemi != 0 && axis != null && (axis != AXIS.LATITUDE || ordinateValue <= OrdinateParser.LAT_MAX) && (axis != AXIS.LONGITUDE || ordinateValue <= OrdinateParser.LON_MAX);
 
   }
 
@@ -89,14 +78,14 @@ public final class Ordinate {
     if (this.ordinateValue == null) {
       this.ordinateValue = 0.0;
     }
-    this.ordinateValue += (minutes / 60.0);
+    this.ordinateValue += minutes / 60.0;
   }
 
   public void setSeconds(Double seconds) {
     if (this.ordinateValue == null) {
       this.ordinateValue = 0.0;
     }
-    this.ordinateValue += (seconds / 3600.0);
+    this.ordinateValue += seconds / 3600.0;
   }
 
   public OrdinateParser.ORDINATETYPE getType() {

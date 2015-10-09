@@ -5,14 +5,14 @@ import java.util.List;
 
 public class VocabMatch {
 
-  // the vocabulary match as it appeared in the document
+  /** The vocabulary match as it appeared in the document. */
   private String textMatch;
 
-  // the location this was found in the document
-  private long start = 0L;
-  private long end = 0L;
+  /** The location this was found in the document. */
+  private long start;
+  private long end;
 
-  // the vocab entries this has been matched to
+  /** The vocab entries this has been matched to. */
   private List<Vocab> vocabs = new ArrayList<Vocab>();
 
   public String getTextMatch() {

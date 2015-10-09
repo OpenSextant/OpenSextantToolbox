@@ -21,7 +21,6 @@ public class Anno {
   }
 
   public Anno(Annotation a) {
-    // TODO Auto-generated constructor stub
   }
 
   public long getStart() {

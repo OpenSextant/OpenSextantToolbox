@@ -1,5 +1,5 @@
 /*
-                  NOTICE
+              NOTICE
 This software was produced for the U. S. Government
 under Contract No. W15P7T-11-C-F600, and is
 subject to the Rights in Noncommercial Computer Software
@@ -43,18 +43,19 @@ import org.slf4j.LoggerFactory;
  */
 @CreoleResource(name = "OpenSextant AnnotationDumpPR", comment = "Diagnostic tool for dumping annotations")
 public class AnnotationDumpPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
+
   private static final long serialVersionUID = 1L;
-  private File outputDir = null;
+  private File outputDir;
   private String outFileName = "annotations.txt";
-  private File vocabFile = null;
-  transient BufferedWriter vocabWriter = null;
-  // a running count of how many documents seen so far
+  private File vocabFile;
+  transient BufferedWriter vocabWriter;
+  /** A running count of how many documents seen so far. */
   private Integer docCount = 0;
   String annotationSetName;
   String annotationName = "Token";
   transient List<String> featureNames = new ArrayList<String>();
   Long contxtSize = 75L;
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationDumpPR.class);
 
   private void initialize() {
@@ -63,30 +64,20 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     openFiles();
   }
 
-  // Do the initialization
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
+  /** Do the initialization. */
   @Override
   public Resource init() throws ResourceInstantiationException {
     initialize();
     return this;
   }
 
-  // Re-do the initialization
-  /**
-   * @throws ResourceInstantiationException
-   */
+  /** Re-do the initialization. */
   @Override
   public void reInit() throws ResourceInstantiationException {
     initialize();
   }
 
-  // Do the work
-  /**
-   * @throws ExecutionException
-   */
+  /** Do the work. */
   @Override
   public void execute() throws ExecutionException {
     // get all of the annotations of interest from the annotationset given
@@ -98,31 +89,18 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     for (Annotation anno : annoSet) {
       writeAnnotation(anno);
     } // end annotation loop
-  } // end execute
+  } /** End execute. */
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionFinished(Controller arg0) throws ExecutionException {
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
     initialize();
@@ -183,11 +161,10 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
         Object tmp = feats.get(name);
         if (tmp != null) {
           vocabWriter.write(tmp.toString());
-          vocabWriter.write("\t");
         } else {
           vocabWriter.write("");
-          vocabWriter.write("\t");
         }
+		vocabWriter.write("\t");
       }
       vocabWriter.write(anno.getStartNode().getOffset().toString());
       vocabWriter.write("\t");
@@ -218,20 +195,13 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     if (contextEnd > Utils.lengthLong(document)) {
       contextEnd = Utils.lengthLong(document);
     }
-    String context = Utils.cleanStringFor(document, contextStart, contextEnd);
-    return context;
+    return Utils.cleanStringFor(document, contextStart, contextEnd);
   }
 
-  /**
-   * @return
-   */
   public File getOutputDir() {
     return outputDir;
   }
 
-  /**
-   * @param outputDir
-   */
   @CreoleParameter(defaultValue = "C:\\dump\\vocab")
   public void setOutputDir(File outputDir) {
     outputDir.mkdirs();

@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -26,21 +26,21 @@ package org.opensextant.placedata;
  */
 public class Geocoord implements java.io.Serializable {
   private static final long serialVersionUID = -3313528469542406371L;
-  // canonical form is decimal degree
-  Double latitude = null;
-  Double longitude = null;
-  // the phrase as found in the document
+  /** Canonical form is decimal degree. */
+  Double latitude;
+  Double longitude;
+  /** The phrase as found in the document. */
   String expression = "";
   public int precision = -1;
   /**
-   * Set to false if expression cannot be interpreted as meaningful lat/lon
+   * Set to false if expression cannot be interpreted as meaningful lat/lon.
    */
-  public boolean isValid = false;
+  public boolean isValid;
 
-  // radius of the earth in kilometers, used for distance calc
+  /** Radius of the earth in kilometers, used for distance calc. */
   public static final double R = 6372.8;
 
-  // empty public constructor so this class be used like a Bean
+  /** Empty public constructor so this class be used like a Bean. */
   public Geocoord() {
     isValid = true;
   }
@@ -60,9 +60,7 @@ public class Geocoord implements java.io.Serializable {
   public Double distanceDeg(double lat, double lon) {
     Double d = Double.MAX_VALUE;
     if (isValid) {
-      d = Math.sqrt(Math.pow((this.latitude - lat), 2.0) + Math.pow((this.longitude - lon), 2.0));
-    } else {
-      // System.err.println("Null in Geocoord" + this.expression);
+      d = Math.sqrt(Math.pow(this.latitude - lat, 2.0) + Math.pow(this.longitude - lon, 2.0));
     }
     return d;
   }
@@ -76,10 +74,8 @@ public class Geocoord implements java.io.Serializable {
   public Double distanceDeg(Geocoord another) {
     Double d = Double.MAX_VALUE;
     if (isValid && another != null) {
-      d = Math.sqrt(Math.pow((this.latitude - another.getLatitude()), 2.0)
-          + Math.pow((this.longitude - another.getLongitude()), 2.0));
-    } else {
-      // System.err.println("Null in Geocoord" + this.expression);
+      d = Math.sqrt(Math.pow(this.latitude - another.getLatitude(), 2.0)
+          + Math.pow(this.longitude - another.getLongitude(), 2.0));
     }
     return d;
   }
@@ -90,8 +86,8 @@ public class Geocoord implements java.io.Serializable {
    */
   public Double distance(Geocoord another) {
 
-    double lat = this.getLatitude();
-    double lon = this.getLongitude();
+    double lat = getLatitude();
+    double lon = getLongitude();
     double lat2 = another.getLatitude();
     double lon2 = another.getLongitude();
 
@@ -104,8 +100,8 @@ public class Geocoord implements java.io.Serializable {
    */
   public Double distance(double lat, double lon) {
 
-    double lat2 = this.getLatitude();
-    double lon2 = this.getLongitude();
+    double lat2 = getLatitude();
+    double lon2 = getLongitude();
 
     return distance(lat, lon, lat2, lon2);
 
@@ -143,14 +139,7 @@ public class Geocoord implements java.io.Serializable {
     this.longitude = longitude;
   }
 
-  /**
-   * If the coordinates were extracted from an explicit text mention, such as a latitude-longitude pair or Military Grid
-   * Reference number, this returns the text mention from which the spatial coordinates were derived.
-   */
-  /*
-   * public String getExpression() { return expression; } public void setExpression(String expression) { this.expression
-   * = expression; }
-   */
+
   @Override
   public String toString() {
     if (isValid) {

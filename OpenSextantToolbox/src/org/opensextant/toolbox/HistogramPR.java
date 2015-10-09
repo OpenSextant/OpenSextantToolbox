@@ -42,17 +42,17 @@ import org.slf4j.LoggerFactory;
     + " on selected annotations")
 public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
   private static final long serialVersionUID = 1L;
-  private File outputDir = null;
+  private File outputDir;
   private String outFileName = "vocabStats.txt";
-  private File vocabFile = null;
-  transient BufferedWriter vocabWriter = null;
+  private File vocabFile;
+  transient BufferedWriter vocabWriter;
   transient Map<String, Long> vocabStats = new HashMap<String, Long>();
   private Integer docCount = 0;
   String annotationSetName;
   String annotationName;
   String featureName;
   Boolean convertToLower;
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(HistogramPR.class);
 
   private void initialize() {
@@ -62,40 +62,27 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
     vocabStats.clear();
   }
 
-  // Do the initialization
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
+  /** Do the initialization. */
   @Override
   public Resource init() throws ResourceInstantiationException {
     initialize();
     return this;
   }
 
-  // Re-do the initialization
-  /**
-   * @throws ResourceInstantiationException
-   */
+  /** Re-do the initialization. */
   @Override
   public void reInit() throws ResourceInstantiationException {
     initialize();
   }
 
-  // Do the work
-  /**
-   * @throws ExecutionException
-   */
+  /** Do the work. */
   @Override
   public void execute() throws ExecutionException {
     // get all of the annotations of interest from the annotationset given
     AnnotationSet annoSet = document.getAnnotations(annotationSetName).get(annotationName);
     // if no explicit feature name is given, use word/phrase as found in
     // document
-    Boolean explicitFeatureName = true;
-    if (featureName == null || featureName.equalsIgnoreCase("")) {
-      explicitFeatureName = false;
-    }
+    Boolean explicitFeatureName = Boolean.valueOf(featureName != null && !"".equalsIgnoreCase(featureName));
     docCount++;
     LOGGER.info("(" + docCount + ") This document has " + annoSet.size() + " " + annotationName + " annotations");
     // loop over all selected annotations
@@ -126,13 +113,8 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
       openFiles();
       writeStats();
     }
-  } // end execute
+  } /** End execute. */
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
     closeFiles();
@@ -142,10 +124,6 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionFinished(Controller arg0) throws ExecutionException {
     closeFiles();
@@ -155,10 +133,6 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
     initialize();
@@ -215,16 +189,10 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
     }
   }
 
-  /**
-   * @return
-   */
   public File getOutputDir() {
     return outputDir;
   }
 
-  /**
-   * @param outputDir
-   */
   @CreoleParameter(defaultValue = "C:\\dump\\vocab")
   public void setOutputDir(File outputDir) {
     outputDir.mkdirs();

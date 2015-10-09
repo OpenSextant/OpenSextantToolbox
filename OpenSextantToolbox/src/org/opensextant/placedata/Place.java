@@ -37,7 +37,6 @@ public class Place implements Comparable<Object>, Serializable {
   private String expandedPlaceName; // only present for abbrev/codes
   private String nameType;
   private String nameTypeSystem;
-  // private String script;
 
   // The geospatial data
   private String countryCode; // ISO2 code
@@ -45,9 +44,6 @@ public class Place implements Comparable<Object>, Serializable {
   // private String countryCodeISO3; // ISO3 code
   private String admin1;
   private String admin2;
-  // private String admin3;
-  // private String admin4;
-  // private String admin5;
 
   // what type of place this is
   private String featureClass;
@@ -153,11 +149,11 @@ public class Place implements Comparable<Object>, Serializable {
    */
   public boolean isAbbreviation() {
 
-    if (this.nameType.equalsIgnoreCase(ABBREV_TYPE)) {
+    if (ABBREV_TYPE.equalsIgnoreCase(this.nameType)) {
       return true;
     }
 
-    if (this.nameType.equalsIgnoreCase(CODE_TYPE)) {
+    if (CODE_TYPE.equalsIgnoreCase(this.nameType)) {
       return true;
     }
 
@@ -280,6 +276,10 @@ public class Place implements Comparable<Object>, Serializable {
     this.nameType = nameType;
   }
 
+  /**
+   * The name bias is a measure of the a priori likelihood that a mention of this place's name actually refers to a
+   * place.
+   */
   public double getNameBias() {
     return nameBias;
   }
@@ -288,6 +288,9 @@ public class Place implements Comparable<Object>, Serializable {
     this.nameBias = nameBias;
   }
 
+  /**
+   * The ID bias is a measure of the a priori likelihood that a mention of this name refers to this particular place.
+   */
   public double getIdBias() {
     return idBias;
   }
@@ -304,14 +307,6 @@ public class Place implements Comparable<Object>, Serializable {
     this.geocoord = geocoord;
   }
 
-  /**
-   * The name bias is a measure of the a priori likelihood that a mention of this place's name actually refers to a
-   * place.
-   */
-
-  /**
-   * The ID bias is a measure of the a priori likelihood that a mention of this name refers to this particular place.
-   */
 
   public String getNameTypeSystem() {
     return nameTypeSystem;

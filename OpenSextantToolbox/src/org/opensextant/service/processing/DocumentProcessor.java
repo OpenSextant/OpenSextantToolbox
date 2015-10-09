@@ -14,7 +14,7 @@ public class DocumentProcessor {
 
   private CorpusController controller;
   private Corpus corpus;
-  // Log object. 
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(DocumentProcessor.class);
 
   public DocumentProcessor(CorpusController cont) {

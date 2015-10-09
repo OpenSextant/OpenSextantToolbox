@@ -29,61 +29,64 @@ import org.slf4j.LoggerFactory;
 
 public class MatcherFactory {
 
-  private MatcherFactory() {
-  }
 
-  // the name of environment var and system property for solr
+
+  /** The name of environment var and system property for solr. */
   private static String envParam = "solr.home";
 
-  // string specifying solr home, could be file path or URL
+  /** String specifying solr home, could be file path or URL. */
   private static String homeLocation;
 
-  // states of solr server and thus the MatcherFactory
-  // is solr accessed via URL (remote) or embedded?
-  private static boolean isRemote = false;
-  // do we have a valid solr home?
-  private static boolean isConfigured = false;
-  // have we started solr?
-  private static boolean isStarted = false;
+  /**
+   * States of solr server and thus the MatcherFactory
+   * is solr accessed via URL (remote) or embedded?
+   */
+  private static boolean isRemote;
+  /** Do we have a valid solr home? */
+  private static boolean isConfigured;
+  /** Have we started solr? */
+  private static boolean isStarted;
 
-  // the solr servers which are the heart of the MatcherFactory
-  private static SolrServer solrServerGeo = null;
-  private static SolrServer solrServerVocab = null;
+  /** The solr servers which are the heart of the MatcherFactory. */
+  private static SolrServer solrServerGeo;
+  private static SolrServer solrServerVocab;
 
-  // all of the Matchers,Searchers and VocabMatchers the Factory has created
-  // weak references so they can be GC'ed
+  /**
+   * All of the Matchers,Searchers and VocabMatchers the Factory has created
+   * weak references so they can be GC'ed.
+   */
   static Map<PlacenameMatcher, Boolean> matchers = new WeakHashMap<PlacenameMatcher, Boolean>();
   static Map<PlacenameSearcher, Boolean> searchers = new WeakHashMap<PlacenameSearcher, Boolean>();
   static Map<VocabMatcher, Boolean> vocabers = new WeakHashMap<VocabMatcher, Boolean>();
 
-  // the fields of the geo match and query response
+  /** The fields of the geo match and query response. */
   private static String gazetteerFieldNames = "id,place_id,name,name_expanded,lat,lon,geo,feat_class,feat_code,"
       + "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
       + "name_bias,id_bias,name_type,name_type_system,partition,search_only";
 
-  // the field names to load the gazetteer (same as match/query except for "geo" field which is created on load
+  /** The field names to load the gazetteer (same as match/query except for "geo" field which is created on load. */
   private static String gazetteerFieldNamesLoader = "id,place_id,name,name_expanded,lat,lon,feat_class,feat_code,"
       + "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
       + "name_bias,id_bias,name_type,name_type_system,partition,search_only";
 
-  // the fixed fields of the vocab match and response
+  /** The fixed fields of the vocab match and response. */
   private static String vocabFieldNames = "id,phrase,category,taxonomy";
 
-  // the initial parameters for matchers and the searchers and vocabers
+  /** The initial parameters for matchers and the searchers and vocabers. */
   private static ModifiableSolrParams matchParams = new ModifiableSolrParams();
   private static ModifiableSolrParams searchParams = new ModifiableSolrParams();
   private static ModifiableSolrParams vocabParams = new ModifiableSolrParams();
 
-  // mapping from gazetteer codes to hierachical expression used on the Place object
+  /** Mapping from gazetteer codes to hierachical expression used on the Place object. */
   private static Map<String,String> featureCodeMap =  new HashMap<String,String>();
 
-  // the matching request handler
+  /** The matching request handler. */
   private static final String MATCH_REQUESTHANDLER = "/tag";
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(MatcherFactory.class);
 
-  // set the base config for the matching and searching params
+  /** Set the base config for the matching and searching params. */
   static {
     matchParams.set(CommonParams.QT, MATCH_REQUESTHANDLER);
     matchParams.set(CommonParams.FL, gazetteerFieldNames);
@@ -110,7 +113,7 @@ public class MatcherFactory {
 
   }
 
-  //set the values of the feature codes
+  /** Set the values of the feature codes. */
 
   static {
     featureCodeMap.put("A", "Geo.featureType.AdminRegion");
@@ -124,9 +127,12 @@ public class MatcherFactory {
     featureCodeMap.put("S", "Geo.featureType.SpotFeature");
   }
 
-
+  private MatcherFactory() {
+  }
+  
+  
   /**
-   * Configure this MatcherFctory
+   * Configure this MatcherFctory.
    * @param home
    *          solr home as a file path or URL
    */
@@ -170,7 +176,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Start this MatcherFactory
+   * Start this MatcherFactory.
    */
   public static void start() {
 
@@ -193,21 +199,14 @@ public class MatcherFactory {
       solrServerGeo = server;
       solrServerVocab = server;
     } else { // must be local, use EmbeddedSolrServer
-     // try {
-     // File solrXML = new File(homeLocation + File.separator + "solr.xml");
+
       CoreContainer solrContainer = new CoreContainer(homeLocation);
-        //solrContainer.load(homeLocation, solrXML);
-        // when we switch to solr > 4.3
+
       solrContainer.load();
       EmbeddedSolrServer serverGeo = new EmbeddedSolrServer(solrContainer, "gazetteer");
       EmbeddedSolrServer serverVocab = new EmbeddedSolrServer(solrContainer, "vocabulary");
       solrServerGeo = serverGeo;
       solrServerVocab = serverVocab;
-     // } catch (FileNotFoundException e) {
-        // this should never happen since we check before calling
-       // LOGGER.error("Could not find solr home when initializing MatcherFactory:" + homeLocation, e);
-       // return;
-      //}
     }
 
     // see if solr servers are really there
@@ -249,7 +248,7 @@ public class MatcherFactory {
 
   }
 
-  // set the value for solr home
+  /** Set the value for solr home. */
   private static boolean setHome(String home) {
 
     String foundIt = home;
@@ -312,7 +311,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Get a PlacenameMatcher
+   * Get a PlacenameMatcher.
    * @return a PlacenameMatcher
    */
   public static PlacenameMatcher getMatcher() {
@@ -351,7 +350,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Get a PlacenameSearcher
+   * Get a PlacenameSearcher.
    * @return a PlacenameSearcher
    */
   public static PlacenameSearcher getSearcher() {
@@ -392,7 +391,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Get a VocabMatcher
+   * Get a VocabMatcher.
    * @return a PlacenameSearcher
    */
   public static VocabMatcher getVocabMatcher() {
@@ -442,7 +441,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Request a shutdown
+   * Request a shutdown.
    * @param srcher
    *          the searcher which is request the shutdown
    */
@@ -457,7 +456,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Shutdown the MatcherFactory
+   * Shutdown the MatcherFactory.
    * @param force
    *          if true, force a shutdown even if there are matchers and searchers still out there (rude)
    */
@@ -489,7 +488,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Check if a URL is valid
+   * Check if a URL is valid.
    * @param url
    *          the URL to check
    * @return
@@ -505,13 +504,7 @@ public class MatcherFactory {
       return false;
     }
 
-    // some sort of URL, check to see if its is a HTTP URL
-    if (solrURL.getProtocol().equalsIgnoreCase("http")) {
-      return true;
-    }
-
-    // anything else return false;
-    return false;
+    return "http".equalsIgnoreCase(solrURL.getProtocol());
   }
 
   private static boolean validFileURL(String url) {
@@ -526,7 +519,7 @@ public class MatcherFactory {
     }
 
     // some sort of URL, check to see if its is a file URL
-    if (solrURL.getProtocol().equalsIgnoreCase("file")) {
+    if ("file".equalsIgnoreCase(solrURL.getProtocol())) {
 
       // see if points to something
       File tmp;
@@ -542,7 +535,6 @@ public class MatcherFactory {
       return validFile(tmp.getAbsolutePath());
     }
 
-    // anything else return false;
     return false;
   }
 
@@ -562,12 +554,7 @@ public class MatcherFactory {
 
     File solrXML = new File(tmp, "solr.xml");
 
-    if (!solrXML.exists()) {
-      // doesn't contain a solr.xml
-      return false;
-    }
-
-    return true;
+    return solrXML.exists();
 
   }
 
@@ -604,7 +591,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Get an integer from a record
+   * Get an integer from a record.
    */
   protected static int getInteger(SolrDocument d, String f) {
     Object obj = d.getFieldValue(f);
@@ -620,14 +607,14 @@ public class MatcherFactory {
   }
 
   /**
-   * Get a floating point object from a record
+   * Get a floating point object from a record.
    */
   protected static Float getFloat(SolrDocument d, String f) {
     Object obj = d.getFieldValue(f);
-    if (obj == null) {
-      return 0F;
-    } else {
+    if (obj != null) {
       return (Float) obj;
+    } else {
+      return 0F;
     }
   }
 
@@ -651,9 +638,6 @@ public class MatcherFactory {
     return null;
   }
 
-  /**
-     *
-     */
   protected static char getChar(SolrDocument solrDoc, String name) {
     String result = getString(solrDoc, name);
     if (result == null) {
@@ -666,18 +650,18 @@ public class MatcherFactory {
   }
 
   /**
-   * Get a String object from a record
+   * Get a String object from a record.
    */
   protected static String getString(SolrDocument solrDoc, String name) {
     Object result = solrDoc.getFirstValue(name);
-    if (result == null) {
-      return null;
+    if (result != null) {
+      return result.toString();
     }
-    return result.toString();
+    return null;
   }
 
   /**
-   * Get a double from a record
+   * Get a double from a record.
    */
   protected static double getDouble(SolrDocument solrDoc, String name) {
     Object result = solrDoc.getFirstValue(name);
@@ -733,7 +717,7 @@ public class MatcherFactory {
   }
 
   /**
-   * Create a Place object from a Solr document
+   * Create a Place object from a Solr document.
    * @param gazEntry
    *          a solr document describing a Place
    * @return the Place created from the solr Document

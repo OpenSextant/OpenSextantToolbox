@@ -28,13 +28,13 @@ import org.slf4j.LoggerFactory;
 
 public class OpenSextantLookupResource extends ServerResource {
 
-  // Log object. 
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantLookupResource.class);
 
   @Get
   public Representation doGet() {
 
-    Request req = this.getRequest();
+    Request req = getRequest();
     // get the submitted attributes
     ConcurrentMap<String, Object> attrs = req.getAttributes();
     String format = (String) attrs.get("format");
@@ -58,36 +58,33 @@ public class OpenSextantLookupResource extends ServerResource {
     List<Place> placesFound = s.searchByQueryString(query);
     LOGGER.info("Found " + placesFound.size() + " places");
 
-    if (format.equalsIgnoreCase("json")) {
-      JacksonRepresentation<List<Place>> jackRep = new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON,
+    if ("json".equalsIgnoreCase(format)) {
+      return new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON,
           placesFound);
-      return jackRep;
     }
 
-    if (format.equalsIgnoreCase("csv")) {
-      StringBuffer buff = new StringBuffer();
+    if ("csv".equalsIgnoreCase(format)) {
+      StringBuilder buff = new StringBuilder();
 
       buff.append("PlaceName\tExpandedPlaceName\tNameType\tNameTypeSystem\tCountryCode\tAdmin1\tAdmin2\tFeatureClass\tFeatureCode\tLatitude\tLongitude\tSource\n");
 
       for (Place pl : placesFound) {
-        buff.append(ifNull(pl.getPlaceName()) + "\t");
-        buff.append(ifNull(pl.getExpandedPlaceName()) + "\t");
-        buff.append(ifNull(pl.getNameType()) + "\t");
-        buff.append(ifNull(pl.getNameTypeSystem()) + "\t");
-        buff.append(ifNull(pl.getCountryCode()) + "\t");
-        buff.append(ifNull(pl.getAdmin1()) + "\t");
-        buff.append(ifNull(pl.getAdmin2()) + "\t");
-        buff.append(ifNull(pl.getFeatureClass()) + "\t");
-        buff.append(ifNull(pl.getFeatureCode()) + "\t");
-        buff.append(ifNull(pl.getLatitude().toString()) + "\t");
-        buff.append(ifNull(pl.getLongitude().toString()) + "\t");
-        buff.append(ifNull(pl.getSource()) + "\t");
+        buff.append(ifNull(pl.getPlaceName())).append("\t");
+        buff.append(ifNull(pl.getExpandedPlaceName())).append("\t");
+        buff.append(ifNull(pl.getNameType())).append("\t");
+        buff.append(ifNull(pl.getNameTypeSystem())).append("\t");
+        buff.append(ifNull(pl.getCountryCode())).append("\t");
+        buff.append(ifNull(pl.getAdmin1())).append("\t");
+        buff.append(ifNull(pl.getAdmin2())).append("\t");
+        buff.append(ifNull(pl.getFeatureClass())).append("\t");
+        buff.append(ifNull(pl.getFeatureCode())).append("\t");
+        buff.append(ifNull(pl.getLatitude().toString())).append("\t");
+        buff.append(ifNull(pl.getLongitude().toString())).append("\t");
+        buff.append(ifNull(pl.getSource())).append("\t");
         buff.append("\n");
       }
 
-      StringRepresentation rep = new StringRepresentation(buff.toString());
-
-      return rep;
+      return new StringRepresentation(buff.toString());
     }
 
     return new StringRepresentation("Unknown format:" + format);
@@ -95,15 +92,15 @@ public class OpenSextantLookupResource extends ServerResource {
   }
 
   @Put
-  public Representation doPut(Representation entity) throws Exception {
+  public Representation doPut(){
 
-    return handle(this.getRequest());
+    return handle(getRequest());
   }
 
-  @Post()
-  public Representation doPost(Representation entity) throws Exception {
+  @Post
+  public Representation doPost() {
 
-    return handle(this.getRequest());
+    return handle(getRequest());
   }
 
   private Representation handle(Request req) {
@@ -143,25 +140,20 @@ public class OpenSextantLookupResource extends ServerResource {
     String meth = req.getMethod().getName();
     String attrString = "";
     for (String n : attrs.keySet()) {
-      attrString = attrString + "\n" + n + "=" + attrs.get(n).toString();
+      attrString = attrString + "\n" + n + "=" + attrs.get(n);
     }
-   // String extractType = (String) attrs.get("type");
-  //  String format = (String) attrs.get("format");
-   // String content = (String) attrs.get("content");
 
     String retString = "You requested a " + meth + " Lookup with attributes= " + attrString;
 
-    Representation ret = new StringRepresentation(retString);
-
-    return ret;
+    return new StringRepresentation(retString);
   }
 
   private String ifNull(String in) {
-    if (in == null) {
-      return "";
+    if (in != null) {
+      return in;
     }
 
-    return in;
+    return "";
   }
 
 }

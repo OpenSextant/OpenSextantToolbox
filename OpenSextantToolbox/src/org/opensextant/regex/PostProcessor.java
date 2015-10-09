@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -39,6 +39,6 @@ public interface PostProcessor {
    * @param types
    *          the types of RegexAnnotations to process (implementation specific)
    */
-  public abstract void postProcess(List<RegexAnnotation> annos, Set<String> types);
+  void postProcess(List<RegexAnnotation> annos, Set<String> types);
 
 }

@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 
 public class GeoNormalizer implements Normalizer {
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(GeoNormalizer.class);
 
-  // there are 5 geocoord families
+  /** There are 5 geocoord families. */
   private static final String DD_FAMILY = "DD";
   private static final String DM_FAMILY = "DM";
   private static final String DMS_FAMILY = "DMS";
@@ -36,8 +36,6 @@ public class GeoNormalizer implements Normalizer {
     Map<String, String> elementsFound = new HashMap<String, String>();
     int numGroups = matchResult.groupCount();
     for (int i = 0; i < numGroups + 1; i++) {
-      // int s = matchResult.start(i);
-      // int e = matchResult.end(i);
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
@@ -50,7 +48,7 @@ public class GeoNormalizer implements Normalizer {
     String family = r.getRuleFamily();
     String ruleName = r.getRuleName();
 
-    if (family.equals(DD_FAMILY)) {
+    if (DD_FAMILY.equals(family)) {
 
       Ordinate lat = null;
       Ordinate lon = null;
@@ -58,7 +56,7 @@ public class GeoNormalizer implements Normalizer {
         lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATETYPE.DD);
         lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATETYPE.DD);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno.toString() + " Ordinate Parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " Ordinate Parser exception:" , e);
       }
 
       if (lat != null && lon != null) {
@@ -68,19 +66,19 @@ public class GeoNormalizer implements Normalizer {
         annoFeatures.put("geoPattern", ruleName);
       } else {
         anno.setValid(false);
-        LOGGER.debug("Couldn't normalize " + anno.toString());
+        LOGGER.debug("Couldn't normalize " + anno);
       }
 
     }
 
-    if (family.equals(DM_FAMILY) || family.equals(DMS_FAMILY)) {
+    if (DM_FAMILY.equals(family) || DMS_FAMILY.equals(family)) {
       Ordinate lat = null;
       Ordinate lon = null;
       try {
         lat = OrdinateParser.parse(elementsFound, AXIS.LATITUDE, OrdinateParser.ORDINATETYPE.DMS);
         lon = OrdinateParser.parse(elementsFound, AXIS.LONGITUDE, OrdinateParser.ORDINATETYPE.DMS);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno.toString() + " Ordinate Parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " Ordinate Parser exception:" , e);
       }
 
       if (lat != null && lon != null) {
@@ -90,18 +88,18 @@ public class GeoNormalizer implements Normalizer {
         annoFeatures.put("geoPattern", ruleName);
       } else {
         anno.setValid(false);
-        LOGGER.debug("Couldn't normalize " + anno.toString());
+        LOGGER.debug("Couldn't normalize " + anno);
       }
 
     }
 
-    if (family.equals(MGRS_FAMILY)) {
+    if (MGRS_FAMILY.equals(family)) {
 
       List<MGRS> mgrsCandidates = null;
       try {
         mgrsCandidates = MGRSParser.parseMGRS(elementsFound);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno.toString() + " MGRS parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " MGRS parser exception:" , e);
 
       }
 
@@ -124,15 +122,15 @@ public class GeoNormalizer implements Normalizer {
         }
       } else {
         anno.setValid(false);
-        LOGGER.debug("Couldn't normalize " + anno.toString());
+        LOGGER.debug("Couldn't normalize " + anno);
       }
     }
-    if (family.equals(UTM_FAMILY)) {
+    if (UTM_FAMILY.equals(family)) {
       UTM utm = null;
       try {
         utm = UTMParser.parseUTM(elementsFound);
       } catch (Exception e) {
-        LOGGER.debug("Couldn't normalize " + anno.toString() + " UTM parser exception:" , e);
+        LOGGER.debug("Couldn't normalize " + anno + " UTM parser exception:" , e);
       }
 
       if (utm != null) {
@@ -143,7 +141,7 @@ public class GeoNormalizer implements Normalizer {
         annoFeatures.put("geoPattern", ruleName);
       } else {
         anno.setValid(false);
-        LOGGER.debug("Couldn't normalize " + anno.toString());
+        LOGGER.debug("Couldn't normalize " + anno);
       }
     }
     return;

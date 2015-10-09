@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.StringEncoder;
 
 /**
- * A simple encoder that merely removes leading and trailing punctuation
+ * A simple encoder that merely removes leading and trailing punctuation.
  */
 public class PunctEncoder implements StringEncoder {
   @Override

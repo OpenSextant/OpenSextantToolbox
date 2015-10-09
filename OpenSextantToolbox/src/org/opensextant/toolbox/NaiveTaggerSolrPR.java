@@ -60,6 +60,8 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
   private String outputASName;
   private String annotationType;
 
+  private boolean outputASNameSet = false;
+  
   // location of solr gazetteer
   private String gazetteerHome;
 
@@ -148,7 +150,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
       return;
     }
     // If no output Annotation set was given, append to the input AS
-    AnnotationSet annotSet = (outputASNameSet ? document.getAnnotations(outputASName) : document.getAnnotations());
+    AnnotationSet annotSet = outputASNameSet ? document.getAnnotations(outputASName) : document.getAnnotations();
 
     for (PlaceCandidate pc : matches) {
       // create and populate the PlaceCandidate annotation
@@ -207,7 +209,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
     this.annotationType = annotationType;
   }
 
-  private boolean outputASNameSet = false;
+
 
   public String getGazHome() {
     return gazetteerHome;

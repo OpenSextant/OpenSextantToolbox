@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class OpenSextantServer {
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantServer.class);
 
   private OpenSextantServer() {

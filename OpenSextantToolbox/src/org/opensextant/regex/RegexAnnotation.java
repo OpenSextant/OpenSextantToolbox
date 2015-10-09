@@ -82,11 +82,7 @@ public class RegexAnnotation {
     int s2 = other.start;
     int e2 = other.end;
 
-    if ((s1 < s2 && e1 < s2) || (s2 < s1 && e2 < s1)) {
-      return false;
-    }
-
-    return true;
+    return (s1 >= s2 || e1 >= s2) && (s2 >= s1 || e2 >= s1);
   }
 
   @Override

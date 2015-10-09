@@ -2,6 +2,7 @@ package org.opensextant.service.processing;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,7 +32,7 @@ public class ServiceDriver {
         FileFilterUtils.trueFileFilter());
 
     // put the files in a thread safe queue
-    ConcurrentLinkedQueue<File> fileQueue = new ConcurrentLinkedQueue<File>(filesToProcess);
+    Queue<File> fileQueue = new ConcurrentLinkedQueue<File>(filesToProcess);
 
     // the executor that manages the submitter threads
     ExecutorService executor = Executors.newFixedThreadPool(numThread);
@@ -66,7 +67,7 @@ public class ServiceDriver {
 
     // stop the clock and print some stats
     long end = System.nanoTime();
-    double dur = (end - start) / (1000000000.0);
+    double dur = (end - start) / 1000000000.0;
     int numDocs = filesToProcess.size();
     double avg = filesToProcess.size() / dur;
     System.out.println(numDocs + " docs took " + dur + " secs. Average= " + avg);

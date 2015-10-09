@@ -1,4 +1,4 @@
-/**
+/*
  *
  *  Copyright 2009-2013 The MITRE Corporation.
  *
@@ -31,35 +31,30 @@ import java.util.Map;
 import org.opensextant.geodesy.UTM;
 
 /**
- * *
+ * *.
  * @author ubaldino
  */
 public class UTMParser {
 
-  private UTMParser() {
-  }
-  // Log object
-  // private static final Logger LOGGER = LoggerFactory.getLogger(UTMParser.class);
-  /**
-     *
-     */
-  public static final char UTM_NORTH = 'N';
-  /**
-     *
-     */
-  public static final char UTM_SOUTH = 'S';
 
   /**
-   * @param elements
-   * @return
+   * Log object
+   * private static final Logger LOGGER = LoggerFactory.getLogger(UTMParser.class);
    */
+  public static final char UTM_NORTH = 'N';
+  public static final char UTM_SOUTH = 'S';
+
+  private UTMParser() {
+  }
+  
+  
   public static UTM parseUTM(Map<String, String> elements) {
 
     String z = elements.get("UTMZone");
     String z1 = elements.get("UTMZoneZZ"); // 0-5\d
     String z2 = elements.get("UTMZoneZ"); // \d
     if (z == null) {
-      z = (z1 != null ? z1 : z2);
+      z = z1 != null ? z1 : z2;
     }
     if (z == null) {
       return null;
@@ -78,7 +73,6 @@ public class UTMParser {
     String northing = elements.get("UTMNorthing");
     Integer eastingValue = Integer.parseInt(easting);
     Integer northingValue = Integer.parseInt(northing);
-    UTM utm = new UTM(zz, h, eastingValue.doubleValue(), northingValue.doubleValue());
-    return utm;
+    return new UTM(zz, h, eastingValue.doubleValue(), northingValue.doubleValue());
   }
 }

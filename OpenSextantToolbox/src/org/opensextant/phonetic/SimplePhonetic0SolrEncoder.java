@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -44,8 +44,6 @@ public class SimplePhonetic0SolrEncoder implements StringEncoder {
 
   @Override
   public String encode(String word) throws EncoderException {
-    // remove the case, punct and diacritics
-    String tmp = PhoneticUtils.removeCase(PhoneticUtils.foldToASCII(PhoneticUtils.removePunctuation(word)));
-    return tmp;
+    return PhoneticUtils.removeCase(PhoneticUtils.foldToASCII(PhoneticUtils.removePunctuation(word)));
   }
 }

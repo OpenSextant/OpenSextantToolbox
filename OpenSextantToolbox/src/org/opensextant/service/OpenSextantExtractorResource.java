@@ -34,19 +34,18 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.Put;
-import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OpenSextantExtractorResource extends ServerResource {
 
-  // log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
 
-  // the name of the field in the form which holds the uploaded file
+  /** The name of the field in the form which holds the uploaded file. */
   static String formFileName = "infile";
-  // the result formats supported
+  /** The result formats supported. */
   static Set<String> formats = new HashSet<String>();
   static {
     formats.add("json");
@@ -55,26 +54,26 @@ public class OpenSextantExtractorResource extends ServerResource {
     formats.add("csv");
   }
 
-  // the pool from which the document processor is pulled
+  /** The pool from which the document processor is pulled. */
   DocumentProcessorPool dpPool;
 
   @Override
-  protected void doInit() throws ResourceException {
+  protected void doInit()  {
     super.doInit();
     // get a reference to the pool in the Application
-    dpPool = ((OpenSextantApplication) this.getApplication()).getPool();
+    dpPool = ((OpenSextantApplication) getApplication()).getPool();
   }
 
-  @Get()
+  @Get
   public Representation doGet() {
     return new StringRepresentation("GET is not supported, use POST or PUT");
   }
 
   @Post
   @Put
-  public Representation doPost(Representation entity) throws Exception {
+  public Representation doPost(Representation entity) throws IOException {
     // get the request
-    Request req = this.getRequest();
+    Request req = getRequest();
     // get the submitted attributes
     ConcurrentMap<String, Object> attrs = req.getAttributes();
     String type = (String) attrs.get("extracttype");
@@ -82,9 +81,7 @@ public class OpenSextantExtractorResource extends ServerResource {
     String sourceURLString = (String) attrs.get("url");
 
     if (sourceURLString != null) {
-      // System.out.println("Fetching from "+ sourceURLString);
       String sourceURL = java.net.URLDecoder.decode(sourceURLString, "UTF-8");
-      // System.out.println("Fetching from "+ sourceURL);
       URL url = new URL(sourceURL);
       return extract(type, format, url);
     }
@@ -92,14 +89,12 @@ public class OpenSextantExtractorResource extends ServerResource {
     // return list of extraction types
     if (type == null) {
       Set<String> ret = this.dpPool.getProcessNames();
-      JacksonRepresentation<Set<String>> jackRep = new JacksonRepresentation<Set<String>>(ret);
-      return jackRep;
+      return new JacksonRepresentation<Set<String>>(ret);
     }
 
     // return list of result types
     if (format == null) {
-      JacksonRepresentation<Set<String>> jackRep = new JacksonRepresentation<Set<String>>(formats);
-      return jackRep;
+      return new JacksonRepresentation<Set<String>>(formats);
     }
 
     if (entity != null) {
@@ -114,10 +109,10 @@ public class OpenSextantExtractorResource extends ServerResource {
       // if its a form
       if (MediaType.MULTIPART_FORM_DATA.equals(media, true)) {
         URL u = handleForm(entity, formFileName);
-        if (u == null) {
-          return new StringRepresentation("Form with no field named  \"" + formFileName + "\"");
+        if (u != null) {
+          return extract(type, format, u);
         }
-        return extract(type, format, u);
+        return new StringRepresentation("Form with no field named  \"" + formFileName + "\"");
       }
 
       // if it is text of some kind
@@ -139,7 +134,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 
   }
 
-  // extract the content from the submitted form as a URL
+  /** Extract the content from the submitted form as a URL. */
   private URL handleForm(Representation entity, String filename) {
 
     RestletFileUpload fileupload = new RestletFileUpload(new DiskFileItemFactory());
@@ -209,7 +204,7 @@ public class OpenSextantExtractorResource extends ServerResource {
       DocumentBean doc = dpPool.process(extractType, content);
 
       // clean up temp file if used
-      if(content.getProtocol().equalsIgnoreCase("file")){
+      if("file".equalsIgnoreCase(content.getProtocol())){
         String tempFilePath = content.getPath();
         File tmpFile = new File(tempFilePath);
         tmpFile.delete();
@@ -228,12 +223,11 @@ public class OpenSextantExtractorResource extends ServerResource {
 
   private Representation convertResult(DocumentBean db, String resultFormat) {
 
-    if (resultFormat.equalsIgnoreCase("json")) {
-      JacksonRepresentation<DocumentBean> jackRep = new JacksonRepresentation<DocumentBean>(db);
-      return jackRep;
+    if ("json".equalsIgnoreCase(resultFormat)) {
+      return new JacksonRepresentation<DocumentBean>(db);
     }
 
-    if (resultFormat.equalsIgnoreCase("geojson")) {
+    if ("geojson".equalsIgnoreCase(resultFormat)) {
       FeatureCollection coll = new FeatureCollection();
 
       for (Anno a : db.getAnnoList()) {
@@ -250,12 +244,12 @@ public class OpenSextantExtractorResource extends ServerResource {
         ft.setProperty("snippet", db.getSnippet(a, 25));
         ft.setGeometry(null);
 
-        if (t.equalsIgnoreCase("Date")) {
+        if ("Date".equalsIgnoreCase(t)) {
           Date dt = (Date) fm.get("date");
           ft.setProperty("date", dt.toString());
         }
 
-        if (t.equalsIgnoreCase("PLACE")) {
+        if ("PLACE".equalsIgnoreCase(t)) {
           Place pl = (Place) fm.get("place");
           ft.setProperty("placeName", pl.getPlaceName());
           ft.setProperty("countrycode", pl.getCountryCode());
@@ -265,7 +259,7 @@ public class OpenSextantExtractorResource extends ServerResource {
           ft.setGeometry(pt);
         }
 
-        if (t.equalsIgnoreCase("GEOCOORD")) {
+        if ("GEOCOORD".equalsIgnoreCase(t)) {
           Geocoord geo = (Geocoord) fm.get("geo");
           Point pt = new Point(geo.getLongitude(), geo.getLatitude());
           ft.setGeometry(pt);
@@ -274,18 +268,16 @@ public class OpenSextantExtractorResource extends ServerResource {
         coll.add(ft);
       }
 
-      JacksonRepresentation<FeatureCollection> jackRep = new JacksonRepresentation<FeatureCollection>(coll);
-      return jackRep;
+      return new JacksonRepresentation<FeatureCollection>(coll);
     }
 
-    if (resultFormat.equalsIgnoreCase("xml")) {
-      JacksonRepresentation<DocumentBean> jackRep = new JacksonRepresentation<DocumentBean>(MediaType.TEXT_XML, db);
-      return jackRep;
+    if ("xml".equalsIgnoreCase(resultFormat)) {
+      return new JacksonRepresentation<DocumentBean>(MediaType.TEXT_XML, db);
     }
 
-    if (resultFormat.equalsIgnoreCase("csv")) {
+    if ("csv".equalsIgnoreCase(resultFormat)) {
 
-      StringBuffer buff = new StringBuffer();
+      StringBuilder buff = new StringBuilder();
 
       buff.append("MatchText\tType\tHierarchy\tStart\tEnd\tSnippet\tDate\tPlaceName\tCountryCode\tFeatureClass\tFeatureCode\tLatitude\tLongitude\n");
 
@@ -294,65 +286,64 @@ public class OpenSextantExtractorResource extends ServerResource {
         Map<String, Object> fm = a.getFeatures();
         Object h = fm.get("hierarchy");
 
-        buff.append(a.getMatchText() + "\t" + t + "\t" + h + "\t" + a.getStart() + "\t" + a.getEnd() + "\t");
+        buff.append(a.getMatchText()).append("\t").append(t).append("\t")
+				.append(h).append("\t").append(a.getStart()).append("\t")
+				.append(a.getEnd()).append("\t");
         buff.append(db.getSnippet(a, 25));
 
-        if (t.equalsIgnoreCase("Date")) {
+        if ("Date".equalsIgnoreCase(t)) {
           Date dt = (Date) fm.get("date");
           buff.append("\t");
-          buff.append(dt.toString() + "\t");
+          buff.append(dt).append("\t");
         } else {
           buff.append("\t");
         }
 
-        if (t.equalsIgnoreCase("PLACE")) {
+        if ("PLACE".equalsIgnoreCase(t)) {
           Place pl = (Place) fm.get("place");
           buff.append("\t");
-          buff.append(pl.getPlaceName() + "\t");
-          buff.append(pl.getCountryCode() + "\t");
-          buff.append(pl.getFeatureClass() + "\t");
-          buff.append(pl.getFeatureCode() + "\t");
-          buff.append(pl.getLatitude() + "\t");
-          buff.append(pl.getLongitude() + "\t");
+          buff.append(pl.getPlaceName()).append("\t");
+          buff.append(pl.getCountryCode()).append("\t");
+          buff.append(pl.getFeatureClass()).append("\t");
+          buff.append(pl.getFeatureCode()).append("\t");
+          buff.append(pl.getLatitude()).append("\t");
+          buff.append(pl.getLongitude()).append("\t");
 
         }
-        if (t.equalsIgnoreCase("GEOCOORD")) {
+        if ("GEOCOORD".equalsIgnoreCase(t)) {
           Geocoord geo = (Geocoord) fm.get("geo");
           buff.append("\t");
-          buff.append("" + "\t");
-          buff.append("" + "\t");
-          buff.append("" + "\t");
-          buff.append("" + "\t");
-          buff.append(geo.getLatitude() + "\t");
-          buff.append(geo.getLongitude() + "\t");
+          buff.append("\t");
+          buff.append("\t");
+          buff.append("\t");
+          buff.append("\t");
+          buff.append(geo.getLatitude()).append("\t");
+          buff.append(geo.getLongitude()).append("\t");
         }
         buff.append("\n");
       }
 
-      StringRepresentation rep = new StringRepresentation(buff.toString());
-
-      return rep;
+      return new StringRepresentation(buff.toString());
     }
 
-    // none of the above, assume json
-    JacksonRepresentation<DocumentBean> jackRep = new JacksonRepresentation<DocumentBean>(db);
-    return jackRep;
+    return new JacksonRepresentation<DocumentBean>(db);
   }
 
-  // create a URL based on an InputStream
+  /** Create a URL based on an InputStream. */
   private URL streamUrl(String urlString, final InputStream is, final String contType) throws MalformedURLException {
     return new URL(null, urlString, new URLStreamHandler() {
+      @Override
       public URLConnection openConnection(URL u) {
         return new URLConnection(u) {
           @Override
           public String getContentType() {
             return contType;
           }
-
+          @Override
           public void connect() {
             // do nothing
           }
-
+          @Override
           public InputStream getInputStream() {
             return is;
           }

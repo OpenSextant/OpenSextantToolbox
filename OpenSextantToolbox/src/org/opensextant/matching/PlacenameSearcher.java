@@ -21,7 +21,7 @@ public class PlacenameSearcher {
   private SolrServer solrServer;
   private ModifiableSolrParams baseSearchParams = new ModifiableSolrParams();
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(PlacenameSearcher.class);
 
   protected PlacenameSearcher(SolrServer svr, ModifiableSolrParams prms) {
@@ -45,7 +45,6 @@ public class PlacenameSearcher {
       SolrDocumentList docList = response.getResults();
       for (SolrDocument d : docList) {
         Place p = MatcherFactory.createPlace(d);
-        // System.out.println(d.getFieldValue("name") + " " +d.getFieldValue("score") );
         places.add(p);
       }
     }
@@ -57,7 +56,6 @@ public class PlacenameSearcher {
 
     ModifiableSolrParams srchParams = new ModifiableSolrParams(baseSearchParams);
     srchParams.set("q", q);
-    // srchParams.set("sort", "score desc");
     QueryResponse response = null;
     try {
       response = solrServer.query(srchParams);
@@ -67,18 +65,13 @@ public class PlacenameSearcher {
     }
 
     if (response != null) {
-      SolrDocumentList docList = response.getResults();
-      return docList;
+      return response.getResults();
     }
 
     return null;
 
   }
 
-  /**
-   * @param query
-   * @return
-   */
   public List<Place> searchByQueryString(String query) {
     ModifiableSolrParams srchParams = new ModifiableSolrParams(baseSearchParams);
     srchParams.set("q", query);
@@ -95,18 +88,17 @@ public class PlacenameSearcher {
     }
 
     srchParams.set("defType", "edismax");
-    // srchParams.set("sort", "score desc");
 
     srchParams.set("q", query);
     return search(srchParams);
   }
 
-  // distance in kilometers
+  /** Distance in kilometers. */
   public List<ScoredPlace> searchByCircle(Geocoord center, double distance) {
     return searchByCircle(center.getLatitude(), center.getLongitude(), distance);
   }
 
-  // distance in kilometers
+  /** Distance in kilometers. */
   public List<ScoredPlace> searchByCircle(double lat, double lon, double distance) {
     ModifiableSolrParams srchParams = new ModifiableSolrParams(baseSearchParams);
     String query = "{!geofilt pt=" + lat + "," + lon + " sfield=geo" + " d=" + distance + "}";
@@ -140,7 +132,7 @@ public class PlacenameSearcher {
 
   }
 
-  // TODO add search variants for exact/inexact name, constraints (country,feature type), geo radius ...
+  /** TODO add search variants for exact/inexact name, constraints (country,feature type), geo radius ... */
 
   public void cleanup() {
     MatcherFactory.shutdown(this);

@@ -1,4 +1,4 @@
-/**
+/*
  *
  *  Copyright 2009-2013 The MITRE Corporation.
  *
@@ -40,30 +40,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * *
+ * *.
  * @author ubaldino
  */
 public class MGRSParser {
 
-  private MGRSParser() {
-  }
 
-  // Log object
+
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(MGRSParser.class);
 
   private static DateFormat df1 = new java.text.SimpleDateFormat("ddMMMyyyy");
   private static DateFormat df2 = new java.text.SimpleDateFormat("ddMMMyy");
-
+  static final Pattern DELWS = Pattern.compile("\\s+");
+  
   static {
     // turn off lenient date parsing
     df1.setLenient(false);
     df2.setLenient(false);
   }
 
-  /**
-   * @param elements
-   * @return
-   */
+  private MGRSParser() {
+  }
+  
   public static List<MGRS> parseMGRS(Map<String, String> elements) {
 
     // get all of the pieces
@@ -71,13 +70,13 @@ public class MGRSParser {
     String quad = elements.get("MGRSQuad");
     String en = elements.get("Easting_Northing");
 
-    // have all the pieces?
-    if (zone == null || quad == null || en == null) {
-      return null;
-    }
-
     // the results
     List<MGRS> mgrs = new ArrayList<MGRS>();
+    
+    // have all the pieces?
+    if (zone == null || quad == null || en == null) {
+      return mgrs;
+    }
 
     // look for alternate interpretations
     List<String> variants = findVariants(zone, quad, en);
@@ -112,7 +111,7 @@ public class MGRSParser {
 
   }
 
-  // MGRS instances which should be rejected
+  /** MGRS instances which should be rejected. */
   private static boolean badMGRS(String txt) {
     // reject these patterns
     // 23 JAN 1900 - date
@@ -154,10 +153,6 @@ public class MGRSParser {
     return false;
   }
 
-  /**
-   * @param x
-   * @return
-   */
   protected static int parseInt(String x) {
     try {
       return Integer.parseInt(x);
@@ -167,7 +162,7 @@ public class MGRSParser {
     }
   }
 
-  static final Pattern DELWS = Pattern.compile("\\s+");
+
 
   public static String deleteWhitespace(String t) {
     Matcher m = DELWS.matcher(t);

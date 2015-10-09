@@ -83,8 +83,7 @@ public class Scorer {
   // admin structure similarity scores
   double countryOnlyScore = 0.9;
   double countryDifferentAdminScore = .75;
-  // Log object
-  // private static final Logger LOGGER = LoggerFactory.getLogger(Scorer.class);
+
   /**
    * Score each of the place candidates
    * @param pcList
@@ -94,15 +93,10 @@ public class Scorer {
     for (PlaceCandidate pc : pcList) {
       // for each Place on the PC
       for (Place p : pc.getPlaces()) {
-        // System.out.println();
         double prior = biasWeight * p.getIdBias();
         double evidenceScore = scoreEvidence(p, pc.getEvidence());
-        // double totalScore = prior * evidenceScore;
         double totalScore = (prior + evidenceScore) / 2.0;
         pc.setPlaceScore(p, totalScore);
-        // System.out.println("Setting final score for " +p.toString() +
-        // "=" + prior +" +" + evidenceScore + "=" + totalScore );
-        // pc.incrementPlaceScore(p, biasWeight * prior);
       }
     }
     // empty out the document evidence list
@@ -121,10 +115,9 @@ public class Scorer {
     // TODO if there is evidence but no country and admin evidence
     // use document level evidence
     // if no evidence from candidate, use document level evidence
-    if (evidList.size() == 0) {
-      if (docEvidList.size() > 0) {
-        // System.out.println("Using doc level evidence");
-        // System.out.println(docEvidList.toString());
+    if (evidList.isEmpty()) {
+      if (!docEvidList.isEmpty()) {
+
         evidList = docEvidList;
       } else {
         // no local or document level evidence
@@ -140,9 +133,7 @@ public class Scorer {
       // running sum of the scores
       sumScore = sumScore + singleScore;
     }
-    // return prodScore;
-    double avgScore = sumScore / evidList.size();
-    return avgScore;
+    return sumScore / evidList.size();
   }
 
   /**
@@ -157,12 +148,10 @@ public class Scorer {
     double featureTypeScore = scoreFeatureType(ev, place);
     double adminStructureScore = scoreAdminStructure(ev, place);
     // calculate the total score from the weighted component scores
-    double totalScore = (nameWeight * nameScore + geocoordWeight * geocoordScore + featureTypeWeight * featureTypeScore + adminStructureWeight
+
+    return (nameWeight * nameScore + geocoordWeight * geocoordScore + featureTypeWeight * featureTypeScore + adminStructureWeight
         * adminStructureScore)
         / totalWeight;
-    // System.out.println("\tComparing " + ev.toString() + "\t"
-    // +place.toString() + "\t" + totalScore );
-    return totalScore;
   }
 
   /* ---------------------Name Similarity ------------------ */
@@ -248,7 +237,7 @@ public class Scorer {
     String evidenceFClass = evidence.getFeatureClass();
     if (evidenceFClass != null) {
       evidenceFClass = geoPrefixPattern.matcher(evidenceFClass).replaceFirst("");
-      // evidenceFClass = evidenceFClass.replaceFirst("^Geo.featureType.", "");
+
     }
     String evidenceFCode = evidence.getFeatureCode();
     double weight = evidence.getWeight();
@@ -256,7 +245,6 @@ public class Scorer {
     String gazetteerFClass = place.getFeatureClass();
     if (gazetteerFClass != null) {
       gazetteerFClass = geoPrefixPattern.matcher(gazetteerFClass).replaceFirst("");
-      // gazetteerFClass = gazetteerFClass.replaceFirst("^Geo.featureType.", "");
     }
     String gazetteerFCode = place.getFeatureCode();
     // no evidence, zero score
@@ -271,7 +259,7 @@ public class Scorer {
       return 1.0 * weight;
     }
     // class level match, no code level info
-    if (evidenceFClass.equals(gazetteerFClass) && evidenceFCode.equals(NO_EVIDENCE)) {
+    if (evidenceFClass.equals(gazetteerFClass) && NO_EVIDENCE.equals(evidenceFCode)) {
       return featureTypeClassScore * weight;
     }
     // partial credit for the commonly confused classes of A,L and P
@@ -323,7 +311,7 @@ public class Scorer {
       return 1.0 * weight;
     }
     // country match, no admin1 evidence
-    if (evidenceCountry.equals(gazetteerCountry) && evidenceAdm1.equals(NO_EVIDENCE)) {
+    if (evidenceCountry.equals(gazetteerCountry) && NO_EVIDENCE.equals(evidenceAdm1)) {
       return countryOnlyScore * weight;
     }
     // country match, incompatible admin1 evidence

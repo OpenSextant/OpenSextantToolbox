@@ -1,4 +1,4 @@
-/**
+/*
  *
  *  Copyright 2009-2013 The MITRE Corporation.
  *
@@ -38,23 +38,27 @@ import java.util.Map;
  */
 public final class OrdinateParser {
 
-  // Log object
-  // private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class);
+  /**
+   * Log object
+   * private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class);
 
-  // the two type of Ordinates
+   * the two type of Ordinates
+   */
   public enum ORDINATETYPE {
     DD, DMS
-  };
-  // the two axes
+  }
+  /** The two axes. */
   public enum AXIS {
     LATITUDE, LONGITUDE
-  };
+  }
 
   public static final int LAT_MAX = 90;
   public static final int LON_MAX = 180;
 
-  // public static final String[] COORDINATE_SYMBOLS = {"��", "��", "'", "\"", ":", "lat", "lon", "geo", "coord",
-  // "deg"};
+  /**
+   * Public static final String[] COORDINATE_SYMBOLS = {"��", "��", "'", "\"", ":", "lat", "lon", "geo", "coord",
+   * "deg"};
+   */
 
   public static final String WEST = "W";
   public static final String SOUTH = "S";
@@ -63,7 +67,7 @@ public final class OrdinateParser {
   public static final String NEGATIVE = "-";
   public static final String POSITIVE = "+";
 
-  // public static final int NO_HEMISPHERE_VALUE = -0x10;
+  /** Public static final int NO_HEMISPHERE_VALUE = -0x10;. */
   public static final int POS_HEMI = 1;
   public static final int NEG_HEMI = -1;
   public static final int NO_HEMI = 0;
@@ -104,10 +108,7 @@ public final class OrdinateParser {
 
   }
 
-  /**
-   * @return
-   */
-  private static final boolean parseLatitude(Ordinate ord, Map<String, String> elements) {
+  private static boolean parseLatitude(Ordinate ord, Map<String, String> elements) {
     // DEGREES
     Double degrees = null;
     Integer deg = getIntValue(elements.get("degLat"));
@@ -177,7 +178,7 @@ public final class OrdinateParser {
   }
 
   /**
-   * This is a copy of the logic for digest_latitude_match; All I replace is "Lat" with "Lon"
+   * This is a copy of the logic for digest_latitude_match; All I replace is "Lat" with "Lon".
    * @return
    */
   private static boolean parseLongitude(Ordinate ord, Map<String, String> elements) {
@@ -291,10 +292,10 @@ public final class OrdinateParser {
   }
 
   private static Integer getIntValue(String val) {
-    if (val == null) {
-      return null;
+    if (val != null) {
+      return Integer.valueOf(val);
     }
-    return new Integer(val);
+    return null;
   }
 
   /**
@@ -309,7 +310,7 @@ public final class OrdinateParser {
       val = val.replaceFirst("-", ".");
     }
 
-    return new Float(val);
+    return Float.valueOf(val);
   }
 
   private static Float getFractionValue(String val) {

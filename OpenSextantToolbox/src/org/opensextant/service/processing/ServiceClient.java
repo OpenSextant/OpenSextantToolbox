@@ -19,19 +19,19 @@ import org.slf4j.LoggerFactory;
 
 public class ServiceClient implements Runnable {
 
-  // Log object. 
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(ServiceClient.class);
 
-  // parameters for the extractor
+  /** Parameters for the extractor. */
   private String extractHost;
   private int extractPort;
   private String extractType;
   private String extractFormat;
 
-  // the client used to send request to the extractor
+  /** The client used to send request to the extractor. */
   protected Client client;
 
-  // the queue which feeds files to this client
+  /** The queue which feeds files to this client. */
   private Queue<File> fileQueue;
 
   public ServiceClient(String extractHost, int extractPort, String extractType, String extractFormat) {
@@ -104,7 +104,7 @@ public class ServiceClient implements Runnable {
 
   }
 
-  // default result handler: dump to standard out, override in subclass
+  /** Default result handler: dump to standard out, override in subclass */
   protected void handleResults(Representation extractResult) {
 
     String txt;

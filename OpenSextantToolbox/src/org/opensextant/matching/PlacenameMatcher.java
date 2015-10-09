@@ -27,11 +27,11 @@ public class PlacenameMatcher {
   private ModifiableSolrParams matchParams;
 
   private static final String APRIORI_NAME_RULE = "AprioriNameBias";
-  private SolrTaggerRequest tagRequest = null;
+  private SolrTaggerRequest tagRequest;
   private Map<Integer, Place> placeIDMap = new HashMap<Integer, Place>(100);
-  private boolean tagAbbrev = false;
+  private boolean tagAbbrev;
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(PlacenameMatcher.class);
 
   protected PlacenameMatcher(SolrServer svr, ModifiableSolrParams prms) {
@@ -109,13 +109,11 @@ public class PlacenameMatcher {
         Place place = placeIDMap.get(placeID);
 
         // don't tag if place name is an abbrev and matchtext is all lower case
-        if (!tagAbbrev) {
-          if (place.isAbbreviation() && isLower) {
+        if (!tagAbbrev && place.isAbbreviation() && isLower) {
             isValid = false;
           LOGGER.debug("Not tagging abbreviation:" + matchText);
             break;
           }
-        }
 
         // don't add places already on candidate
         if (!seenPlaces.contains(place.getPlaceID())) {

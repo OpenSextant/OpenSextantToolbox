@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -32,10 +32,11 @@ import org.opensextant.regex.time.DateTimeNormalizer2.TimeResolution;
  */
 public class DateResolutionComparator implements Comparator<RegexAnnotation> {
 
-  /*
+  /**
    * (non-Javadoc)
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
+  @Override
   public int compare(RegexAnnotation a1, RegexAnnotation a2) {
     int result;
 

@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public abstract class PostProcessorBase implements PostProcessor {
     List<List<RegexAnnotation>> inters = new ArrayList<List<RegexAnnotation>>();
 
     // null or empty list as input, no interactions, return list with one empty list
-    if (annos == null || annos.size() == 0) {
+    if (annos == null || annos.isEmpty()) {
       inters.add(new ArrayList<RegexAnnotation>());
       return inters;
     }
@@ -65,8 +65,7 @@ public abstract class PostProcessorBase implements PostProcessor {
     // add the first anno to the current group to start
     RegexAnnotation a = annos.get(0);
     currentGroup.add(a);
-    // add the current group to the list
-    // inters.add(currentGroup);
+
 
     // loop over all the rest of the annos
     for (int i = 1; i < annos.size(); i++) {
@@ -74,19 +73,14 @@ public abstract class PostProcessorBase implements PostProcessor {
       // get the next anno to compare
       RegexAnnotation b = annos.get(i);
 
-      // TODO confirm this logic for all possible combos of interaction
-      // compare the next anno to the current group
-      if (interactsWithGroup(currentGroup, b)) {
-        currentGroup.add(b);
-      } else {// end of current group, b goes in next group
+      if (!interactsWithGroup(currentGroup, b)) {// end of current group, b goes in next group
         // add the current group to the list
         inters.add(currentGroup);
         // get a new group and add to list
         currentGroup = new ArrayList<RegexAnnotation>();
         inters.add(currentGroup);
-        // add b to new group
-        currentGroup.add(b);
       }
+      currentGroup.add(b);
 
       // slide forward to next anno
       a = b;
@@ -99,7 +93,7 @@ public abstract class PostProcessorBase implements PostProcessor {
     return inters;
   }
 
-  // check for interactions between an annotation and an existing group
+  /** Check for interactions between an annotation and an existing group. */
   private boolean interactsWithGroup(List<RegexAnnotation> group, RegexAnnotation b) {
 
     for (RegexAnnotation g : group) {
@@ -111,14 +105,15 @@ public abstract class PostProcessorBase implements PostProcessor {
     return false;
   }
 
-  /*
+  /**
    * (non-Javadoc)
    * @see org.opensextant.regex.PostProcessor#postProcess(java.util.List, java.util.Set)
    */
+  @Override
   public void postProcess(List<RegexAnnotation> annos, Set<String> types) {
 
     // null or empty input list, do nothing
-    if (annos == null || annos.size() == 0) {
+    if (annos == null || annos.isEmpty()) {
       return;
     }
 
@@ -151,9 +146,9 @@ public abstract class PostProcessorBase implements PostProcessor {
   public List<RegexAnnotation> decide(List<RegexAnnotation> inters) {
     List<RegexAnnotation> keepers = new ArrayList<RegexAnnotation>();
 
-    if (inters != null && inters.size() > 0) {
+    if (inters != null && !inters.isEmpty()) {
       // sort the annotations by temporal resolution
-      Collections.sort(inters, this.getComparator());
+      Collections.sort(inters, getComparator());
       // select annotation with highest resolution
       keepers.add(inters.get(0));
     }

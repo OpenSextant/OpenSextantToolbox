@@ -23,7 +23,6 @@ package org.opensextant.matching;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,10 +42,10 @@ public class DataLoader {
   private static ModifiableSolrParams loadParams = new ModifiableSolrParams();
   private static String requestHandler = "/update";
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
 
-  // some common params
+  /** Some common params. */
   static {
     loadParams.set("update.contentType", "text/csv");
     loadParams.set("skipLines", "1");
@@ -80,7 +79,7 @@ public class DataLoader {
 
     // convert indexed content to flat list
     // currently creates a temp file, could stream?
-    if (inputForm.equalsIgnoreCase("index")) {
+    if ("index".equalsIgnoreCase(inputForm)) {
       csvFilePath = flatten(csvFilePath);
     }
 
@@ -88,7 +87,7 @@ public class DataLoader {
 
       // set the fieldnames param for the selected schema
       final ModifiableSolrParams params = new ModifiableSolrParams(loadParams);
-      if (scheme.equalsIgnoreCase("gazetteer")) {
+      if ("gazetteer".equalsIgnoreCase(scheme)) {
         params.set("fieldnames", MatcherFactory.getGazetteerFieldNamesLoader());
       } else {
         params.set("fieldnames", MatcherFactory.getVocabFieldNames());
@@ -231,7 +230,7 @@ public class DataLoader {
 
     SolrServer svr = null;
 
-    if (scheme.equalsIgnoreCase("gazetteer")) {
+    if ("gazetteer".equalsIgnoreCase(scheme)) {
       svr = MatcherFactory.getSolrServerGeo();
     } else {
       svr = MatcherFactory.getSolrServerVocab();

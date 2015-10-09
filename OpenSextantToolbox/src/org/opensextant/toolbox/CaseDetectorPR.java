@@ -97,7 +97,7 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
   @Override
   public void execute() throws ExecutionException {
     // If no Annotation set was given, use the default
-    AnnotationSet annotSet = (inputASName == null || inputASName.equals("")) ? document.getAnnotations() : document
+    AnnotationSet annotSet = (inputASName == null || "".equals(inputASName)) ? document.getAnnotations() : document
         .getAnnotations(inputASName);
     // the histogram of case types counts seen in the document
     Map<String, Integer> caseCounts = new HashMap<String, Integer>();
@@ -110,7 +110,7 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
     // get the tokens
     AnnotationSet tokenSet = annotSet.get(tokenAnnoName);
     // see if there any tokens to work with
-    if (tokenSet == null || tokenSet.size() == 0) {
+    if (tokenSet == null || tokenSet.isEmpty()) {
       LOGGER.error("No tokens found in " + document.getName());
       return;
     }
@@ -146,7 +146,6 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
     double total = 1.0 * lowercaseCount + uppercaseCount + initialcaseCount;
     double lowerPercent = lowercaseCount / total;
     double upperPercent = uppercaseCount / total;
-    // double initialPercent = initialcaseCount/total;
     double sentenceInitialRatio = initialcaseCount / (1.0 * sentenceCount);
     // if mostly lower case and (significantly) fewer initials than
     // sentences

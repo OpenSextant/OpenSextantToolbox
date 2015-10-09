@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
 public class Phoneticizer {
   Map<String, StringEncoder> algorithms = new HashMap<String, StringEncoder>();
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(Phoneticizer.class);
   public Phoneticizer() {
     // populate the algorithms Map with an instance of each encoder
@@ -58,7 +58,6 @@ public class Phoneticizer {
     BeiderMorseEncoder bmApprox = new BeiderMorseEncoder();
     bmApprox.setRuleType(RuleType.APPROX);
     bmApprox.setConcat(false);
-    // StringEncoder caver = new Caverphone();
     StringEncoder caver1 = new Caverphone1();
     StringEncoder caver2 = new Caverphone2();
     StringEncoder colgne = new ColognePhonetic();
@@ -77,13 +76,9 @@ public class Phoneticizer {
     StringEncoder simple0SolrPlus = new SimplePhonetic0SolrPlusEncoder();
     StringEncoder simple1 = new SimplePhonetic1Encoder();
     StringEncoder simple2 = new SimplePhonetic2Encoder();
-    // not really language encodings
-    // StringEncoder qcode = new QCodec();
-    // StringEncoder qpcode = new QuotedPrintableCodec();
-    // StringEncoder urlcode = new URLCodec();
+
     algorithms.put("Beider-Morse-Exact", bmExact);
     algorithms.put("Beider-Morse-Approximate", bmApprox);
-    // algorithms.put("CaverPhone", caver);
     algorithms.put("CaverPhone_1.0", caver1);
     algorithms.put("CaverPhone_2.0", caver2);
     algorithms.put("Cologne_Phonetic", colgne);
@@ -100,10 +95,6 @@ public class Phoneticizer {
     algorithms.put("Simple_Phonetic0SolrPlus", simple0SolrPlus);
     algorithms.put("Simple_Phonetic1", simple1);
     algorithms.put("Simple_Phonetic2", simple2);
-    // not really language encodings
-    // algorithms.put("Q Code", qcode);
-    // algorithms.put("Q Printable", qpcode);
-    // algorithms.put("URL Code", urlcode);
   }
 
   public List<String> supportedAlgorithms() {
@@ -123,7 +114,7 @@ public class Phoneticizer {
   public String phoneticForm(String word, String method) {
     String tmpMeth = method;
     // if unknown method requested, force to default rather then failing
-    if (!(this.supportedAlgorithms().contains(tmpMeth))) {
+    if (!supportedAlgorithms().contains(tmpMeth)) {
       tmpMeth = "Simple_Phonetic0";
       // need to log something here to identify parameter change
     }
@@ -136,23 +127,4 @@ public class Phoneticizer {
     return tmpResult;
   }
 
-  // for testing
-  public static void main(String[] args) throws Exception {
-    Phoneticizer phoner = new Phoneticizer();
-    List<String> algos = phoner.supportedAlgorithms();
-    System.out.println("Supported Algorithms are:");
-    for (String alg : algos) {
-      System.out.println("\t" + alg);
-    }
-    System.out.println();
-    // String testWord1 = "C.U.A.";
-    // String testWord2 = "C. U. A. ";
-    // String testWord3 = "C . U . A . ";
-    String testWord4 = "'Wombat";
-    System.out.println("Test word:" + testWord4);
-    for (String alg : algos) {
-      String tmp = phoner.phoneticForm(testWord4, alg);
-      System.out.println(tmp + "\t" + alg);
-    }
-  }
 }

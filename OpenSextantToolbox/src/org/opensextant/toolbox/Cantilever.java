@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,21 +36,22 @@ import org.opensextant.placedata.PlaceEvidence.Scope;
  * It also propagates each PlaceCandidate's place evidence across all PlaceCandidates with the same base name.
  */
 public class Cantilever {
-  // the factor to weigh evidence which has been propagated (< 1.0)
+  /** The factor to weigh evidence which has been propagated (< 1.0) */
   private static double weightPropFactor = 0.75;
-  // the factor to weigh place confidence which has been propagated (< 1.0)
+  /** The factor to weigh place confidence which has been propagated (< 1.0) */
   private static double confidencePropFactor = 0.75;
-  // the factor to weigh document level country information(< 1.0)
-  // private static double CountryPropFactor = 0.1;
-  // the factor to weigh document level admin1 information(< 1.0)
-  // private static double AdminPropFactor = 0.1;
-  // the inexact matcher used to find the "same" place
+  /**
+   * The factor to weigh document level country information(< 1.0)
+   * private static double CountryPropFactor = 0.1;
+   * the factor to weigh document level admin1 information(< 1.0)
+   * private static double AdminPropFactor = 0.1;
+   * the inexact matcher used to find the "same" place
+   */
   private static Phoneticizer phoner = new Phoneticizer();
-  // which phonetic/inexact algorithm to use
+  /** Which phonetic/inexact algorithm to use. */
   private static String phoneticAlgName = "SimplePhonetic0";
 
-  // Log object
-  // private static final Logger LOGGER = LoggerFactory.getLogger(Cantilever.class);
+
   /**
    * Iterate through a List of PlaceCandidates to determine is-place confidence scores and propagate place evidence.
    * @param pcList
@@ -91,7 +92,7 @@ public class Cantilever {
           // for each bit of evidence on this PC
           for (PlaceEvidence e : pc.getEvidence()) {
             // only propagate LOCAL scope evidence
-            if (e.getScope().equals(PlaceEvidence.Scope.LOCAL)) {
+            if (PlaceEvidence.Scope.LOCAL.equals(e.getScope())) {
               // create a new Evidence based on the existing
               PlaceEvidence tmpEvid = new PlaceEvidence(e);
               // adjust the weight and scope to show that it is
@@ -120,7 +121,7 @@ public class Cantilever {
             p.addRuleAndConfidence("CoRefConfidence", totalPlaceConfidence);
           }
           // if we have any evidence to propagate
-          if (jointEvidence.size() > 0) {
+          if (jointEvidence.isEmpty()) {
             p.getEvidence().addAll(jointEvidence);
           }
         }
@@ -130,11 +131,8 @@ public class Cantilever {
       // n (ideally one) consistent PlaceEvidence(s).
   }
 
-  // do some simple canonicalization of name
+  /** Do some simple canonicalization of name. */
   private String baseName(String name) {
-    // rempve case diacritics and some punct
-    String tmp = phoner.phoneticForm(name, phoneticAlgName);
-    // strip off some generics?
-    return tmp;
+    return phoner.phoneticForm(name, phoneticAlgName);
   }
 }

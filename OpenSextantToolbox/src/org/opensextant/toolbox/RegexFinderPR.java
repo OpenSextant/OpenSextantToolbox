@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ import gate.creole.metadata.RunTime;
 import gate.util.InvalidOffsetException;
 
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.List;
 
 import org.opensextant.regex.RegexAnnotation;
 import org.opensextant.regex.RegexMatcher;
@@ -47,13 +47,13 @@ import org.slf4j.LoggerFactory;
     + "based on Java regular expresssions")
 public class RegexFinderPR extends AbstractLanguageAnalyser implements ProcessingResource {
   private static final long serialVersionUID = 1375472181851584128L;
-  // the Regexmatcher object which does all of the work
+  /** The Regexmatcher object which does all of the work. */
   private transient RegexMatcher reger;
-  // the annotationSet into which the dates will be written
+  /** The annotationSet into which the dates will be written. */
   private String outputAnnotationSet;
-  // the file containing the patterns
-  private URL patternFile = null;
-  // the log
+  /** The file containing the patterns. */
+  private URL patternFile;
+  /** The log. */
   private static final Logger LOGGER = LoggerFactory.getLogger(RegexFinderPR.class);
 
   /**
@@ -62,38 +62,28 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
   private void initialize() {
     // initialize the regex matcher
     reger = new RegexMatcher(patternFile);
-  } // end initialize
+  } /** End initialize. */
 
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
   @Override
   public Resource init() throws ResourceInstantiationException {
-    this.initialize();
+    initialize();
     return this;
   }
 
-  /**
-   * @throws ResourceInstantiationException
-   */
   @Override
   public void reInit() throws ResourceInstantiationException {
-    this.initialize();
+    initialize();
   }
 
-  /**
-   * @throws ExecutionException
-   */
   @Override
   public void execute() throws ExecutionException {
     // get the annotation set into which we will place any annotations found
-    AnnotationSet annotSet = (outputAnnotationSet == null || outputAnnotationSet.equals("")) ? document
+    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet)) ? document
         .getAnnotations() : document.getAnnotations(outputAnnotationSet);
     // get the text of the document
     String text = getDocument().getContent().toString();
     // find the matches via the regex matcher
-    ArrayList<RegexAnnotation> matches = reger.match(text);
+    List<RegexAnnotation> matches = reger.match(text);
     // loop over all the results
     for (RegexAnnotation a : matches) {
       // fill in all the annotation features
@@ -108,16 +98,10 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
     }
   }
 
-  /**
-   * @return
-   */
   public String getOutputAnnotationSet() {
     return outputAnnotationSet;
   }
 
-  /**
-   * @param outputAnnotationSet
-   */
   @Optional
   @RunTime
   @CreoleParameter
@@ -125,16 +109,10 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
     this.outputAnnotationSet = outputAnnotationSet;
   }
 
-  /**
-   * @return
-   */
   public URL getPatternFile() {
     return patternFile;
   }
 
-  /**
-   * @param patternFile
-   */
   @CreoleParameter
   public void setPatternFile(URL patternFile) {
     this.patternFile = patternFile;

@@ -9,7 +9,7 @@ public class GeocoordComparator implements Comparator<RegexAnnotation> {
   @Override
   public int compare(RegexAnnotation o1, RegexAnnotation o2) {
 
-    if (!o1.getType().equalsIgnoreCase("GEOCOORD") || !o2.getType().equalsIgnoreCase("GEOCOORD")) {
+    if (!"GEOCOORD".equalsIgnoreCase(o1.getType()) || !"GEOCOORD".equalsIgnoreCase(o2.getType())) {
       return 0;
     }
 
@@ -21,10 +21,10 @@ public class GeocoordComparator implements Comparator<RegexAnnotation> {
       return 0;
     }
 
-    if (fam1.equalsIgnoreCase("DM") && fam2.equalsIgnoreCase("DMS")) {
+    if ("DM".equalsIgnoreCase(fam1) && "DMS".equalsIgnoreCase(fam2)) {
       return 1;
     }
-    if (fam1.equalsIgnoreCase("DMS") && fam2.equalsIgnoreCase("DM")) {
+    if ("DMS".equalsIgnoreCase(fam1) && "DM".equalsIgnoreCase(fam2)) {
       return -1;
     }
 

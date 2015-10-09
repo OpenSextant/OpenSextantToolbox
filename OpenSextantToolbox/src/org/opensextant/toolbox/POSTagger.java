@@ -35,27 +35,21 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- */
 @CreoleResource(name = "OpenSextant_POS_Tagger", comment = "A POS tagger based on the JITAR ngram model")
 public class POSTagger extends AbstractLanguageAnalyser implements ProcessingResource {
-  /**
-   *
-   *
-   **/
   private static final long serialVersionUID = 1L;
   private String inputASName;
   private String outputASName;
-  // the lexicon and ngrams used by the tagger
+  /** The lexicon and ngrams used by the tagger. */
   private URL lexiconFileURL;
   private URL ngramFileURL;
-  // the lexicon and ngrams used by the gueser algoithm (suffix handler)
+  /** The lexicon and ngrams used by the gueser algoithm (suffix handler). */
   private URL guesserLexiconFileURL;
   private URL guesserNgramFileURL;
   private transient HMMTagger tagger;
-  private transient Model model = null;
-  private transient Model guesserModel = null;
-  // Log object
+  private transient Model model;
+  private transient Model guesserModel;
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(POSTagger.class);
   private void initialize() {
     // Load the model
@@ -97,8 +91,9 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
 
   @Override
   public void execute() throws ExecutionException {
-    if (inputASName != null && inputASName.equals(""))
-      inputASName = null;
+    if ("".equals(inputASName)) {
+		inputASName = null;
+	}
     AnnotationSet inputAS = (inputASName == null) ? document.getAnnotations() : document.getAnnotations(inputASName);
     // Get all of the sentences in document
     AnnotationSet sentenceSet = inputAS.get("Sentence");
@@ -137,7 +132,7 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
         annoList.get(i).getFeatures().put(featureName, tags.get(i + indexOffset));
       }
     } // end sentence iterator
-  } // end execute()
+  } /** End execute(). */
 
   @Override
   public void cleanup() {

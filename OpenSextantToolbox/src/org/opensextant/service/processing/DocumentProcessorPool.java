@@ -33,10 +33,10 @@ import org.slf4j.LoggerFactory;
 public class DocumentProcessorPool {
 
   private Map<String, BlockingQueue<DocumentProcessor>> poolMap = new HashMap<String, BlockingQueue<DocumentProcessor>>();
-  private  long docsProcessedCount =0L;
-  private  long docsFailedCount =0L;
+  private  long docsProcessedCount;
+  private  long docsFailedCount;
   
- // Log object.
+ /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(DocumentProcessorPool.class);
 
 
@@ -65,7 +65,7 @@ public class DocumentProcessorPool {
 
       File gappFile = new File(gappHome, gapp);
 
-      this.addProcess(app, gappFile, poolSize);
+      addProcess(app, gappFile, poolSize);
 
     }
 
@@ -159,12 +159,12 @@ public class DocumentProcessorPool {
 
     return avail;
   }
-
+  @Override
   public String toString() {
-    StringBuffer buff = new StringBuffer();
+    StringBuilder buff = new StringBuilder();
     buff.append("Extractor\tNumber in pool\n");
     for (String name : poolMap.keySet()) {
-      buff.append(name + "\t");
+      buff.append(name).append("\t");
       buff.append(poolMap.get(name).size());
       buff.append("\n");
     }
@@ -228,7 +228,7 @@ public class DocumentProcessorPool {
       tmpAnno.setType(type);
       tmpAnno.setMatchText(Utils.cleanStringFor(doc, a));
 
-      if (type.equalsIgnoreCase("PLACE")) {
+      if ("PLACE".equalsIgnoreCase(type)) {
         FeatureMap fm = a.getFeatures();
 
         tmpAnno.getFeatures().put("place", fm.get("bestPlace"));
@@ -237,7 +237,7 @@ public class DocumentProcessorPool {
         continue;
       }
 
-      if (type.equalsIgnoreCase("ENTITY")) {
+      if ("ENTITY".equalsIgnoreCase(type)) {
         continue;
       }
 

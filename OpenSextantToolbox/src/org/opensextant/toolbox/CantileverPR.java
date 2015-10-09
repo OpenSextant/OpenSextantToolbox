@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -65,22 +65,15 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
     scr = new Scorer();
   }
 
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
   @Override
   public Resource init() throws ResourceInstantiationException {
-    this.initialize();
+    initialize();
     return this;
   }
 
-  /**
-   * @throws ResourceInstantiationException
-   */
   @Override
   public void reInit() throws ResourceInstantiationException {
-    this.initialize();
+    initialize();
   }
 
   /**
@@ -93,7 +86,7 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
     // the list of PC objects
     List<PlaceCandidate> pcList = new ArrayList<PlaceCandidate>();
     // get the annotation set
-    AnnotationSet annotSet = (outputAnnotationSet == null || outputAnnotationSet.equals("")) ? document
+    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet)) ? document
         .getAnnotations() : document.getAnnotations(outputAnnotationSet);
     // Get all of the placecandidate annotations
     AnnotationSet candidateSet = annotSet.get(candidateAnnotationName);
@@ -105,7 +98,7 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
       if (pc != null) {
         pcList.add(pc);
       } else {
-        LOGGER.error("Null PC on annotation" + candAnno.toString());
+        LOGGER.error("Null PC on annotation" + candAnno);
       }
     } // end place candidate loop
       // enable/disable co-referencing
@@ -119,18 +112,12 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
     }
     // score and rank the Places in each PC according to the evidence
     scr.score(pcList);
-  } // end execute
+  } /** End execute. */
 
-  /**
-   * @return
-   */
   public String getOutputAnnotationSet() {
     return outputAnnotationSet;
   }
 
-  /**
-   * @param outputAnnotationSet
-   */
   @Optional
   @RunTime
   @CreoleParameter
@@ -138,16 +125,10 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
     this.outputAnnotationSet = outputAnnotationSet;
   }
 
-  /**
-   * @return
-   */
   public String getCandidateAnnotationName() {
     return candidateAnnotationName;
   }
 
-  /**
-   * @param candidateAnnotationName
-   */
   @Optional
   @RunTime
   @CreoleParameter(defaultValue = "placecandidate")
@@ -155,16 +136,10 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
     this.candidateAnnotationName = candidateAnnotationName;
   }
 
-  /**
-   * @return
-   */
   public String getCandidateFeatureName() {
     return candidateFeatureName;
   }
 
-  /**
-   * @param candidateFeatureName
-   */
   @Optional
   @RunTime
   @CreoleParameter(defaultValue = "placeCandidate")

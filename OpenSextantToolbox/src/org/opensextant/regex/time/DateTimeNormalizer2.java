@@ -16,13 +16,15 @@ import org.slf4j.LoggerFactory;
 
 public class DateTimeNormalizer2 implements Normalizer {
 
-  // Enum representing the specificity of the date time reference
+  /** Enum representing the specificity of the date time reference. */
   public enum TimeResolution {
     NONE, ESTIMATED, ERA, CENTURY, DECADE, YEAR, MONTH, WEEK, DAY, HOUR, MINUTE, SECOND, FRACTIONAL_SECOND
-  };
+  }
 
-  // map containing all of the Joda defined formatting elements and their corresponding TimeResolutions
-  // NOTE: any element names appearing in a regex other than these will be ignored for normalization purposes
+  /**
+   * Map containing all of the Joda defined formatting elements and their corresponding TimeResolutions
+   * NOTE: any element names appearing in a regex other than these will be ignored for normalization purposes
+   */
   private static Map<String, TimeResolution> jodaNames = new HashMap<String, TimeResolution>();
   static {
     jodaNames.put("G", TimeResolution.ERA);
@@ -50,21 +52,21 @@ public class DateTimeNormalizer2 implements Normalizer {
     jodaNames.put("z", TimeResolution.NONE);
   }
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(DateTimeNormalizer2.class);
 
   @Override
   public void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
 
-    if (anno.getType().equalsIgnoreCase("Date")) {
+    if ("Date".equalsIgnoreCase(anno.getType())) {
       normalizeDate(anno, r, matchResult);
     }
 
-    if (anno.getType().equalsIgnoreCase("Time")) {
+    if ("Time".equalsIgnoreCase(anno.getType())) {
       normalizeTime(anno, r, matchResult);
     }
 
-    if (anno.getType().equalsIgnoreCase("DayOfTheMonth")) {
+    if ("DayOfTheMonth".equalsIgnoreCase(anno.getType())) {
       normalizeDay(anno, r, matchResult);
     }
 
@@ -76,8 +78,6 @@ public class DateTimeNormalizer2 implements Normalizer {
     Map<String, String> elementsFound = new HashMap<String, String>();
     int numGroups = matchResult.groupCount();
     for (int i = 0; i < numGroups + 1; i++) {
-      // int s = matchResult.start(i);
-      // int e = matchResult.end(i);
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
@@ -91,8 +91,8 @@ public class DateTimeNormalizer2 implements Normalizer {
 
     // create a reduced match and equivalent format string from each Joda element found
     // the reduced match will contain only values relevant to normalization
-    StringBuffer reducedMatch = new StringBuffer();
-    StringBuffer jodaPattern = new StringBuffer();
+    StringBuilder reducedMatch = new StringBuilder();
+    StringBuilder jodaPattern = new StringBuilder();
     // look for the most precise element in pattern
     TimeResolution mostPrec = TimeResolution.NONE;
     boolean hasYear = false;
@@ -105,14 +105,14 @@ public class DateTimeNormalizer2 implements Normalizer {
       // see if elem is a joda named elem
       if (jodaNames.keySet().contains(elem)) {
         // add elem value to reduced match
-        reducedMatch.append(elemValue + " ");
+        reducedMatch.append(elemValue).append(" ");
         // add elem to pattern string
-        jodaPattern.append(elem + " ");
+        jodaPattern.append(elem).append(" ");
         // get the resolution for this element
         TimeResolution tr = jodaNames.get(elem);
 
         // see if we have a year resolution
-        if (tr.equals(TimeResolution.YEAR)) {
+        if (TimeResolution.YEAR.equals(tr)) {
           hasYear = true;
         }
 
@@ -159,7 +159,7 @@ public class DateTimeNormalizer2 implements Normalizer {
     // adjust precision for some specific cases
 
     // look for phrases like "the 1990's" or "the 1800s"
-    if (r.getRuleFamily().equalsIgnoreCase("YEAR")) {
+    if ("YEAR".equalsIgnoreCase(r.getRuleFamily())) {
       // get phrase, remove apostrophes and tics
       String phrase = anno.getMatchText().trim().replaceAll("['`]", "");
 
@@ -186,8 +186,6 @@ public class DateTimeNormalizer2 implements Normalizer {
     Map<String, String> elementsFound = new HashMap<String, String>();
     int numGroups = matchResult.groupCount();
     for (int i = 0; i < numGroups + 1; i++) {
-      // int s = matchResult.start(i);
-      // int e = matchResult.end(i);
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
@@ -207,8 +205,6 @@ public class DateTimeNormalizer2 implements Normalizer {
     Map<String, String> elementsFound = new HashMap<String, String>();
     int numGroups = matchResult.groupCount();
     for (int i = 0; i < numGroups + 1; i++) {
-      // int s = matchResult.start(i);
-      // int e = matchResult.end(i);
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
@@ -223,46 +219,48 @@ public class DateTimeNormalizer2 implements Normalizer {
     return;
   }
 
-  // TODO decide on value for missing year
-  // if the pattern does not include some form of "YEAR", use
-  // current year?, Joda default year (2000),? year 0000?
-  // get a year value when none has been found
+  /**
+   * TODO decide on value for missing year
+   * if the pattern does not include some form of "YEAR", use
+   * current year?, Joda default year (2000),? year 0000?
+   * get a year value when none has been found
+   */
   private int getEstimatedYear() {
     DateTime now = new DateTime();
     return now.getYear();
   }
 
-  // some hackery to convert some values to those that Joda recognizes
+  /** Some hackery to convert some values to those that Joda recognizes. */
   private String cleanValues(String elemName, String elemValue) {
 
     // strip trailing periods on abbreviated months and add "SEPT" as valid abbrev
-    if (elemName.equals("MMM")) {
+    if ("MMM".equals(elemName)) {
       elemValue = elemValue.replaceFirst("\\.$", "").replaceFirst("(?i:sept)", "Sep");
     }
 
     // strip leading apostrophe/tic from abbreviated year
-    if (elemName.equals("YY")) {
+    if ("YY".equals(elemName)) {
       elemValue = elemValue.replaceFirst("^['`]", "");
     }
 
     // strip trailing ordinals from days
-    if (elemName.equals("dd")) {
+    if ("dd".equals(elemName)) {
       elemValue = elemValue.replaceFirst("(st|nd|rd|th|ST|ND|RD|TH)$", "");
     }
 
     // strip periods from abbreviated eras
-    if (elemName.equals("G")) {
+    if ("G".equals(elemName)) {
       elemValue = elemValue.replaceAll("\\.", "").toUpperCase();
     }
 
     // convert Z,ZULU and UTC timezones to GMT
-    if (elemName.equals("z")
-        && (elemValue.equalsIgnoreCase("Z") || elemValue.equalsIgnoreCase("ZULU") || elemValue.equalsIgnoreCase("UTC"))) {
+    if ("z".equals(elemName)
+        && ("Z".equalsIgnoreCase(elemValue) || "ZULU".equalsIgnoreCase(elemValue) || "UTC".equalsIgnoreCase(elemValue))) {
       elemValue = "GMT";
     }
 
     // strip periods from am/pm eras
-    if (elemName.equals("a")) {
+    if ("a".equals(elemName)) {
       elemValue = elemValue.replaceAll("\\.", "").toUpperCase();
     }
 

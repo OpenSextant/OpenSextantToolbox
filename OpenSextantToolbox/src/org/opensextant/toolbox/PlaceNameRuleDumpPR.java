@@ -47,17 +47,17 @@ import org.slf4j.LoggerFactory;
     + " PlaceCandidate annotations")
 public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
   private static final long serialVersionUID = 1L;
-  private File outputDir = null;
+  private File outputDir;
   private String outFileName = "placeNameStatsWithRules.txt";
-  private File vocabFile = null;
-  transient BufferedWriter vocabWriter = null;
-  // a running count of how many documents seen so far
+  private File vocabFile;
+  transient BufferedWriter vocabWriter;
+  /** A running count of how many documents seen so far. */
   private Integer docCount = 0;
   String placeAnnotationName = "placecandidate";
   String featureName = "placeCandidate";
   String assessName = "Assessment";
   Long contxtSize = 75L;
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(PlaceNameRuleDumpPR.class);
 
   private void initialize() {
@@ -66,30 +66,20 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     openFiles();
   }
 
-  // Do the initialization
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
+  /** Do the initialization. */
   @Override
   public Resource init() throws ResourceInstantiationException {
     initialize();
     return this;
   }
 
-  // Re-do the initialization
-  /**
-   * @throws ResourceInstantiationException
-   */
+  /** Re-do the initialization. */
   @Override
   public void reInit() throws ResourceInstantiationException {
     initialize();
   }
 
-  // Do the work
-  /**
-   * @throws ExecutionException
-   */
+  /** Do the work. */
   @Override
   public void execute() throws ExecutionException {
     // get all of the annotations of interest
@@ -119,7 +109,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     } // end placeCandidate annotation loop
 
-  } // end execute
+  } /** End execute. */
 
   private void calcAssessment(Annotation anno, AnnotationSet truthAnnoSet) {
 
@@ -136,12 +126,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     AnnotationSet coveredSet = truth.getCovering("PLACE", start, end);
     AnnotationSet overlapSet = truth.get("PLACE", start, end);
 
-    boolean isPlace = true;
-//    String placename = gate.Utils.cleanStringFor(document, anno);
-
-    if (score <= 0) {
-      isPlace = false;
-    }
+    boolean isPlace = score > 0;
 
     if (exactSet.size() == 1  ) {
 
@@ -155,7 +140,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     }
 
-    if (exactSet.size() != 1 && (containedSet.size() > 0 || coveredSet.size() > 0   || overlapSet.size() >0 ) ){
+    if (exactSet.size() != 1 && (!containedSet.isEmpty() || !coveredSet.isEmpty()   || !overlapSet.isEmpty() ) ){
 
       if (isPlace) {
         anno.getFeatures().put(assessName, "TP-Overlap");
@@ -177,7 +162,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     }
 
-    if (exactSet.size() == 0 && containedSet.size() == 0 && coveredSet.size() == 0 && overlapSet.size() == 0) {
+    if (exactSet.isEmpty() && containedSet.isEmpty() && coveredSet.isEmpty() && overlapSet.isEmpty()) {
 
       if(isPlace){
         anno.getFeatures().put(assessName, "FP");
@@ -187,35 +172,19 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
     }
 
-//    String result = (String) anno.getFeatures().get(assessName);
- //   LOGGER.info( placename + " (" + result + ") is place:" +isPlace +" Exact matches:" + exactSet.size() + " Contained matches:" +containedSet.size() + " Covered matches:" + coveredSet.size() + " Overlap matches:" + overlapSet.size()  );
-
 
   }
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionFinished(Controller arg0) throws ExecutionException {
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
     initialize();
@@ -353,20 +322,13 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     if (contextEnd > Utils.lengthLong(document)) {
       contextEnd = Utils.lengthLong(document);
     }
-    String context = Utils.cleanStringFor(document, contextStart, contextEnd);
-    return context;
+    return Utils.cleanStringFor(document, contextStart, contextEnd);
   }
 
-  /**
-   * @return
-   */
   public File getOutputDir() {
     return outputDir;
   }
 
-  /**
-   * @param outputDir
-   */
   @CreoleParameter(defaultValue = "C:\\dump\\vocab")
   public void setOutputDir(File outputDir) {
     outputDir.mkdirs();

@@ -88,7 +88,7 @@ public class PhoneticTaggerPR extends AbstractLanguageAnalyser implements Proces
   @Override
   public void execute() throws ExecutionException {
     // If no output Annotation set was given, append to the input AS
-    AnnotationSet annotSet = (outputASName == null || outputASName.equals("")) ? document.getAnnotations() : document
+    AnnotationSet annotSet = (outputASName == null || "".equals(outputASName)) ? document.getAnnotations() : document
         .getAnnotations(outputASName);
     // get the tokens
     AnnotationSet tokenSet = annotSet.get(tokenAnnoName);
@@ -183,7 +183,7 @@ public class PhoneticTaggerPR extends AbstractLanguageAnalyser implements Proces
   public void setPhoneticFeatureName(String phoneticFeatureName) {
     String tmp = phoneticFeatureName;
     // don't overwrite "string", the default token feature name
-    if (phoneticFeatureName.equalsIgnoreCase("string")) {
+    if ("string".equalsIgnoreCase(phoneticFeatureName)) {
       tmp = phoneticFeatureName + "_reduced";
     }
     // don't allow output feature same as input feature name

@@ -1,4 +1,4 @@
-/**
+/*
  Copyright 2009-2013 The MITRE Corporation.
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -42,41 +42,41 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
    */
   public enum Scope {
     APRIORI, LOCAL, COREF, MERGED, DOCUMENT
-  };
+  }
 
   private static final long serialVersionUID = 2389068012345L;
-  /** The geospatial data, the actual evidence found */
-  private String placeName = null;
-  private String countryCode = null;
-  private String admin1 = null;
-  private String featureClass = null;;
-  private String featureCode = null;
-  private transient Geocoord geocoord = null;
-  // The rule which found the evidence
-  private String rule = null;
-  // the scope from which this evidence came
+  /** The geospatial data, the actual evidence found. */
+  private String placeName;
+  private String countryCode;
+  private String admin1;
+  private String featureClass;
+  private String featureCode;
+  private transient Geocoord geocoord;
+  /** The rule which found the evidence. */
+  private String rule;
+  /** The scope from which this evidence came. */
   private Scope scope = Scope.LOCAL;
-  // The strength of the evidence
-  private Double weight = null;
+  /** The strength of the evidence. */
+  private Double weight;
 
   public PlaceEvidence() {
-  };
+  }
 
-  // copy constructor
+  /** Copy constructor. */
   public PlaceEvidence(PlaceEvidence old) {
     this();
-    this.setAdmin1(old.getAdmin1());
-    this.setCountryCode(old.getCountryCode());
-    this.setFeatureClass(old.getFeatureClass());
-    this.setFeatureCode(old.getFeatureCode());
-    this.setGeocoord(old.getGeocoord());
-    this.setPlaceName(old.getPlaceName());
-    this.setRule(old.getRule());
-    this.setScope(old.getScope());
-    this.setWeight(old.getWeight());
-  };
+    setAdmin1(old.getAdmin1());
+    setCountryCode(old.getCountryCode());
+    setFeatureClass(old.getFeatureClass());
+    setFeatureCode(old.getFeatureCode());
+    setGeocoord(old.getGeocoord());
+    setPlaceName(old.getPlaceName());
+    setRule(old.getRule());
+    setScope(old.getScope());
+    setWeight(old.getWeight());
+  }
 
-  // compare to other evidence by strength
+  /** Compare to other evidence by strength. */
   @Override
   public int compareTo(Object other) {
     if (!(other instanceof PlaceEvidence)) {
@@ -101,7 +101,7 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
     return super.hashCode();
   }
 
-  // The getters and setters.
+  /** The getters and setters. */
   public String getPlaceName() {
     return placeName;
   }
@@ -174,11 +174,10 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
     this.weight = weight;
   }
 
-  // Override toString to get a reasonable string label for this PlaceEvidence
+  /** Override toString to get a reasonable string label for this PlaceEvidence. */
   @Override
   public String toString() {
-    String output = this.rule + "-" + this.scope + "/" + this.weight + "(" + this.placeName + "," + this.admin1 + ","
+    return this.rule + "-" + this.scope + "/" + this.weight + "(" + this.placeName + "," + this.admin1 + ","
         + this.countryCode + ")";
-    return output;
   }
 }

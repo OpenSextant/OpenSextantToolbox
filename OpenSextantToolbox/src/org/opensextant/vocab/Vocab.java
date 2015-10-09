@@ -4,22 +4,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Vocab {
-  // internal id
+  /** Internal id. */
   private String id;
 
-  // the vocabulary phrase as it appeared in the lexicon/dictionary
+  /** The vocabulary phrase as it appeared in the lexicon/dictionary. */
   private String vocabMatch;
 
-  // the collection,catalog or other grouping of vocabulary
+  /** The collection,catalog or other grouping of vocabulary. */
   private String collection;
 
-  // a category
+  /** A category. */
   private String category;
 
-  // a taxonomic categorization
+  /** A taxonomic categorization. */
   private String taxonomy;
 
-  // any other attributes,characteristics or labels
+  /** Any other attributes,characteristics or labels. */
   private Map<String, Object> attributes = new HashMap<String, Object>();
 
   public String getId() {
@@ -70,9 +70,9 @@ public class Vocab {
     this.attributes = attributes;
   }
 
+  @Override
   public String toString() {
-    String tmp = this.getVocabMatch() + " (" + this.getCategory() + "/" + this.getTaxonomy() + ")";
-    return tmp;
+    return getVocabMatch() + " (" + getCategory() + "/" + getTaxonomy() + ")";
   }
 
 }

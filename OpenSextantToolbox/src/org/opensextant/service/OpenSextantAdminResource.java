@@ -17,13 +17,13 @@ import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.Put;
-import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OpenSextantAdminResource extends ServerResource {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantAdminResource.class);
   static Set<String> operations = new HashSet<String>();
   static {
     operations.add("health");
@@ -31,41 +31,40 @@ public class OpenSextantAdminResource extends ServerResource {
   }
 
   @Override
-  protected void doInit() throws ResourceException {
+  protected void doInit() {
     super.doInit();
   }
-    // get a reference to the in the Application
+    /** Get a reference to the in the Application. */
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantAdminResource.class);
+
 
   @Post
   @Put
   @Get
   public Representation doGet() {
     // get the request
-    Request req = this.getRequest();
+    Request req = getRequest();
     // get the submitted attributes
     ConcurrentMap<String, Object> attrs = req.getAttributes();
     String op = (String) attrs.get("operation");
 
     if (op == null) {
-      JacksonRepresentation<Set<String>> jackRep = new JacksonRepresentation<Set<String>>(operations);
-      return jackRep;
+      return new JacksonRepresentation<Set<String>>(operations);
     }
 
     if (!operations.contains(op)) {
-      StringBuffer buf = new StringBuffer();
-      buf.append("Unknown operation \"" + op + "\" requested. Supported operations are:");
+      StringBuilder buf = new StringBuilder();
+      buf.append("Unknown operation \"").append(op).append("\" requested. Supported operations are:");
       for (String s : operations) {
-        buf.append(s + ",");
+        buf.append(s).append(",");
       }
       buf.replace(buf.length() - 1, buf.length(), "");
 
       return new StringRepresentation(buf.toString());
     }
 
-    if (op.equalsIgnoreCase("health")) {
-      DocumentProcessorPool dpPool = ((OpenSextantApplication) this.getApplication()).getPool();
+    if ("health".equalsIgnoreCase(op)) {
+      DocumentProcessorPool dpPool = ((OpenSextantApplication) getApplication()).getPool();
       Map<String, Integer> avail = dpPool.available();
 
       long failCount  = dpPool.getDocsFailedCount();
@@ -73,7 +72,7 @@ public class OpenSextantAdminResource extends ServerResource {
 
       String stat = "green";
 
-      if(avail.size() == 0){
+      if(avail.isEmpty()){
         stat = "red";
       }
 
@@ -89,15 +88,13 @@ public class OpenSextantAdminResource extends ServerResource {
         LOGGER.error("JSON exception when attemting to create status info ", e);
       }
 
-      JsonRepresentation jsonRep = new JsonRepresentation(ret);
-
-      return jsonRep;
+      return new JsonRepresentation(ret);
     }
 
-    if (op.equalsIgnoreCase("shutdown")) {
+    if ("shutdown".equalsIgnoreCase(op)) {
 
       DeferedStop task = new DeferedStop();
-      task.setApp((OpenSextantApplication) this.getApplication());
+      task.setApp((OpenSextantApplication) getApplication());
       task.setTime(4000);
       new Thread(task).start();
 
@@ -105,10 +102,10 @@ public class OpenSextantAdminResource extends ServerResource {
 
     }
 
-    StringBuffer buf = new StringBuffer();
-    buf.append("Unknown operation " + op + " requested. Supported operations are:");
+    StringBuilder buf = new StringBuilder();
+    buf.append("Unknown operation ").append(op).append(" requested. Supported operations are:");
     for (String s : operations) {
-      buf.append(s + ",");
+      buf.append(s).append(",");
     }
 
     return new StringRepresentation(buf.toString());

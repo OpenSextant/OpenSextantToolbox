@@ -23,10 +23,10 @@ public class VocabMatcher {
   private SolrServer solrServer;
   private ModifiableSolrParams matchParams;
 
-  private SolrTaggerRequest tagRequest = null;
+  private SolrTaggerRequest tagRequest;
   private Map<Integer, Vocab> vocabIDMap = new HashMap<Integer, Vocab>(100);
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcher.class);
 
   protected VocabMatcher(SolrServer svr, ModifiableSolrParams prms) {

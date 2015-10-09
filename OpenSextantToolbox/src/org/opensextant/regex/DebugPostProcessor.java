@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 public class DebugPostProcessor extends PostProcessorBase {
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(DebugPostProcessor.class);
 
   @Override
@@ -22,15 +22,15 @@ public class DebugPostProcessor extends PostProcessorBase {
   public List<RegexAnnotation> decide(List<RegexAnnotation> inters) {
     List<RegexAnnotation> keepers = new ArrayList<RegexAnnotation>();
 
-    if (inters != null && inters.size() > 0) {
+    if (inters != null && !inters.isEmpty()) {
       // sort the annotations by document order
-      Collections.sort(inters, this.getComparator());
+      Collections.sort(inters, getComparator());
 
       // build up a message showing the alternative annotations
-      StringBuffer tmp = new StringBuffer();
-      tmp.append("Must decide amongst these " + inters.size() + " annotations\n");
+      StringBuilder tmp = new StringBuilder();
+      tmp.append("Must decide amongst these ").append(inters.size()).append(" annotations\n");
       for (RegexAnnotation a : inters) {
-        tmp.append("\t" + a.toString() + "\n");
+        tmp.append("\t").append(a).append("\n");
       }
       tmp.append("-------\n");
       LOGGER.debug(tmp.toString());

@@ -3,7 +3,6 @@ package org.opensextant.service.processing;
 import java.io.IOException;
 
 import org.opensextant.service.OpenSextantApplication;
-import org.restlet.Client;
 import org.restlet.data.MediaType;
 import org.restlet.data.Protocol;
 import org.restlet.data.Reference;
@@ -15,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 public class ElasticServiceClient extends ServiceClient {
 
-  // log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
   private String storeHost;
   private int storePort = 9200;
@@ -41,10 +40,9 @@ public class ElasticServiceClient extends ServiceClient {
     ClientResource storeResource = new ClientResource(storeRef);
     storeResource.setNext(client);
 
-    InputRepresentation extractRep;
+   
     try {
-      extractRep = new InputRepresentation(extractResult.getStream(), MediaType.TEXT_PLAIN);
-      Representation storeResult = storeResource.post(extractRep, MediaType.APPLICATION_JSON);
+      InputRepresentation extractRep = new InputRepresentation(extractResult.getStream(), MediaType.TEXT_PLAIN);
     } catch (IOException e) {
       LOGGER.warn("Could not handle result",e);
     }

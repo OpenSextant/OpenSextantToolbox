@@ -44,13 +44,13 @@ import org.slf4j.LoggerFactory;
     + " of Place name results")
 public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
   private static final long serialVersionUID = 1L;
-  private File outputDir = null;
+  private File outputDir;
   private String outFileName = "placeNameStats.txt";
-  private File vocabFile = null;
-  transient BufferedWriter vocabWriter = null;
-  // Map is organized as placename -> [PlaceCount,NotPlaceCount,NoOpinioCount]
+  private File vocabFile;
+  transient BufferedWriter vocabWriter;
+  /** Map is organized as placename -> [PlaceCount,NotPlaceCount,NoOpinioCount]. */
   transient Map<String, Long[]> placeNameStats = new HashMap<String, Long[]>();
-  // a running count of how many documents seen so far
+  /** A running count of how many documents seen so far. */
   private Integer docCount = 0;
   String placeAnnotationName = "placecandidate";
   String notPlaceAnnotationName = "NOT_place";
@@ -58,7 +58,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
   String featureName = "placeCandidate";
   String assessName = "Assessment";
   Boolean convertToLower;
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(PlaceNameStatisticsPR.class);
 
   private void initialize() {
@@ -68,30 +68,20 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     placeNameStats.clear();
   }
 
-  // Do the initialization
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
+  /** Do the initialization. */
   @Override
   public Resource init() throws ResourceInstantiationException {
     initialize();
     return this;
   }
 
-  // Re-do the initialization
-  /**
-   * @throws ResourceInstantiationException
-   */
+  /** Re-do the initialization. */
   @Override
   public void reInit() throws ResourceInstantiationException {
     initialize();
   }
 
-  // Do the work
-  /**
-   * @throws ExecutionException
-   */
+  /** Do the work. */
   @Override
   public void execute() throws ExecutionException {
     // get all of the annotations of interest
@@ -158,13 +148,8 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
       openFiles();
       writeStats();
     }
-  } // end execute
+  } /** End execute. */
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
     closeFiles();
@@ -174,10 +159,6 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionFinished(Controller arg0) throws ExecutionException {
     closeFiles();
@@ -187,10 +168,6 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     closeFiles();
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
     initialize();
@@ -265,16 +242,10 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     }
   }
 
-  /**
-   * @return
-   */
   public File getOutputDir() {
     return outputDir;
   }
 
-  /**
-   * @param outputDir
-   */
   @CreoleParameter(defaultValue = "C:\\dump\\vocab")
   public void setOutputDir(File outputDir) {
     outputDir.mkdirs();

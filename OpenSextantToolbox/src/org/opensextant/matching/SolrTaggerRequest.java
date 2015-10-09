@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2009-2013 The MITRE Corporation.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -36,13 +36,13 @@ import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase;
 
 /**
- * *
+ * *.
  * @author dsmiley
  * @author ubaldino
  */
 @SuppressWarnings("serial")
 public class SolrTaggerRequest extends QueryRequest {
-  public String input = null;
+  public String input;
 
   public SolrTaggerRequest(SolrParams p, SolrRequest.METHOD m) {
     super(p, m);

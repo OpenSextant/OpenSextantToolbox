@@ -43,59 +43,49 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
 
   private static final long serialVersionUID = 1L;
 
-  // the annotationSet into which the created annotations will be written
+  /** The annotationSet into which the created annotations will be written. */
   private String outputAnnotationSet;
 
-  // the name of the noun phrase annotation to categorize
+  /** The name of the noun phrase annotation to categorize. */
   String nounPhraseAnnoName;
 
-  // the feature name which identifies a vocabulary entity
+  /** The feature name which identifies a vocabulary entity. */
   String vocabFeatureName = "hierarchy";
 
-  // What portion of the NounPhrase should be tagged as a derived entity?
+  /** What portion of the NounPhrase should be tagged as a derived entity? */
   boolean markPhrase = true;
 
-  // do corefercing for otherwise uncategorized annotations
+  /** Do corefercing for otherwise uncategorized annotations. */
   boolean doCoref = true;
 
-  // co-referencing mapping <word,category>
+  /** Co-referencing mapping <word,category>. */
   private transient Map<String, String> wordCatMap = new HashMap<String, String>();
 
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(ChunkCategorizerPR2.class);
 
   private void initialize() {
     LOGGER.info("Initializing ");
   }
 
-  // Do the initialization
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
+  /** Do the initialization. */
   @Override
   public Resource init() throws ResourceInstantiationException {
     initialize();
     return this;
   }
 
-  // Re-do the initialization
-  /**
-   * @throws ResourceInstantiationException
-   */
+  /** Re-do the initialization. */
   @Override
   public void reInit() throws ResourceInstantiationException {
     initialize();
   }
 
-  // Do the work
-  /**
-   * @throws ExecutionException
-   */
+  /** Do the work. */
   @Override
   public void execute() throws ExecutionException {
     // get the annotation set into which we will place any annotations
-    AnnotationSet annotSet = (outputAnnotationSet == null || outputAnnotationSet.equals("")) ? document
+    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet)) ? document
         .getAnnotations() : document.getAnnotations(outputAnnotationSet);
 
     // get all of the noun phrase chunks annotations
@@ -142,29 +132,16 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     for (Annotation np : npSet) {
       createDerivedEntities(np, annotSet);
     }
-  } // end execute
+  } /** End execute. */
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionFinished(Controller arg0) throws ExecutionException {
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
 
@@ -186,10 +163,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     // thin out the hierarchical vocab
     String thinnedVocabName = "TEMP_thinnedVocab";
     AnnotationSet thinnedVocabSet = thinAnnotations(vocabSet, thinnedVocabName);
-    // thin out the basic vocab
-    // String thinnedBasicVocabName = "TEMP_thinnedVocab";
-    // AnnotationSet thinnedBBSet =
-    // thinAnnotations(bbSet,thinnedBasicVocabName);
+
     for (Annotation a : tokenSet) {
       Long start = a.getStartNode().getOffset();
       Long end = a.getEndNode().getOffset();
@@ -199,7 +173,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
       // could add non hierarchical vocab here
       // second layer - type from any overlapping Vocab
       AnnotationSet vSet = thinnedVocabSet.get(start, end);
-      if (vSet.size() >= 1) {
+      if (!vSet.isEmpty()) {
         Annotation tmpVocab = vSet.iterator().next();
         String tmpCatLabel = tmpVocab.getType();
         String tmpCatHier = (String) tmpVocab.getFeatures().get("hierarchy");
@@ -207,21 +181,22 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
       }
       // third layer - type from any overlapping Entities
       AnnotationSet eSet = entitySet.get(start, end);
-      if (eSet.size() >= 1) {
-        Annotation tmpEntity = vSet.iterator().next();
+      if (!eSet.isEmpty()) {
+        Annotation tmpEntity = eSet.iterator().next();
         String tmpCatLabel = tmpEntity.getType();
         String tmpCatHier = (String) tmpEntity.getFeatures().get("hierarchy");
         tmpMap.put("Category", "E." + tmpCatLabel + "/" + tmpCatHier);
       }
     }
     // remove the temporary thinned vocab sets
-    // document.removeAnnotationSet(thinnedBasicVocabName);
     document.removeAnnotationSet(thinnedVocabName);
   }
 
-  // attache a CategorySequence,CategorySequence_Reduced and ProperSequence
-  // features to
-  // NounPhrase
+  /**
+   * Attache a CategorySequence,CategorySequence_Reduced and ProperSequence
+   * features to
+   * NounPhrase.
+   */
   private void attachCategorySequence(Annotation np, AnnotationSet tokens) {
     Long start = np.getStartNode().getOffset();
     Long end = np.getEndNode().getOffset();
@@ -234,7 +209,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
       String tmpCat = (String) a.getFeatures().get("Category");
       categorySequence.add(tmpCat);
       String redCat = tmpCat.split("\\.")[0];
-      if (redCat.equals("P")) {
+      if ("P".equals(redCat)) {
         if (tmpCat.startsWith("P.Proper")) {
           String tmpProper = gate.Utils.cleanStringFor(document, a);
           if (tmpProper.length() > 2) {
@@ -254,15 +229,17 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     np.getFeatures().put("ProperSequence", properSequence);
   }
 
-  // categorize a nounPhrase based on its category sequence
-  // also populate the coref mapping
+  /**
+   * Categorize a nounPhrase based on its category sequence
+   * also populate the coref mapping.
+   */
   private void categorize(Annotation np) {
     List<?> categories = (List<?>) np.getFeatures().get("CategorySequence");
     String reducedCatSeq = (String) np.getFeatures().get("CategorySequence_Reduced");
     String cat = "";
     String type = "";
     String hier = "";
-    // String[] categories = catSeq.split(" ");
+
     int rule = -1;
     // Rule #0 - seq is all Entities and misc = already handled
     if (reducedCatSeq.matches("[Ex]+")) {
@@ -305,7 +282,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     }
   }
 
-  // derive entities from the categorized nounphrase
+  /** Derive entities from the categorized nounphrase. */
   private void createDerivedEntities(Annotation np, AnnotationSet as) {
     String entType = (String) np.getFeatures().get("EntityType");
     if (entType != null && entType.length() > 0) {
@@ -318,8 +295,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
         start = np.getStartNode().getOffset();
         end = np.getEndNode().getOffset();
       }
-      // if(markHead){ }
-      // if(markModifierAndHead){ }
+
       String hier = (String) np.getFeatures().get("hierarchy");
       FeatureMap fm = gate.Factory.newFeatureMap();
       fm.put("string", str);
@@ -334,7 +310,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     }
   }
 
-  // populate the co-referencing map from a categorized noun phrase
+  /** Populate the co-referencing map from a categorized noun phrase. */
   private void addToCorefMap(Annotation np) {
     String tmpType = (String) np.getFeatures().get("EntityType");
     if (tmpType == null || tmpType.length() < 1) {
@@ -381,11 +357,12 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     }
   }
 
-  // thin out the annotation set by removing any annotation which is
-  // completely within but not identical (in length) to another
+  /**
+   * Thin out the annotation set by removing any annotation which is
+   * completely within but not identical (in length) to another.
+   */
   private AnnotationSet thinAnnotations(AnnotationSet annoSet, String setName) {
-    List<Annotation> survivorList = new ArrayList<Annotation>();
-    survivorList.addAll(annoSet);
+    List<Annotation> survivorList = new ArrayList<Annotation>(annoSet);
     for (Annotation currentAnno : annoSet) {
       // get all annotations that "cover" the current.
       AnnotationSet coverSet = gate.Utils.getCoveringAnnotations(annoSet, currentAnno);
@@ -399,13 +376,11 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
     }
     // add all of the survivors to the "Thinned" annotation set
     AnnotationSet thinnedSet = document.getAnnotations(setName);
-    for (Annotation a : survivorList) {
-      thinnedSet.add(a);
-    }
+    thinnedSet.addAll(survivorList);
     return thinnedSet;
   }
 
-  // reduce the part of speech tags to just "Proper" and "x" (don't care)
+  /** Reduce the part of speech tags to just "Proper" and "x" (don't care). */
   private String reducePOSTags(String tag) {
     if (tag == null) {
       return "x";

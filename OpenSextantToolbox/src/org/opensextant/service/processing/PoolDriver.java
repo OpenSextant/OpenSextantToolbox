@@ -17,16 +17,13 @@ import org.slf4j.LoggerFactory;
 
 public class PoolDriver {
 
-  // Log object.
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(PoolDriver.class);
 
   private PoolDriver() {
 
   }
 
-  /**
-   * @param args
-   */
   public static void main(String[] args) {
 
     Properties prop = null;
@@ -51,7 +48,7 @@ public class PoolDriver {
         FileFilterUtils.trueFileFilter(),
         FileFilterUtils.trueFileFilter());
 
-   // String content = " They were attacked with baseball bats";
+ 
 
     for(File f : filesToProcess){
       DocumentBean result = dpPool.process("general", f);
@@ -61,11 +58,10 @@ public class PoolDriver {
 
     dpPool.cleanup();
     dpPool = null;
-   // dump(result);
 
   }
 
   public static void dump(DocumentBean doc) {
-    System.out.println(doc.getContent().toString());
+    System.out.println(doc.getContent());
   }
 }

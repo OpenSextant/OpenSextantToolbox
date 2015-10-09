@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,27 +20,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RegexMatcher {
-  // the rules used by this RegexMatcher
+  /** The rules used by this RegexMatcher. */
   List<RegexRule> rules = new ArrayList<RegexRule>();
 
-  // the list of entity type this matcher can find
+  /** The list of entity type this matcher can find. */
   Set<String> types = new HashSet<String>();
 
-  // the postprocessors to apply
-  HashMap<PostProcessor, Set<String>> posters = new HashMap<PostProcessor, Set<String>>();
+  /** The postprocessors to apply. */
+  Map<PostProcessor, Set<String>> posters = new HashMap<PostProcessor, Set<String>>();
 
-  // future stuff: named groups useful?
-  // String namedGroup = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
-  // Pattern namedGroupPattern = Pattern.compile(namedGroup);
+  /**
+   * Future stuff: named groups useful?
+   * String namedGroup = "\\(\\?<([a-zA-Z][a-zA-Z0-9]*)>";
+   * Pattern namedGroupPattern = Pattern.compile(namedGroup);
 
-  // the pattern of a DEFINE within a RULE e.g "<somePiece>"
-  // NOTE: should we look for existing (not DEFINEDd) capture groups
+   * the pattern of a DEFINE within a RULE e.g "<somePiece>"
+   * NOTE: should we look for existing (not DEFINEDd) capture groups
+   */
   String elementRegex = "<[a-zA-Z0-9_]+>";
   Pattern elementPattern = Pattern.compile(elementRegex);
 
-  // has this mather been sucessfully initialized
-  boolean isInited = false;
-  // Log object
+  /** Has this mather been sucessfully initialized. */
+  boolean isInited;
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(RegexMatcher.class);
 
   public RegexMatcher(URL patternFile) {
@@ -50,21 +53,19 @@ public class RegexMatcher {
     initialize(patternFile);
   }
 
-  public ArrayList<RegexAnnotation> match(String input) {
+  public List<RegexAnnotation> match(String input) {
 
     // The matches to return
-    ArrayList<RegexAnnotation> matches = new ArrayList<RegexAnnotation>();
+    List<RegexAnnotation> matches = new ArrayList<RegexAnnotation>();
 
     if (!isInited) {
       LOGGER.error("Tried to use RegexMatcher without initializing first");
       return matches;
     }
 
- //   long startTime = 0L;
- //   long endTime = 0L;
+
 
     for (RegexRule r : rules) {
-  //    startTime= System.nanoTime();
       String t = r.getEntityType();
       Normalizer normer = r.getNormalizer();
       // Do the matching, looping over the rules
@@ -89,9 +90,6 @@ public class RegexMatcher {
           matches.add(tmp);
         }
       }
-    //  endTime = System.nanoTime();
-    //  double dur = (endTime-startTime)/1000000.0;
-    //  LOGGER.debug("Regex rule " + r.getEntityType() + ":" + r.getRuleFamily() + "-" + r.getRuleName() + " took " + dur + " millisecs for " + input.length() + " chars");
     }
 
     // run the matches through the postprocessor(s) if any specified
@@ -104,19 +102,16 @@ public class RegexMatcher {
 
   public void initialize(URL patFile) {
     // the #DEFINE statements as name and regex
-    HashMap<String, String> defines = new HashMap<String, String>();
-
-    // the #RULE statements as name and a sequence of DEFINES and regex bits
-    // HashMap<String, String> rulesLines = new HashMap<String, String>();
+    Map<String, String> defines = new HashMap<String, String>();
 
     // the #NORM statements as entitytype and classname
-    HashMap<String, String> normalizerClassnames = new HashMap<String, String>();
+    Map<String, String> normalizerClassnames = new HashMap<String, String>();
 
     // the #POST statements as entitytype and classname
-    HashMap<String, Set<String>> posterClassnames = new HashMap<String, Set<String>>();
+    Map<String, Set<String>> posterClassnames = new HashMap<String, Set<String>>();
 
     // the #TAXO statements as entitytype and taxonomy string
-    HashMap<String, String> taxos = new HashMap<String, String>();
+    Map<String, String> taxos = new HashMap<String, String>();
     BufferedReader reader = null;
     try {
       reader = new BufferedReader(new InputStreamReader(patFile.openStream(), "UTF-8"));
@@ -277,7 +272,7 @@ public class RegexMatcher {
     }
 
     isInited = true;
-  } // end initialize
+  } /** End initialize. */
 
   public void initialize(File patFile) {
     try {

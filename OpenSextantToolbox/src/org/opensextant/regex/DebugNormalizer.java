@@ -5,8 +5,10 @@ import java.util.regex.MatchResult;
 
 public class DebugNormalizer implements Normalizer {
 
-  // Log object
-  // private static final Logger LOGGER = LoggerFactory.getLogger(DebugNormalizer.class);
+  /**
+   * Log object
+   * private static final Logger LOGGER = LoggerFactory.getLogger(DebugNormalizer.class);
+   */
   @Override
   public void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
 
@@ -16,8 +18,6 @@ public class DebugNormalizer implements Normalizer {
 
     for (int i = 0; i < numGroups + 1; i++) {
       // Future: create sub-annotations?
-      // int s = matchResult.start(i);
-      // int e = matchResult.end(i);
 
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);

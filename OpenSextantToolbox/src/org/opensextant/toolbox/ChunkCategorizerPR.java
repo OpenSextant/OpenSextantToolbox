@@ -40,41 +40,31 @@ import org.slf4j.LoggerFactory;
     + " the vocabulary they contain")
 public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements ProcessingResource, ControllerAwarePR {
   private static final long serialVersionUID = 1L;
-  // the name of the noun phrase annotation to categorize
+  /** The name of the noun phrase annotation to categorize. */
   String nounPhraseAnnoName;
-  // the feature name which identifies a vocabulary entity
+  /** The feature name which identifies a vocabulary entity. */
   String vocabFeatureName = "hierarchy";
-  // Log object
+  /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(ChunkCategorizerPR.class);
 
   private void initialize() {
     LOGGER.info("Initializing ");
   }
 
-  // Do the initialization
-  /**
-   * @return
-   * @throws ResourceInstantiationException
-   */
+  /** Do the initialization. */
   @Override
   public Resource init() throws ResourceInstantiationException {
     initialize();
     return this;
   }
 
-  // Re-do the initialization
-  /**
-   * @throws ResourceInstantiationException
-   */
+  /** Re-do the initialization. */
   @Override
   public void reInit() throws ResourceInstantiationException {
     initialize();
   }
 
-  // Do the work
-  /**
-   * @throws ExecutionException
-   */
+  /** Do the work. */
   @Override
   public void execute() throws ExecutionException {
     // get all of the noun phrase chunks annotations
@@ -92,33 +82,20 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
     for (Annotation a : npSet) {
       categorize(a, thinnedVocabSet, entitySet);
       // TODO DEBUG remove for production
-      if (((String) a.getFeatures().get("EntityType")) == null) {
+      if ((String) a.getFeatures().get("EntityType") == null) {
         document.getAnnotations().add(a.getStartNode(), a.getEndNode(), "NOT_CATEGORIZED", a.getFeatures());
       }
     } // end annotation loop
-  } // end execute
+  } /** End execute. */
 
-  /**
-   * @param arg0
-   * @param arg1
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionAborted(Controller arg0, Throwable arg1) throws ExecutionException {
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionFinished(Controller arg0) throws ExecutionException {
   }
 
-  /**
-   * @param arg0
-   * @throws ExecutionException
-   */
   @Override
   public void controllerExecutionStarted(Controller arg0) throws ExecutionException {
 
@@ -148,9 +125,6 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
     List<Annotation> vocabSetHead = gate.Utils.inDocumentOrder(vocab.get(headStartNode.getOffset(),
         headEndNode.getOffset()));
     // get the entities for the whole NP and just the head
-    // List<Annotation> entitySetNP =
-    // gate.Utils.inDocumentOrder(entities.get(npStartNode.getOffset(),
-    // npEndNode.getOffset()));
     List<Annotation> entitySetHead = gate.Utils.inDocumentOrder(entities.get(headStartNode.getOffset(),
         headEndNode.getOffset()));
     // reverse the order of the vocab and entity lists so the right most
@@ -158,7 +132,6 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
     // comes first
     Collections.reverse(vocabSetNP);
     Collections.reverse(vocabSetHead);
-    // Collections.reverse(entitySetNP);
     Collections.reverse(entitySetHead);
     // two sorted sets to keep the list of types found:
     // hierachy type anywhere in NP
@@ -178,28 +151,29 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
     npFeatures.put("VocabSeenHead", headTypeList);
     // now pick the "best" category
     // if there is an entity matching the head
-    if (entitySetHead.size() > 0) {
+    if (!entitySetHead.isEmpty()) {
       npFeatures.put("EntityType", entitySetHead.get(0).getFeatures().get("hierarchy"));
       npFeatures.putAll(entitySetHead.get(0).getFeatures());
       return;
     }
-    if (headTypeList.size() > 0) {
+    if (!headTypeList.isEmpty()) {
       npFeatures.put("EntityType", headTypeList.get(0));
       npFeatures.putAll(vocabSetHead.get(0).getFeatures());
       return;
     }
-    if (npTypeList.size() > 0) {
+    if (!npTypeList.isEmpty()) {
       npFeatures.put("EntityType", npTypeList.get(0));
       npFeatures.putAll(vocabSetNP.get(0).getFeatures());
       return;
     }
   }
 
-  // thin out the annotation set by removing
-  // a) any annotation which is completely within but not identical to another
+  /**
+   * Thin out the annotation set by removing
+   * a) any annotation which is completely within but not identical to another.
+   */
   private AnnotationSet thinAnnotations(AnnotationSet annoSet) {
-    List<Annotation> survivorList = new ArrayList<Annotation>();
-    survivorList.addAll(annoSet);
+    List<Annotation> survivorList = new ArrayList<Annotation>(annoSet);
     for (Annotation currentAnno : annoSet) {
       // get all annotations that "cover" the current.
       AnnotationSet coverSet = gate.Utils.getCoveringAnnotations(annoSet, currentAnno);
@@ -213,9 +187,7 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
     }
     // add all of the survivors to the "Thinned" annotation set
     AnnotationSet thinnedSet = document.getAnnotations("Thinned");
-    for (Annotation a : survivorList) {
-      thinnedSet.add(a);
-    }
+    thinnedSet.addAll(survivorList);
     return thinnedSet;
   }
 }
