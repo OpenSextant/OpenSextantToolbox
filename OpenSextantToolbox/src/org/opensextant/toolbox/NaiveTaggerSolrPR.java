@@ -56,7 +56,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
   private static final long serialVersionUID = -6167312014577862928L;
   // Log object
   private static final Logger LOGGER = LoggerFactory.getLogger(NaiveTaggerSolrPR.class);
-  private PlacenameMatcher matcher;
+  private transient PlacenameMatcher matcher;
   private String outputASName;
   private String annotationType;
 

@@ -59,7 +59,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
   boolean doCoref = true;
 
   // co-referencing mapping <word,category>
-  private Map<String, String> wordCatMap = new HashMap<String, String>();
+  private transient Map<String, String> wordCatMap = new HashMap<String, String>();
 
   // Log object
   private static final Logger LOGGER = LoggerFactory.getLogger(ChunkCategorizerPR2.class);

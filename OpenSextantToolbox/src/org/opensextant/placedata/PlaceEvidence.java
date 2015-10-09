@@ -51,7 +51,7 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
   private String admin1 = null;
   private String featureClass = null;;
   private String featureCode = null;
-  private Geocoord geocoord = null;
+  private transient Geocoord geocoord = null;
   // The rule which found the evidence
   private String rule = null;
   // the scope from which this evidence came

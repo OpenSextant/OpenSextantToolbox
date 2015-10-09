@@ -47,12 +47,12 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
   private File outputDir = null;
   private String outFileName = "annotations.txt";
   private File vocabFile = null;
-  BufferedWriter vocabWriter = null;
+  transient BufferedWriter vocabWriter = null;
   // a running count of how many documents seen so far
   private Integer docCount = 0;
   String annotationSetName;
   String annotationName = "Token";
-  List<String> featureNames = new ArrayList<String>();
+  transient List<String> featureNames = new ArrayList<String>();
   Long contxtSize = 75L;
   // Log object
   private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationDumpPR.class);

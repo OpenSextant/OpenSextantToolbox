@@ -45,8 +45,8 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
   private File outputDir = null;
   private String outFileName = "vocabStats.txt";
   private File vocabFile = null;
-  BufferedWriter vocabWriter = null;
-  Map<String, Long> vocabStats = new HashMap<String, Long>();
+  transient BufferedWriter vocabWriter = null;
+  transient Map<String, Long> vocabStats = new HashMap<String, Long>();
   private Integer docCount = 0;
   String annotationSetName;
   String annotationName;

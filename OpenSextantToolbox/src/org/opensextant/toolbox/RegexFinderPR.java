@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 public class RegexFinderPR extends AbstractLanguageAnalyser implements ProcessingResource {
   private static final long serialVersionUID = 1375472181851584128L;
   // the Regexmatcher object which does all of the work
-  private RegexMatcher reger;
+  private transient RegexMatcher reger;
   // the annotationSet into which the dates will be written
   private String outputAnnotationSet;
   // the file containing the patterns

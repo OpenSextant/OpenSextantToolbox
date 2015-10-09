@@ -47,9 +47,9 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
   private File outputDir = null;
   private String outFileName = "placeNameStats.txt";
   private File vocabFile = null;
-  BufferedWriter vocabWriter = null;
+  transient BufferedWriter vocabWriter = null;
   // Map is organized as placename -> [PlaceCount,NotPlaceCount,NoOpinioCount]
-  Map<String, Long[]> placeNameStats = new HashMap<String, Long[]>();
+  transient Map<String, Long[]> placeNameStats = new HashMap<String, Long[]>();
   // a running count of how many documents seen so far
   private Integer docCount = 0;
   String placeAnnotationName = "placecandidate";

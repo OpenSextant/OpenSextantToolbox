@@ -52,9 +52,9 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
   // the lexicon and ngrams used by the gueser algoithm (suffix handler)
   private URL guesserLexiconFileURL;
   private URL guesserNgramFileURL;
-  private HMMTagger tagger;
-  private Model model = null;
-  private Model guesserModel = null;
+  private transient HMMTagger tagger;
+  private transient Model model = null;
+  private transient Model guesserModel = null;
   // Log object
   private static final Logger LOGGER = LoggerFactory.getLogger(POSTagger.class);
   private void initialize() {

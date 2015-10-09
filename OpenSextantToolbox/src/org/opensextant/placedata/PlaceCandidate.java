@@ -50,21 +50,21 @@ public class PlaceCandidate implements Serializable {
 
   // --------------Place/NotPlace stuff ----------------------
   // which rules have expressed a Place/NotPlace opinion on this PC
-  private List<String> rules;
+  private transient List<String> rules;
 
   // the confidence adjustments provided by the Place/NotPlace rules
-  private List<Double> placeConfidences;
+  private transient List<Double> placeConfidences;
 
   // --------------Disambiguation stuff ----------------------
   // the places along with their disambiguation scores
-  private Map<Place, Double> scoredPlaces;
+  private transient Map<Place, Double> scoredPlaces;
 
   // temporary lists to hold the ranked places and scores
-  private List<Place> rankedPlaces;
-  private List<Double> rankedScores;
+  private transient List<Place> rankedPlaces;
+  private transient List<Double> rankedScores;
 
   // the list of PlaceEvidences accumulated from the document about this PC
-  private List<PlaceEvidence> evidence;
+  private transient List<PlaceEvidence> evidence;
 
   // basic constructor
   public PlaceCandidate() {

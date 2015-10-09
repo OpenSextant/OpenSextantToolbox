@@ -54,7 +54,7 @@ public class Place implements Comparable<Object>, Serializable {
   private String featureCode;
 
   // its location as a point
-  private Geocoord geocoord = new Geocoord();
+  private transient Geocoord geocoord = new Geocoord();
 
   // identifiers for this name and place
   private String sourceNameID;

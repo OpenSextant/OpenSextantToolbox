@@ -50,7 +50,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
   private File outputDir = null;
   private String outFileName = "placeNameStatsWithRules.txt";
   private File vocabFile = null;
-  BufferedWriter vocabWriter = null;
+  transient BufferedWriter vocabWriter = null;
   // a running count of how many documents seen so far
   private Integer docCount = 0;
   String placeAnnotationName = "placecandidate";

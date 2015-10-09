@@ -56,7 +56,7 @@ public class PhoneticTaggerPR extends AbstractLanguageAnalyser implements Proces
   // create
   String phoneticAlgo; // algorithm/method used to produce the phonetic form
   // the thing that does all the phonetic work
-  Phoneticizer phoner = null;
+  transient Phoneticizer phoner = null;
 
   // Log object
   private static final Logger LOGGER = LoggerFactory.getLogger(PhoneticTaggerPR.class);

@@ -65,7 +65,7 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
   String sentenceAnnoName; // the annotation to examine,usually "Sentence"
   String subAnnotationName;// annotations within sentenceAnnotation to use
   String clusterAlgo; // algorithm/method used to produce the clusters
-  Controller controller; // the thing that does all the work
+  transient Controller controller; // the thing that does all the work
 
   // Log object
   private static final Logger LOGGER = LoggerFactory.getLogger(CarrotClusterPR.class);

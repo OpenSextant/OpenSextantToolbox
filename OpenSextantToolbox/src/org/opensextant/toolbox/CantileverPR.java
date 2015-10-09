@@ -56,8 +56,8 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
   private String candidateAnnotationName;
   private String candidateFeatureName;
   private boolean doCoref = true;
-  private Cantilever cntlvr;
-  private Scorer scr;
+  private transient Cantilever cntlvr;
+  private transient Scorer scr;
   private static final Logger LOGGER = LoggerFactory.getLogger(CantileverPR.class);
 
   private void initialize() {
