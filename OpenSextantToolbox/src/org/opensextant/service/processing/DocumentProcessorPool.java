@@ -27,12 +27,19 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import org.opensextant.service.OpenSextantExtractorResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DocumentProcessorPool {
 
   private Map<String, BlockingQueue<DocumentProcessor>> poolMap = new HashMap<String, BlockingQueue<DocumentProcessor>>();
   private  long docsProcessedCount =0L;
   private  long docsFailedCount =0L;
+  
+ // Log object.
+  private static final Logger LOGGER = LoggerFactory.getLogger(DocumentProcessorPool.class);
+
+
 
   public DocumentProcessorPool(Properties prop) {
 
@@ -49,7 +56,7 @@ public class DocumentProcessorPool {
     try {
       Gate.init();
     } catch (GateException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't init GATE", e);
     }
 
     for (String app : apps) {
@@ -71,11 +78,11 @@ public class DocumentProcessorPool {
     try {
       template = (CorpusController) PersistenceManager.loadObjectFromFile(gappFile);
     } catch (PersistenceException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't load GAPP file" + gappFile.getName(), e);
     } catch (ResourceInstantiationException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't load GAPP file" + gappFile.getName(), e);
     } catch (IOException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't load GAPP file" + gappFile.getName(), e);
     }
 
     if (poolSize > 0) {
@@ -92,7 +99,7 @@ public class DocumentProcessorPool {
           pool.add(dpTmp);
 
         } catch (ResourceInstantiationException e) {
-          e.printStackTrace();
+          LOGGER.error("Couldn't create controller for " + gappFile.getName(), e);
         }
 
       }
@@ -108,13 +115,14 @@ public class DocumentProcessorPool {
     try {
       processor = poolMap.get(name).take();
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't get a processor from the pool", e);
     }
 
     try {
       processor.process(doc);
     } catch (Exception e) {
       docsFailedCount++;
+      LOGGER.error("Document failed to process" + doc.getName(), e);
     } finally {
       docsProcessedCount++;
       poolMap.get(name).add(processor);
@@ -169,7 +177,7 @@ public class DocumentProcessorPool {
     try {
       gateDoc = Factory.newDocument(content);
     } catch (ResourceInstantiationException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't create new document from given string", e);
     }
 
     return gateDocToBean(process(extractType, gateDoc));
@@ -181,9 +189,9 @@ public class DocumentProcessorPool {
     try {
       gateDoc = Factory.newDocument(content.toURI().toURL());
     } catch (ResourceInstantiationException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't create new document from " + content.getName(), e);
     } catch (MalformedURLException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldn't create new document from " + content.getName(), e);
     }
 
     return gateDocToBean(process(extractType, gateDoc));
@@ -195,7 +203,7 @@ public class DocumentProcessorPool {
     try {
       gateDoc = Factory.newDocument(content);
     } catch (ResourceInstantiationException e) {
-      System.err.println("Couldnt create content from " + content.toExternalForm());
+      LOGGER.error("Couldnt create content from " + content.toExternalForm(), e);
       return null;
     }
 

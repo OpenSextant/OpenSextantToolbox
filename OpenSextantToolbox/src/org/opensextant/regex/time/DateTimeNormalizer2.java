@@ -51,7 +51,7 @@ public class DateTimeNormalizer2 implements Normalizer {
   }
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(DateTimeNormalizer2.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DateTimeNormalizer2.class);
 
   @Override
   public void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
@@ -81,7 +81,7 @@ public class DateTimeNormalizer2 implements Normalizer {
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
-      if (log.isDebugEnabled()) {
+      if (LOGGER.isDebugEnabled()) {
         normalizedResults.put(elemName, elemenValue);
       }
     }
@@ -129,8 +129,8 @@ public class DateTimeNormalizer2 implements Normalizer {
     try {
       fmt = DateTimeFormat.forPattern(jodaPattern.toString());
     } catch (Exception e) {
-      log.warn("Could not use format " + jodaPattern.toString() + " derived from " + anno.getMatchText()
-          + " setting annotation as invalid:" + e.getMessage());
+      LOGGER.warn("Could not use format " + jodaPattern + " derived from " + anno.getMatchText()
+          + " setting annotation as invalid", e);
       anno.setValid(false);
       return;
     }
@@ -139,7 +139,7 @@ public class DateTimeNormalizer2 implements Normalizer {
     if (!hasYear) {
       int estYear = getEstimatedYear();
       fmt = fmt.withDefaultYear(estYear);
-      log.debug("No year in pattern " + jodaPattern + " using:" + estYear);
+      LOGGER.debug("No year in pattern " + jodaPattern + " using:" + estYear);
       // set time resolution to ESTIMATED to indicate assumption made
       mostPrec = TimeResolution.ESTIMATED;
     }
@@ -148,10 +148,10 @@ public class DateTimeNormalizer2 implements Normalizer {
     DateTime dt = null;
     try {
       dt = fmt.parseDateTime(reducedMatch.toString());
-      log.debug("Parsing ->" + anno.getMatchText() + "<- reduced to ->" + reducedMatch + "<- as format ->"
-          + jodaPattern.toString() + "<- got " + dt.toString());
+      LOGGER.debug("Parsing ->" + anno.getMatchText() + "<- reduced to ->" + reducedMatch + "<- as format ->"
+          + jodaPattern + "<- got " + dt);
     } catch (Exception e) {
-      log.warn("Cannot normalize " + anno.getMatchText() + " using " + r.toString() + " error was:" + e.getMessage());
+      LOGGER.warn("Cannot normalize " + anno.getMatchText() + " using " + r, e);
       anno.setValid(false);
       return;
     }
@@ -191,7 +191,7 @@ public class DateTimeNormalizer2 implements Normalizer {
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
-      if (log.isDebugEnabled()) {
+      if (LOGGER.isDebugEnabled()) {
         normalizedResults.put(elemName, elemenValue);
       }
     }
@@ -212,7 +212,7 @@ public class DateTimeNormalizer2 implements Normalizer {
       String elemenValue = matchResult.group(i);
       String elemName = r.getElementMap().get(i);
       elementsFound.put(elemName, elemenValue);
-      if (log.isDebugEnabled()) {
+      if (LOGGER.isDebugEnabled()) {
         normalizedResults.put(elemName, elemenValue);
       }
     }

@@ -84,7 +84,7 @@ public class Scorer {
   double countryOnlyScore = 0.9;
   double countryDifferentAdminScore = .75;
   // Log object
-  // private static Logger log = LoggerFactory.getLogger(Scorer.class);
+  // private static final Logger LOGGER = LoggerFactory.getLogger(Scorer.class);
   /**
    * Score each of the place candidates
    * @param pcList

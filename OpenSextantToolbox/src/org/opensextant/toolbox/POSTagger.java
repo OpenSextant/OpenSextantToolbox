@@ -56,7 +56,7 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
   private Model model = null;
   private Model guesserModel = null;
   // Log object
-  private static Logger log = LoggerFactory.getLogger(POSTagger.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(POSTagger.class);
   private void initialize() {
     // Load the model
     try {
@@ -65,7 +65,7 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
       guesserModel = Model.readModel(new BufferedReader(new InputStreamReader(guesserLexiconFileURL.openStream(),"UTF-8")),
           new BufferedReader(new InputStreamReader(guesserNgramFileURL.openStream(),"UTF-8")));
     } catch (IOException e) {
-      log.error("Unable to read the POS model!", e);
+      LOGGER.error("Unable to read the POS model!", e);
 
     }
     // Set up word handlers. The suffix word handler is used as a fallback

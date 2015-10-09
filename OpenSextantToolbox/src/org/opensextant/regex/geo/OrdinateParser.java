@@ -39,7 +39,7 @@ import java.util.Map;
 public final class OrdinateParser {
 
   // Log object
-  // private static Logger log = LoggerFactory.getLogger(Ordinate.class);
+  // private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class);
 
   // the two type of Ordinates
   public enum ORDINATETYPE {

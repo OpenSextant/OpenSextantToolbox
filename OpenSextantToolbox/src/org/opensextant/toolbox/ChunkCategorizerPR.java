@@ -45,10 +45,10 @@ public class ChunkCategorizerPR extends AbstractLanguageAnalyser implements Proc
   // the feature name which identifies a vocabulary entity
   String vocabFeatureName = "hierarchy";
   // Log object
-  private static Logger log = LoggerFactory.getLogger(ChunkCategorizerPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ChunkCategorizerPR.class);
 
   private void initialize() {
-    log.info("Initializing ");
+    LOGGER.info("Initializing ");
   }
 
   // Do the initialization

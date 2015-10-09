@@ -27,7 +27,7 @@ public class VocabMatcher {
   private Map<Integer, Vocab> vocabIDMap = new HashMap<Integer, Vocab>(100);
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(VocabMatcher.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcher.class);
 
   protected VocabMatcher(SolrServer svr, ModifiableSolrParams prms) {
     this.solrServer = svr;
@@ -46,7 +46,7 @@ public class VocabMatcher {
     try {
       response = tagRequest.process(solrServer);
     } catch (SolrServerException e) {
-      log.error("Got exception when attempting to match " + docName, e);
+      LOGGER.error("Got exception when attempting to match " + docName, e);
       return matches;
     }
 

@@ -6,7 +6,7 @@ import java.util.regex.MatchResult;
 public class DebugNormalizer implements Normalizer {
 
   // Log object
-  // private static Logger log = LoggerFactory.getLogger(DebugNormalizer.class);
+  // private static final Logger LOGGER = LoggerFactory.getLogger(DebugNormalizer.class);
   @Override
   public void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
 

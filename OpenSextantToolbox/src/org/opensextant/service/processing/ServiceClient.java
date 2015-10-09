@@ -14,8 +14,13 @@ import org.restlet.representation.FileRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServiceClient implements Runnable {
+
+  // Log object. 
+  private static final Logger LOGGER = LoggerFactory.getLogger(ServiceClient.class);
 
   // parameters for the extractor
   private String extractHost;
@@ -66,7 +71,7 @@ public class ServiceClient implements Runnable {
           mt = MediaType.valueOf(mtString);
         }
       } catch (IOException e1) {
-        System.err.println("Couldn't get mimetype for " + srcFile.getName() + " using plain text");
+        LOGGER.error("Couldn't get mimetype for " + srcFile.getName() + " using plain text", e1);
       }
 
       // create representation for the input file
@@ -81,11 +86,11 @@ public class ServiceClient implements Runnable {
           // do something with extraction results
           handleResults(extractResult);
         } else {
-          System.err.println(resp);
+          LOGGER.error("FAILE response from POST " + resp);
         }
 
       } catch (ResourceException e) {
-        e.printStackTrace();
+        LOGGER.error("Didnt get response from POST ", e);
       }
 
     }
@@ -93,8 +98,8 @@ public class ServiceClient implements Runnable {
     try {
       client.stop();
     } catch (Exception e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+
+      LOGGER.error("Couldn't stop client", e);
     }
 
   }
@@ -111,8 +116,7 @@ public class ServiceClient implements Runnable {
         System.out.println(txt.length());
       }
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOGGER.error("Couldn't get text from response", e);
     }
 
   }

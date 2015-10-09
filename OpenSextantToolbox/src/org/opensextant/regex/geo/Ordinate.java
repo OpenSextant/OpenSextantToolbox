@@ -31,7 +31,7 @@ import org.opensextant.regex.geo.OrdinateParser.AXIS;
 public final class Ordinate {
 
   // Log object
-  // private static Logger log = LoggerFactory.getLogger(Ordinate.class);
+  // private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class);
 
   // the ordinate type [DD,DMS]
   private OrdinateParser.ORDINATETYPE type = OrdinateParser.ORDINATETYPE.DD;

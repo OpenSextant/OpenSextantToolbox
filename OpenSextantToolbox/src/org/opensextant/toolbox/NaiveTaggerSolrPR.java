@@ -55,7 +55,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
      */
   private static final long serialVersionUID = -6167312014577862928L;
   // Log object
-  static Logger log = LoggerFactory.getLogger(NaiveTaggerSolrPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(NaiveTaggerSolrPR.class);
   private PlacenameMatcher matcher;
   private String outputASName;
   private String annotationType;
@@ -84,14 +84,14 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
 
       // no gazeetteer home given, try to use default
       if (gazetteerHome == null || gazetteerHome.length() == 0) {
-        log.info("No gazetter home given for MatcherFactory, trying default config");
+        LOGGER.info("No gazetter home given for MatcherFactory, trying default config");
         MatcherFactory.config("");
         // if the the default worked, start
         if (MatcherFactory.isConfigured()) {
           MatcherFactory.start();
-          log.info("NaiveTagger is using MatcherFactory configured to use " + MatcherFactory.getHomeLocation());
+          LOGGER.info("NaiveTagger is using MatcherFactory configured to use " + MatcherFactory.getHomeLocation());
         } else {
-          log.error("No config given and no default set");
+          LOGGER.error("No config given and no default set");
           return this;
         }
       } else {
@@ -103,18 +103,18 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
       if (!MatcherFactory.isStarted()) {
         MatcherFactory.start();
       }
-      log.info("NaiveTagger is using MatcherFactory configured to use " + MatcherFactory.getHomeLocation());
+      LOGGER.info("NaiveTagger is using MatcherFactory configured to use " + MatcherFactory.getHomeLocation());
     }
 
     // see if the Factory is running
     if (!MatcherFactory.isStarted()) {
-      log.error("MatcherFactory did not start. Not configured?");
+      LOGGER.error("MatcherFactory did not start. Not configured?");
       return this;
     }
 
     matcher = MatcherFactory.getMatcher();
     if (matcher == null) {
-      log.error("Could not get a matcher from MatcherFactory. Not configured?");
+      LOGGER.error("Could not get a matcher from MatcherFactory. Not configured?");
       return this;
     }
     matcher.tagAbbreviations(tagAbbreviations);
@@ -144,7 +144,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
     try {
       matches = matcher.matchText(document.getContent().toString(), document.getName());
     } catch (Exception err) {
-      log.error("Error when tagging document " + document.getName(), err);
+      LOGGER.error("Error when tagging document " + document.getName(), err);
       return;
     }
     // If no output Annotation set was given, append to the input AS
@@ -161,7 +161,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
       try {
         annotSet.add(pc.getStart(), pc.getEnd(), annotationType, feats);
       } catch (InvalidOffsetException offsetErr) {
-        log.error("Error when adding PlaceCandidate to document in " + document.getName(), offsetErr);
+        LOGGER.error("Error when adding PlaceCandidate to document in " + document.getName(), offsetErr);
       }
     }
   }

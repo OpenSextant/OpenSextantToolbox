@@ -19,6 +19,8 @@ import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenSextantAdminResource extends ServerResource {
 
@@ -31,9 +33,10 @@ public class OpenSextantAdminResource extends ServerResource {
   @Override
   protected void doInit() throws ResourceException {
     super.doInit();
+  }
     // get a reference to the in the Application
 
-  }
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantAdminResource.class);
 
   @Post
   @Put
@@ -83,8 +86,7 @@ public class OpenSextantAdminResource extends ServerResource {
         ret.key("availableProcessors").value(avail);
         ret.endObject();
       } catch (JSONException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        LOGGER.error("JSON exception when attemting to create status info ", e);
       }
 
       JsonRepresentation jsonRep = new JsonRepresentation(ret);
@@ -139,7 +141,7 @@ public class OpenSextantAdminResource extends ServerResource {
           Component comp = (Component) app.getContext().getAttributes().get("component");
           comp.stop();
         } catch (Exception e) {
-          // e.printStackTrace();
+          LOGGER.error("Couldnt handle provided form", e);
         }
 
       }

@@ -12,8 +12,13 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PoolDriver {
+
+  // Log object.
+  private static final Logger LOGGER = LoggerFactory.getLogger(PoolDriver.class);
 
   private PoolDriver() {
 
@@ -33,11 +38,9 @@ public class PoolDriver {
       // load properties file
       prop.load(input);
     } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOGGER.error("Couldn't load the properties file", e);
     } catch (IOException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOGGER.error("Couldn't load the properties file", e);
     }
 
     DocumentProcessorPool dpPool = new DocumentProcessorPool(prop);

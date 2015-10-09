@@ -62,10 +62,10 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
   private Map<String, String> wordCatMap = new HashMap<String, String>();
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(ChunkCategorizerPR2.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(ChunkCategorizerPR2.class);
 
   private void initialize() {
-    log.info("Initializing ");
+    LOGGER.info("Initializing ");
   }
 
   // Do the initialization
@@ -329,7 +329,7 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
       try {
         as.add(start, end, entType, fm);
       } catch (InvalidOffsetException e) {
-        log.error("Invalid Offset exception when creating Entity annotation", e);
+        LOGGER.error("Invalid Offset exception when creating Entity annotation", e);
       }
     }
   }

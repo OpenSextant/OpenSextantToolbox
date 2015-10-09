@@ -44,7 +44,7 @@ public class DataLoader {
   private static String requestHandler = "/update";
 
   // Log object
-  static Logger log = LoggerFactory.getLogger(DataLoader.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
 
   // some common params
   static {
@@ -106,12 +106,11 @@ public class DataLoader {
       // make the call
       SolrResponseBase response = null;
       try {
-        response = (SolrResponseBase) updateRequest.process(solrServer);
+        response = updateRequest.process(solrServer);
         // see what happened
         printResponse(response);
       } catch (Exception e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        LOGGER.error("Exception in submitting Solr request " + e);
       }
 
     } finally {
@@ -127,8 +126,7 @@ public class DataLoader {
     tmp = tmp + " <inputfilepath> = file to be loaded\n";
     tmp = tmp + " <solrhome> = path to solr home (optional)\n";
 
-    System.out.println(tmp);
-
+    LOGGER.info(tmp);
   }
 
   private static String flatten(String currentPath) {
@@ -146,11 +144,10 @@ public class DataLoader {
     try {
       indexIter = FileUtils.lineIterator(input, "UTF-8");
     } catch (IOException e) {
-      System.err.println("Couldnt read from " + input.getName() + ":" + e.getMessage());
+      LOGGER.error("Couldnt read from " + input.getName() + ":", e);
       return null;
     }
 
-    // int lineCount = 0;
     if (indexIter != null) {
       while (indexIter.hasNext()) {
         // get next line
@@ -171,7 +168,7 @@ public class DataLoader {
     try {
       tmp = File.createTempFile("vocab", "txt");
     } catch (IOException e) {
-      log.error("Could not create temp file when flattening vocab:" + e.getMessage());
+      LOGGER.error("Could not create temp file when flattening vocab:", e);
       return null;
     }
 
@@ -193,7 +190,7 @@ public class DataLoader {
       try {
         contentIter = FileUtils.lineIterator(in, "UTF-8");
       } catch (IOException e) {
-        System.err.println("Couldnt read from " + in.getName() + ":" + e.getMessage());
+        LOGGER.error("Couldnt read from " + in.getName(), e);
         return null;
       }
 
@@ -210,26 +207,21 @@ public class DataLoader {
           try {
             FileUtils.writeStringToFile(tmp, out, "UTF-8", true);
           } catch (IOException e) {
-            log.error("Could not write to temp file when flattening vocab:" + e.getMessage());
+            LOGGER.error("Could not write to temp file when flattening vocab:", e);
           }
           indexID++;
 
         }
       }
     }
-    System.out.println("Flattened " + indexID + " vocabulary entries to temp file");
+    LOGGER.info("Flattened " + indexID + " vocabulary entries to temp file");
     // return temp file path
 
-    String tmpFilePath = tmp.getAbsolutePath();
-
-    return tmpFilePath;
+    return tmp.getAbsolutePath();
   }
 
   private static void printResponse(SolrResponseBase response) {
-    int status = response.getStatus();
-    PrintStream out = status == 0 ? System.out : System.err;
-    out.println(response.toString());
-    out.close();
+    LOGGER.info(response.toString());
   }
 
   private static SolrServer getSolrServer(String scheme, String solrhome) {

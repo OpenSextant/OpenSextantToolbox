@@ -39,7 +39,7 @@ public class UTMParser {
   private UTMParser() {
   }
   // Log object
-  // private static Logger log = LoggerFactory.getLogger(UTMParser.class);
+  // private static final Logger LOGGER = LoggerFactory.getLogger(UTMParser.class);
   /**
      *
      */

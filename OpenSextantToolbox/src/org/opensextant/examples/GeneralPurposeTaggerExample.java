@@ -92,12 +92,6 @@ public class GeneralPurposeTaggerExample {
     // run the files through the tagger
     for (File f : files) {
 
-      // if all of your documents are plain text or you are starting from a String
-      // create a GATE document from a String (which we get from the files for this example)
-      //String contents = FileUtils.readFileToString(f, "UTF-8");
-      //Document doc = Factory.newDocument(contents);
-      //doc.setName(f.getName());
-
       // If your documents are text, HTML,XML,Word, PDF, ....
       // create a GATE document directly from the file
       Document doc = Factory.newDocument(f.toURI().toURL(),"UTF-8");
@@ -147,7 +141,6 @@ public class GeneralPurposeTaggerExample {
 
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
-      //contents = null;
       f = null;
 
     } // end file loop

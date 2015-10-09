@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 public class DebugPostProcessor extends PostProcessorBase {
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(DebugPostProcessor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(DebugPostProcessor.class);
 
   @Override
   public Comparator<? super RegexAnnotation> getComparator() {
@@ -33,7 +33,7 @@ public class DebugPostProcessor extends PostProcessorBase {
         tmp.append("\t" + a.toString() + "\n");
       }
       tmp.append("-------\n");
-      log.debug(tmp.toString());
+      LOGGER.debug(tmp.toString());
 
       // return them all
       keepers.addAll(inters);

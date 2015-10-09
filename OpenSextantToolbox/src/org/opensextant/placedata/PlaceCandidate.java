@@ -177,14 +177,14 @@ public class PlaceCandidate implements Serializable {
     if (currentScore != null) {
       this.scoredPlaces.put(place, currentScore + score);
     } else {
-      // log.error("Tried to increment a score for a non-existent Place");
+      // LOGGER.error("Tried to increment a score for a non-existent Place");
     }
   }
 
   // set the score of an existing place
   public void setPlaceScore(Place place, double score) {
     if (!this.scoredPlaces.containsKey(place)) {
-      // log.error("Tried to increment a score for a non-existent Place");
+      // LOGGER.error("Tried to increment a score for a non-existent Place");
       return;
     }
     this.scoredPlaces.put(place, score);

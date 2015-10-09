@@ -53,10 +53,10 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
   String featureName;
   Boolean convertToLower;
   // Log object
-  private static Logger log = LoggerFactory.getLogger(HistogramPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(HistogramPR.class);
 
   private void initialize() {
-    log.info("Initializing ");
+    LOGGER.info("Initializing ");
     docCount = 0;
     openFiles();
     vocabStats.clear();
@@ -97,7 +97,7 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
       explicitFeatureName = false;
     }
     docCount++;
-    log.info("(" + docCount + ") This document has " + annoSet.size() + " " + annotationName + " annotations");
+    LOGGER.info("(" + docCount + ") This document has " + annoSet.size() + " " + annotationName + " annotations");
     // loop over all selected annotations
     for (Annotation a : annoSet) {
       String feat = "";
@@ -121,7 +121,7 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
     } // end annottaion loop
       // write out interim stats files
     if (docCount % 500 == 0) {
-      log.info("Writing incremental stats at " + docCount + " documents");
+      LOGGER.info("Writing incremental stats at " + docCount + " documents");
       closeFiles();
       openFiles();
       writeStats();
@@ -169,10 +169,10 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
     try {
       vocabWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(vocabFile), "UTF-8"));
     } catch (UnsupportedEncodingException e1) {
-      log.error("Couldnt write to " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e1);
       return;
     } catch (FileNotFoundException e1) {
-      log.error("Couldnt write to " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e1);
       return;
     }
     // write header
@@ -180,7 +180,7 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
       vocabWriter.write("word\tcount");
       vocabWriter.newLine();
     } catch (IOException e) {
-      log.error("Couldnt write to " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
     }
   }
 
@@ -190,12 +190,12 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
       vocabWriter.flush();
       vocabWriter.close();
     } catch (IOException e) {
-      log.error("Couldnt close  " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt close  " + vocabFile.getName(), e);
     }
   }
 
   private void writeStats() {
-    log.info("Vocab stats has " + vocabStats.size() + " entries");
+    LOGGER.info("Vocab stats has " + vocabStats.size() + " entries");
     // write out vocab stats
     for (String word : vocabStats.keySet()) {
       Long count = vocabStats.get(word);
@@ -205,13 +205,13 @@ public class HistogramPR extends AbstractLanguageAnalyser implements ProcessingR
         vocabWriter.write(count.toString());
         vocabWriter.newLine();
       } catch (IOException e) {
-        log.error("Couldnt write to " + vocabFile.getName(), e);
+        LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
       }
     }
     try {
       vocabWriter.flush();
     } catch (IOException e) {
-      log.error("Couldnt flush " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt flush " + vocabFile.getName(), e);
     }
   }
 

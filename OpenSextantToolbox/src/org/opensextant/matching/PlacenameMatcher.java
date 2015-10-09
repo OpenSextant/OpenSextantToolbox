@@ -32,7 +32,7 @@ public class PlacenameMatcher {
   private boolean tagAbbrev = false;
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(PlacenameMatcher.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PlacenameMatcher.class);
 
   protected PlacenameMatcher(SolrServer svr, ModifiableSolrParams prms) {
     this.solrServer = svr;
@@ -55,7 +55,7 @@ public class PlacenameMatcher {
     try {
       response = tagRequest.process(solrServer);
     } catch (SolrServerException e) {
-      log.error("Got exception when attempting to match " + docName, e);
+      LOGGER.error("Got exception when attempting to match " + docName, e);
       return candidates;
     }
 
@@ -112,7 +112,7 @@ public class PlacenameMatcher {
         if (!tagAbbrev) {
           if (place.isAbbreviation() && isLower) {
             isValid = false;
-            log.debug("Not tagging abbreviation:" + matchText);
+          LOGGER.debug("Not tagging abbreviation:" + matchText);
             break;
           }
         }

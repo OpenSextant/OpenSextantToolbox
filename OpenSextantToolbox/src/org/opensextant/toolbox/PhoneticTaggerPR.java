@@ -59,7 +59,7 @@ public class PhoneticTaggerPR extends AbstractLanguageAnalyser implements Proces
   Phoneticizer phoner = null;
 
   // Log object
-  static Logger log = LoggerFactory.getLogger(PhoneticTaggerPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PhoneticTaggerPR.class);
   private void initialize() {
     phoner = new Phoneticizer();
   }

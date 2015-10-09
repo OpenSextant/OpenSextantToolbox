@@ -81,7 +81,7 @@ public class MatcherFactory {
   private static final String MATCH_REQUESTHANDLER = "/tag";
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(MatcherFactory.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MatcherFactory.class);
 
   // set the base config for the matching and searching params
   static {
@@ -134,13 +134,13 @@ public class MatcherFactory {
 
     if (isStarted) {
       // already running
-      log.info("Tried to configure MatcherFactory when already started. Doing nothing.");
+      LOGGER.info("Tried to configure MatcherFactory when already started. Doing nothing.");
       return;
     }
 
     // not running but already configured, must be re-configuring
     if (isConfigured) {
-      log.info("Trying to re-configure MatcherFactory.");
+      LOGGER.info("Trying to re-configure MatcherFactory.");
       isRemote = false;
       isConfigured = false;
       isStarted = false;
@@ -152,7 +152,7 @@ public class MatcherFactory {
     boolean foundHome = setHome(home);
     if (!foundHome) {
       isConfigured = false;
-      log.error("Could not configure MatcherFactory: Could not find a value for solr home");
+      LOGGER.error("Could not configure MatcherFactory: Could not find a value for solr home");
       return;
     }
 
@@ -160,13 +160,13 @@ public class MatcherFactory {
     boolean foundRemoteLocal = setLocalorRemote();
     if (!foundRemoteLocal) {
       isConfigured = false;
-      log.error("Could not configure MatcherFactory: Could not interpret:" + homeLocation);
+      LOGGER.error("Could not configure MatcherFactory: Could not interpret:" + homeLocation);
       return;
     }
 
     // all OK
     isConfigured = true;
-    log.info("Configured MatcherFactory: solr.home=" + homeLocation + " Remote=" + isRemote);
+    LOGGER.info("Configured MatcherFactory: solr.home=" + homeLocation + " Remote=" + isRemote);
   }
 
   /**
@@ -176,13 +176,13 @@ public class MatcherFactory {
 
     if (!isConfigured) {
       // can't start not configured
-      log.error("Could not start MatcherFactory, it hasn't been configured yet");
+      LOGGER.error("Could not start MatcherFactory, it hasn't been configured yet");
       return;
     }
 
     // already started
     if (isStarted) {
-      log.info("Tried to start MatcherFactory when it was already started. Doing nothing.");
+      LOGGER.info("Tried to start MatcherFactory when it was already started. Doing nothing.");
       return;
     }
 
@@ -205,7 +205,7 @@ public class MatcherFactory {
       solrServerVocab = serverVocab;
      // } catch (FileNotFoundException e) {
         // this should never happen since we check before calling
-       // log.error("Could not find solr home when initializing MatcherFactory:" + homeLocation, e);
+       // LOGGER.error("Could not find solr home when initializing MatcherFactory:" + homeLocation, e);
        // return;
       //}
     }
@@ -217,11 +217,11 @@ public class MatcherFactory {
       pingGeo = solrServerGeo.ping();
       pingVocab = solrServerVocab.ping();
     } catch (SolrServerException e) {
-      log.error("Solr Server didn't respond to ping from MatcherFactory", e);
+      LOGGER.error("Solr Server didn't respond to ping from MatcherFactory", e);
       isStarted = false;
       return;
     } catch (IOException e) {
-      log.error("Solr Server didn't respond to ping from MatcherFactory", e);
+      LOGGER.error("Solr Server didn't respond to ping from MatcherFactory", e);
       isStarted = false;
       return;
     }
@@ -230,7 +230,7 @@ public class MatcherFactory {
     if (pingGeo.getStatus() == 0) {
       isStarted = true;
     } else {
-      log.error("Solr Server (Geo) responded with error code from ping from MatcherFactory. Got code:"
+      LOGGER.error("Solr Server (Geo) responded with error code from ping from MatcherFactory. Got code:"
           + pingGeo.getStatus());
       isStarted = false;
     }
@@ -239,7 +239,7 @@ public class MatcherFactory {
     if (pingVocab.getStatus() == 0) {
       isStarted = true;
     } else {
-      log.error("Solr Server (Vocab) responded with error code from ping from MatcherFactory. Got code:"
+      LOGGER.error("Solr Server (Vocab) responded with error code from ping from MatcherFactory. Got code:"
           + pingVocab.getStatus());
       isStarted = false;
     }
@@ -256,35 +256,35 @@ public class MatcherFactory {
     // explicit value given?
     if (foundIt != null && foundIt.length() > 0) {
       homeLocation = foundIt;
-      log.info("Explicit solr home found. Using " + foundIt);
+      LOGGER.info("Explicit solr home found. Using " + foundIt);
       return true;
     } else {
-      log.debug("No explicit value given for solr home. Checking for system property");
+      LOGGER.debug("No explicit value given for solr home. Checking for system property");
     }
 
     // system property?
     foundIt = System.getProperty(envParam);
     if (foundIt != null && foundIt.length() > 0) {
       homeLocation = foundIt;
-      log.info("System property for solr home found. Using " + foundIt);
+      LOGGER.info("System property for solr home found. Using " + foundIt);
       return true;
     } else {
-      log.debug("No " + envParam + " system property for solr home. Checking for env variable");
+      LOGGER.debug("No " + envParam + " system property for solr home. Checking for env variable");
     }
 
     // environment variable?
     foundIt = System.getenv(envParam);
     if (foundIt != null && foundIt.length() > 0) {
       homeLocation = foundIt;
-      log.info("Environment variable for solr home found. Using " + foundIt);
+      LOGGER.info("Environment variable for solr home found. Using " + foundIt);
       return true;
     } else {
-      log.debug("No " + envParam + " environment variable for solr home");
+      LOGGER.debug("No " + envParam + " environment variable for solr home");
     }
 
     // TODO add some sort of default location?
 
-    log.error("Tried everything and no value for solr home found");
+    LOGGER.error("Tried everything and no value for solr home found");
 
     return false;
 
@@ -327,7 +327,7 @@ public class MatcherFactory {
       } else {
         // configured but not started
         start();
-        log.debug("Autostarting MatcherFactory");
+        LOGGER.debug("Autostarting MatcherFactory");
         PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
         matchers.put(tmp, true);
         return tmp;
@@ -335,16 +335,16 @@ public class MatcherFactory {
     } else {
       // not configured
       // try default config
-      log.debug("Trying default config and autostarting Matcher Factory");
+      LOGGER.debug("Trying default config and autostarting Matcher Factory");
       config("");
       if (isConfigured) {
-        log.debug("Default config worked. Try to start");
+        LOGGER.debug("Default config worked. Try to start");
         start();
         PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
         matchers.put(tmp, true);
         return tmp;
       } else {
-        log.error("MatcherFactory not configured and default config didn't work");
+        LOGGER.error("MatcherFactory not configured and default config didn't work");
         return null;
       }
     }
@@ -366,7 +366,7 @@ public class MatcherFactory {
       } else {
         // configured but not started
         start();
-        log.debug("Autostarting MatcherFactory");
+        LOGGER.debug("Autostarting MatcherFactory");
         PlacenameSearcher tmp = new PlacenameSearcher(solrServerGeo, searchParams);
         searchers.put(tmp, true);
         return tmp;
@@ -374,16 +374,16 @@ public class MatcherFactory {
     } else {
       // not configured
       // try default config
-      log.debug("Trying default config and autostarting Matcher Factory");
+      LOGGER.debug("Trying default config and autostarting Matcher Factory");
       config("");
       if (isConfigured) {
-        log.debug("Default config worked. Try to start");
+        LOGGER.debug("Default config worked. Try to start");
         start();
         PlacenameSearcher tmp = new PlacenameSearcher(solrServerGeo, searchParams);
         searchers.put(tmp, true);
         return tmp;
       } else {
-        log.error("MatcherFactory not configured and default config did'nt work");
+        LOGGER.error("MatcherFactory not configured and default config did'nt work");
         return null;
       }
 
@@ -407,7 +407,7 @@ public class MatcherFactory {
       } else {
         // configured but not started
         start();
-        log.debug("Autostarting MatcherFactory");
+        LOGGER.debug("Autostarting MatcherFactory");
         VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
         vocabers.put(tmp, true);
         return tmp;
@@ -415,16 +415,16 @@ public class MatcherFactory {
     } else {
       // not configured
       // try default config
-      log.debug("Trying default config and autostarting Matcher Factory");
+      LOGGER.debug("Trying default config and autostarting Matcher Factory");
       config("");
       if (isConfigured) {
-        log.debug("Default config worked. Try to start");
+        LOGGER.debug("Default config worked. Try to start");
         start();
         VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
         vocabers.put(tmp, true);
         return tmp;
       } else {
-        log.error("MatcherFactory not configured and default config did'nt work");
+        LOGGER.error("MatcherFactory not configured and default config did'nt work");
         return null;
       }
 
@@ -534,7 +534,7 @@ public class MatcherFactory {
         tmp = new File(solrURL.toURI());
       } catch (URISyntaxException e) {
         // can't convert to file.
-        log.error("Cannot use " + url + " as solr home. Doesn't appear to be valid file URL");
+        LOGGER.error("Cannot use " + url + " as solr home. Doesn't appear to be valid file URL", e);
         return false;
       }
 

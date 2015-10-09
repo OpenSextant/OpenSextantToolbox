@@ -54,7 +54,7 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
   // the file containing the patterns
   private URL patternFile = null;
   // the log
-  static Logger log = LoggerFactory.getLogger(RegexFinderPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RegexFinderPR.class);
 
   /**
    * Initializes the DateFinderPR resource.
@@ -103,7 +103,7 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
       try {
         annotSet.add((long) a.getStart(), (long) a.getEnd(), a.getType(), feats);
       } catch (InvalidOffsetException e) {
-        log.error("Invalid Offset exception when creating  annotation", e);
+        LOGGER.error("Invalid Offset exception when creating  annotation", e);
       }
     }
   }

@@ -7,8 +7,13 @@ import java.util.Properties;
 import org.restlet.Component;
 import org.restlet.Server;
 import org.restlet.data.Protocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenSextantServer {
+
+  // Log object
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantServer.class);
 
   private OpenSextantServer() {
 
@@ -50,7 +55,7 @@ public class OpenSextantServer {
 
     // Start the component.
     component.start();
-    System.out.println("OpenSextant REST server is ready");
+    LOGGER.info("OpenSextant REST server is ready");
   }
 
 }

@@ -40,7 +40,7 @@ public class RegexMatcher {
   // has this mather been sucessfully initialized
   boolean isInited = false;
   // Log object
-  private static Logger log = LoggerFactory.getLogger(RegexMatcher.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(RegexMatcher.class);
 
   public RegexMatcher(URL patternFile) {
     initialize(patternFile);
@@ -56,7 +56,7 @@ public class RegexMatcher {
     ArrayList<RegexAnnotation> matches = new ArrayList<RegexAnnotation>();
 
     if (!isInited) {
-      log.error("Tried to use RegexMatcher without initializing first");
+      LOGGER.error("Tried to use RegexMatcher without initializing first");
       return matches;
     }
 
@@ -91,7 +91,7 @@ public class RegexMatcher {
       }
     //  endTime = System.nanoTime();
     //  double dur = (endTime-startTime)/1000000.0;
-    //  log.debug("Regex rule " + r.getEntityType() + ":" + r.getRuleFamily() + "-" + r.getRuleName() + " took " + dur + " millisecs for " + input.length() + " chars");
+    //  LOGGER.debug("Regex rule " + r.getEntityType() + ":" + r.getRuleFamily() + "-" + r.getRuleName() + " took " + dur + " millisecs for " + input.length() + " chars");
     }
 
     // run the matches through the postprocessor(s) if any specified
@@ -121,10 +121,10 @@ public class RegexMatcher {
     try {
       reader = new BufferedReader(new InputStreamReader(patFile.openStream(), "UTF-8"));
     } catch (UnsupportedEncodingException e1) {
-      log.error("Error when opening pattern file", e1);
+      LOGGER.error("Error when opening pattern file", e1);
       return;
     } catch (IOException e1) {
-      log.error("Error when opening pattern file", e1);
+      LOGGER.error("Error when opening pattern file", e1);
       return;
     }
 
@@ -134,7 +134,7 @@ public class RegexMatcher {
       try {
         line = reader.readLine();
       } catch (IOException e) {
-        log.error("Error when reading pattern file.", e);
+        LOGGER.error("Error when reading pattern file.", e);
         return;
       }
       if (line == null) {
@@ -188,7 +188,7 @@ public class RegexMatcher {
         reader.close();
       }
     } catch (IOException e) {
-      log.error("Error when closing pattern file.", e);
+      LOGGER.error("Error when closing pattern file.", e);
     }
     // defines,rules and classes should be completely populated
     // substitute all uses of DEFINE patterns within a RULE
@@ -232,16 +232,16 @@ public class RegexMatcher {
           normer = (Normalizer) Class.forName(normClassName).newInstance();
         } catch (InstantiationException e) {
           normer = new NoOpNormalizer();
-          log.error("Cannot instantiate a " + normClassName + ", using a No Op normalizer instead.");
+          LOGGER.error("Cannot instantiate a " + normClassName + ", using a No Op normalizer instead.", e);
         } catch (IllegalAccessException e) {
           normer = new NoOpNormalizer();
-          log.error("Cannot access a " + normClassName + " to create one, using a No Op normalizer instead.");
+          LOGGER.error("Cannot access a " + normClassName + " to create one, using a No Op normalizer instead.", e);
         } catch (ClassNotFoundException e) {
           normer = new NoOpNormalizer();
-          log.error("Normalizer Class " + normClassName + " not found,using a No Op normalizer instead.");
+          LOGGER.error("Normalizer Class " + normClassName + " not found,using a No Op normalizer instead.", e);
         } catch (java.lang.ClassCastException e) {
           normer = new NoOpNormalizer();
-          log.error("Class " + normClassName + " is not a Normalizer,using a No Op normalizer instead.");
+          LOGGER.error("Class " + normClassName + " is not a Normalizer,using a No Op normalizer instead.", e);
         }
         r.setNormalizer(normer);
       } else { // nothing in file use NoOpNormalzer
@@ -264,13 +264,13 @@ public class RegexMatcher {
         pstr = (PostProcessor) Class.forName(p).newInstance();
       } catch (InstantiationException e) {
         pstr = new NoOpPostProcessor();
-        log.error("Cannot instantiate a " + p + ", using a No Op PostProcessor instead.");
+        LOGGER.error("Cannot instantiate a " + p + ", using a No Op PostProcessor instead.", e);
       } catch (IllegalAccessException e) {
         pstr = new NoOpPostProcessor();
-        log.error("Cannot access a " + p + ", using a No Op PostProcessor instead.");
+        LOGGER.error("Cannot access a " + p + ", using a No Op PostProcessor instead.", e);
       } catch (ClassNotFoundException e) {
         pstr = new NoOpPostProcessor();
-        log.error("Class " + p + " is not a PostProcessor, using a No Op PostProcessor instead.");
+        LOGGER.error("Class " + p + " is not a PostProcessor, using a No Op PostProcessor instead.", e);
       }
 
       posters.put(pstr, posterClassnames.get(p));
@@ -283,7 +283,7 @@ public class RegexMatcher {
     try {
       initialize(patFile.toURI().toURL());
     } catch (MalformedURLException e) {
-      log.error("Cannot initialize the matcher using pattern file  " + patFile.getName(), e);
+      LOGGER.error("Cannot initialize the matcher using pattern file  " + patFile.getName(), e);
     }
   }
 

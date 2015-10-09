@@ -50,7 +50,7 @@ public class Cantilever {
   private static String phoneticAlgName = "SimplePhonetic0";
 
   // Log object
-  // private static Logger log = LoggerFactory.getLogger(Cantilever.class);
+  // private static final Logger LOGGER = LoggerFactory.getLogger(Cantilever.class);
   /**
    * Iterate through a List of PlaceCandidates to determine is-place confidence scores and propagate place evidence.
    * @param pcList

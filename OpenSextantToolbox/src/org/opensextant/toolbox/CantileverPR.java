@@ -58,7 +58,7 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
   private boolean doCoref = true;
   private Cantilever cntlvr;
   private Scorer scr;
-  static Logger log = LoggerFactory.getLogger(CantileverPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CantileverPR.class);
 
   private void initialize() {
     cntlvr = new Cantilever();
@@ -105,7 +105,7 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
       if (pc != null) {
         pcList.add(pc);
       } else {
-        log.error("Null PC on annotation" + candAnno.toString());
+        LOGGER.error("Null PC on annotation" + candAnno.toString());
       }
     } // end place candidate loop
       // enable/disable co-referencing

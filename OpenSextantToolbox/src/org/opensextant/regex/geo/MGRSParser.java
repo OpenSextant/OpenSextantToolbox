@@ -49,7 +49,7 @@ public class MGRSParser {
   }
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(MGRSParser.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MGRSParser.class);
 
   private static DateFormat df1 = new java.text.SimpleDateFormat("ddMMMyyyy");
   private static DateFormat df2 = new java.text.SimpleDateFormat("ddMMMyy");
@@ -89,7 +89,7 @@ public class MGRSParser {
         try {
           tmp = new MGRS(var);
         } catch (IllegalArgumentException e) {
-          log.warn("Could not parse MGRS:" + var);
+          LOGGER.warn("Could not parse MGRS:" + var,e);
         }
         if (tmp != null) {
           mgrs.add(tmp);
@@ -134,7 +134,7 @@ public class MGRSParser {
     }
 
     if (dt != null) {
-      log.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
+      LOGGER.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
       return true;
     }
 
@@ -145,11 +145,11 @@ public class MGRSParser {
     }
 
     if (dt != null) {
-      log.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
+      LOGGER.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
       return true;
     }
 
-    log.debug("Accepting " + txt + " as good MGRS");
+    LOGGER.debug("Accepting " + txt + " as good MGRS");
 
     return false;
   }
@@ -162,6 +162,7 @@ public class MGRSParser {
     try {
       return Integer.parseInt(x);
     } catch (Exception e) {
+      LOGGER.error("Could parse integer:" ,e);
       return -1;
     }
   }

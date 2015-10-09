@@ -36,8 +36,13 @@ import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ResourceException;
 import org.restlet.resource.ServerResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenSextantExtractorResource extends ServerResource {
+
+  // log object
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
 
   // the name of the field in the form which holds the uploaded file
   static String formFileName = "infile";
@@ -142,7 +147,7 @@ public class OpenSextantExtractorResource extends ServerResource {
     try {
       fileItems = fileupload.parseRepresentation(entity);
     } catch (FileUploadException e) {
-      e.printStackTrace();
+      LOGGER.error("Couldnt handle provided form", e);
     }
 
     // look for the field containing the file
@@ -158,13 +163,13 @@ public class OpenSextantExtractorResource extends ServerResource {
           return tmpFile.toURI().toURL();
 
         } catch (MalformedURLException e) {
-          e.printStackTrace();
+          LOGGER.error("Couldnt handle provided form", e);
           return null;
         } catch (IOException e) {
-          e.printStackTrace();
+          LOGGER.error("Couldnt handle provided form", e);
           return null;
         } catch (Exception e) {
-          e.printStackTrace();
+          LOGGER.error("Couldnt handle provided form", e);
           return null;
         }
 

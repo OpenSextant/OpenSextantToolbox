@@ -6,10 +6,15 @@ import org.opensextant.service.processing.DocumentProcessorPool;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenSextantApplication extends Application {
 
-  // the pool of document processors
+  // Log object
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
+
+  // The pool of document processors. 
   DocumentProcessorPool dpPool;
 
   // properties
@@ -23,16 +28,16 @@ public class OpenSextantApplication extends Application {
   public synchronized Restlet createInboundRoot() {
 
     // initialize the pool with settings in the property file
-    System.out.println("Initializing pool of extractors");
+    LOGGER.info("Initializing pool of extractors");
     dpPool = new DocumentProcessorPool(this.prop);
-    System.out.println("Warming up extractor pool");
+    LOGGER.info("Warming up extractor pool");
     // warm up the pool
     String content = "We drove to Kabul.";
     for (String p : dpPool.getProcessNames()) {
       dpPool.process(p, content);
     }
 
-    System.out.println(dpPool.toString());
+    LOGGER.info(dpPool.toString());
 
     // set up the routes
     Router router = new Router();

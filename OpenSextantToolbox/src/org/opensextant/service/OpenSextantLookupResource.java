@@ -23,10 +23,15 @@ import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.Put;
 import org.restlet.resource.ServerResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenSextantLookupResource extends ServerResource {
 
-  @Get()
+  // Log object. 
+  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantLookupResource.class);
+
+  @Get
   public Representation doGet() {
 
     Request req = this.getRequest();
@@ -49,9 +54,9 @@ public class OpenSextantLookupResource extends ServerResource {
       query = Reference.decode(rawQuery);
     }
 
-    System.out.println("Query is" + query);
+    LOGGER.info("Query is" + query);
     List<Place> placesFound = s.searchByQueryString(query);
-    System.out.println("Found " + placesFound.size() + " places");
+    LOGGER.info("Found " + placesFound.size() + " places");
 
     if (format.equalsIgnoreCase("json")) {
       JacksonRepresentation<List<Place>> jackRep = new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON,
@@ -111,29 +116,26 @@ public class OpenSextantLookupResource extends ServerResource {
     try {
       fileItems = fileupload.parseRepresentation(ent);
     } catch (FileUploadException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      LOGGER.error("Couldn't parse request reprsentation", e);
     }
 
     for (FileItem fileItem : fileItems) {
       String fieldName = fileItem.getFieldName();
       String contentType = fileItem.getContentType();
-      System.out.println("fieldname=" + fieldName);
-      System.out.println("contentType =" + contentType);
+      LOGGER.info("fieldname=" + fieldName);
+      LOGGER.info("contentType =" + contentType);
       InputStream is = null;
       try {
         is = fileItem.getInputStream();
       } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        LOGGER.error("Couldn't handle request, couldn't open stream", e);
       }
       if (is != null) {
         Representation in = new InputRepresentation(is);
         try {
           in.write(System.out);
         } catch (IOException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
+          LOGGER.error("Couldn't write Representation", e);
         }
       }
     }

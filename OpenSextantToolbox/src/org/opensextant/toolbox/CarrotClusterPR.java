@@ -68,7 +68,7 @@ public class CarrotClusterPR extends AbstractLanguageAnalyser implements Process
   Controller controller; // the thing that does all the work
 
   // Log object
-  static Logger log = LoggerFactory.getLogger(CarrotClusterPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CarrotClusterPR.class);
 
   private void initialize() {
 

@@ -95,12 +95,6 @@ public class GeotaggerExample {
     // run the files through the tagger
     for (File f : files) {
 
-      // if all of your documents are plain text or you are starting from a String
-      // create a GATE document from a String (which we get from the files for this example)
-      //String contents = FileUtils.readFileToString(f, "UTF-8");
-      //Document doc = Factory.newDocument(contents);
-      //doc.setName(f.getName());
-
       // If your documents are text, HTML,XML,Word, PDF, ....
       // create a GATE document directly from the file
       Document doc = Factory.newDocument(f.toURI().toURL(),"UTF-8");
@@ -152,8 +146,6 @@ public class GeotaggerExample {
         fm.clear();
         // could also see lots more details: alternative places, scores, evidence ...
         // by getting the placeCandidate object attached
-        // PlaceCandidate pcObj = (PlaceCandidate) fm.get("placeCandidate");
-
         System.out.println("\t\t" + text + "->" + name + "," + cc + "(" + lat + "," + lon + ")");
       }
 
@@ -163,7 +155,6 @@ public class GeotaggerExample {
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
       doc = null;
-     // contents = null;
       f = null;
       geocoordResults = null;
       placeNameResults = null;

@@ -22,7 +22,7 @@ public class PlacenameSearcher {
   private ModifiableSolrParams baseSearchParams = new ModifiableSolrParams();
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(PlacenameSearcher.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PlacenameSearcher.class);
 
   protected PlacenameSearcher(SolrServer svr, ModifiableSolrParams prms) {
     solrServer = svr;
@@ -37,7 +37,7 @@ public class PlacenameSearcher {
     try {
       response = solrServer.query(prms);
     } catch (SolrServerException e) {
-      log.error("Got exception when processing query.", e);
+      LOGGER.error("Got exception when processing query.", e);
       return places;
     }
 
@@ -62,7 +62,7 @@ public class PlacenameSearcher {
     try {
       response = solrServer.query(srchParams);
     } catch (SolrServerException e) {
-      log.error("Got exception when processing query.", e);
+      LOGGER.error("Got exception when processing query.", e);
       return null;
     }
 
@@ -119,7 +119,7 @@ public class PlacenameSearcher {
     try {
       response = solrServer.query(srchParams);
     } catch (SolrServerException e) {
-      log.error("Got exception when processing query.", e);
+      LOGGER.error("Got exception when processing query.", e);
       return places;
     }
 

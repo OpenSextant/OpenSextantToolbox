@@ -30,12 +30,17 @@ import org.opensextant.matching.MatcherFactory;
 import org.opensextant.matching.VocabMatcher;
 import org.opensextant.vocab.Vocab;
 import org.opensextant.vocab.VocabMatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
  * Simple example of using the VocabMatcher which uses the Solr gazetteer to find vocabulary in text.
  */
 public class VocabMatcherTest {
+
+  /** Log object. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcherTest.class);
 
   /**
    * Instantiates a new matcher test.
@@ -61,7 +66,7 @@ public class VocabMatcherTest {
       System.out.println("Using supplied arg for location of solr gazetteer");
       solrHome = args[1];
     } else {
-      System.out.println("No arg supplied for location of solr gazetteer. Using environment variable");
+      LOGGER.info("No arg supplied for location of solr gazetteer. Using environment variable");
     }
 
     // configure and start the Matcher Factory
@@ -81,7 +86,7 @@ public class VocabMatcherTest {
     try {
       sampleText = FileUtils.readFileToString(testText, "UTF-8");
     } catch (IOException e) {
-      System.err.println("Exception reading text from file" + testText.getName());
+      LOGGER.error("Exception reading text from file" + testText.getName(), e);
       return;
     }
 
@@ -93,7 +98,7 @@ public class VocabMatcherTest {
     for (VocabMatch mt : matches) {
       String matchText = mt.getTextMatch();
       List<Vocab> vs = mt.getVocabs();
-      System.out.println("\t" + matchText + " " + vs.size() + " possibilities:" + vs.toString());
+      System.out.println("\t" + matchText + " " + vs.size() + " possibilities:" + vs);
     }
 
     // make sure all gets written

@@ -63,7 +63,7 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
   String caseDecisionName; // the feature to create on the document that
   // contains the result of the analysis
   // Log object
-  static Logger log = LoggerFactory.getLogger(CaseDetectorPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CaseDetectorPR.class);
   // the thresholds thst define the majority case level
   // TODO: make these runtime parameters
   double lowerCaseThresh = 0.90;
@@ -111,7 +111,7 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
     AnnotationSet tokenSet = annotSet.get(tokenAnnoName);
     // see if there any tokens to work with
     if (tokenSet == null || tokenSet.size() == 0) {
-      log.error("No tokens found in " + document.getName());
+      LOGGER.error("No tokens found in " + document.getName());
       return;
     }
     // accumulate the case stats

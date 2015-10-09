@@ -59,10 +59,10 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
   String assessName = "Assessment";
   Boolean convertToLower;
   // Log object
-  private static Logger log = LoggerFactory.getLogger(PlaceNameStatisticsPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PlaceNameStatisticsPR.class);
 
   private void initialize() {
-    log.info("Initializing ");
+    LOGGER.info("Initializing ");
     docCount = 0;
     openFiles();
     placeNameStats.clear();
@@ -97,7 +97,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     // get all of the annotations of interest
     AnnotationSet placeCandAnnoSet = document.getAnnotations().get(this.placeAnnotationName);
     docCount++;
-    log.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " " + placeAnnotationName
+    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " " + placeAnnotationName
         + " annotations");
     // loop over all placeCandidate annotations
     for (Annotation anno : placeCandAnnoSet) {
@@ -153,7 +153,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     } // end placeCandidate annotation loop
       // write out interim stats files
     if (docCount % 500 == 0) {
-      log.info("Writing incremental stats at " + docCount + " documents");
+      LOGGER.info("Writing incremental stats at " + docCount + " documents");
       closeFiles();
       openFiles();
       writeStats();
@@ -201,10 +201,10 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
     try {
       vocabWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(vocabFile), "UTF-8"));
     } catch (UnsupportedEncodingException e1) {
-      log.error("Couldnt write to " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e1);
       return;
     } catch (FileNotFoundException e1) {
-      log.error("Couldnt write to " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e1);
       return;
     }
     // write header
@@ -212,7 +212,7 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
       vocabWriter.write("word\tPlaceCount\tNotPlaceCount\tNoOpinionCount\tTP\tTN\tFP\tFN\tTotalCount\tPlacePercentage");
       vocabWriter.newLine();
     } catch (IOException e) {
-      log.error("Couldnt write to " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
     }
   }
 
@@ -222,12 +222,12 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
       vocabWriter.flush();
       vocabWriter.close();
     } catch (IOException e) {
-      log.error("Couldnt close " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt close " + vocabFile.getName(), e);
     }
   }
 
   private void writeStats() {
-    log.info("Place name stats has " + placeNameStats.size() + " entries");
+    LOGGER.info("Place name stats has " + placeNameStats.size() + " entries");
     // write out vocab stats
     for (String word : placeNameStats.keySet()) {
       Long[] count = placeNameStats.get(word);
@@ -255,13 +255,13 @@ public class PlaceNameStatisticsPR extends AbstractLanguageAnalyser implements P
         vocabWriter.write(Double.toString(ratio));
         vocabWriter.newLine();
       } catch (IOException e) {
-        log.error("Couldnt write to " + vocabFile.getName(), e);
+        LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
       }
     }
     try {
       vocabWriter.flush();
     } catch (IOException e) {
-      log.error("Error when flushing writer", e);
+      LOGGER.error("Error when flushing writer", e);
     }
   }
 

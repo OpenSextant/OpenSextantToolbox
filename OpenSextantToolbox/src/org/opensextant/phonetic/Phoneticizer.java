@@ -48,7 +48,7 @@ public class Phoneticizer {
   Map<String, StringEncoder> algorithms = new HashMap<String, StringEncoder>();
 
   // Log object
-  private static Logger log = LoggerFactory.getLogger(Phoneticizer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Phoneticizer.class);
   public Phoneticizer() {
     // populate the algorithms Map with an instance of each encoder
     // first the ones from Apache Commons
@@ -131,7 +131,7 @@ public class Phoneticizer {
     try {
       tmpResult = algorithms.get(tmpMeth).encode(word);
     } catch (EncoderException e) {
-      log.error("Got exception when processing word:" + word, e);
+      LOGGER.error("Got exception when processing word:" + word, e);
     }
     return tmpResult;
   }

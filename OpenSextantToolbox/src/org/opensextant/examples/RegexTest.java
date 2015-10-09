@@ -104,7 +104,6 @@ public class RegexTest {
       patternFile = new File(patternFileName).toURI().toURL();
     } catch (MalformedURLException e) {
       System.err.println("Couldn't use pattern file " + patternFileName + ":" + e.getMessage());
-      System.exit(-1);
     }
 
     // initialize the regex matcher
@@ -118,7 +117,6 @@ public class RegexTest {
       iter = FileUtils.lineIterator(testFile, "UTF-8");
     } catch (IOException e) {
       System.err.println("Couldnt read from " + testFile.getName() + ":" + e.getMessage());
-      System.exit(-1);
     }
 
     int lineCount = 0;
@@ -196,10 +194,10 @@ public class RegexTest {
       if (matchLen > maxMatchedLength) {
         maxMatchedLength = matchLen;
       }
-      tmpRes += (a.toString() + ",");
+      tmpRes += a + ",";
     }
 
-    if (posOrNeg.equalsIgnoreCase("POS")) { // if POS example
+    if ("POS".equalsIgnoreCase(posOrNeg)) { // if POS example
       // perfect result
       if (typesFound.contains(correctType) && annoCount == 1) {
         assessment = "TP";
@@ -225,26 +223,17 @@ public class RegexTest {
         assessment = "FN";
       }
 
-    } else { // NEG examples
-      // perfect result (doesnt matter what else is found)
+    } else // perfect result (doesnt matter what else is found)
       if (!typesFound.contains(correctType)) {
         assessment = "TN";
       } else {
         assessment = "FP";
       }
 
-    }
-
     // check the match lengths to see if we got the whole thing
-    boolean whole = false;
+    boolean whole = correctMatchLength == maxMatchedLength;
 
-    if (correctMatchLength == maxMatchedLength) {
-      whole = true;
-    }
-
-    String results = assessment + "\t" + whole + "\t" + annoCount + "\t" + typesFound.toString() + "\t"
-        + rulesFired.toString() + "\t" + tmpRes;
-    return results;
+    return assessment + "\t" + whole + "\t" + annoCount + "\t" + typesFound + "\t" + rulesFired + "\t" + tmpRes;
   }
 
 }

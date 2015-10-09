@@ -58,10 +58,10 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
   String assessName = "Assessment";
   Long contxtSize = 75L;
   // Log object
-  private static Logger log = LoggerFactory.getLogger(PlaceNameRuleDumpPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PlaceNameRuleDumpPR.class);
 
   private void initialize() {
-    log.info("Initializing ");
+    LOGGER.info("Initializing ");
     docCount = 0;
     openFiles();
   }
@@ -96,8 +96,8 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     AnnotationSet placeCandAnnoSet = document.getAnnotations().get(this.placeAnnotationName);
     AnnotationSet truthAnnoSet = document.getAnnotations("Key").get("PLACE");
     docCount++;
-    log.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " " + placeAnnotationName + " annotations");
-    log.info("(" + docCount + ") " + document.getName() + " has " + truthAnnoSet.size() + " " + "Truth" + " annotations");
+    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + placeCandAnnoSet.size() + " " + placeAnnotationName + " annotations");
+    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + truthAnnoSet.size() + " " + "Truth" + " annotations");
 
 
     // loop over all placeCandidate annotations
@@ -188,7 +188,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     }
 
 //    String result = (String) anno.getFeatures().get(assessName);
- //   log.info( placename + " (" + result + ") is place:" +isPlace +" Exact matches:" + exactSet.size() + " Contained matches:" +containedSet.size() + " Covered matches:" + coveredSet.size() + " Overlap matches:" + overlapSet.size()  );
+ //   LOGGER.info( placename + " (" + result + ") is place:" +isPlace +" Exact matches:" + exactSet.size() + " Contained matches:" +containedSet.size() + " Covered matches:" + coveredSet.size() + " Overlap matches:" + overlapSet.size()  );
 
 
   }
@@ -226,10 +226,10 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
     try {
       vocabWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(vocabFile), "UTF-8"));
     } catch (UnsupportedEncodingException e1) {
-      log.error("Couldnt open  " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt open  " + vocabFile.getName(), e1);
       return;
     } catch (FileNotFoundException e1) {
-      log.error("Couldnt open  " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt open  " + vocabFile.getName(), e1);
       return;
     }
     // write header
@@ -237,7 +237,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
       vocabWriter.write("placeName\tAssessment\tStart\tEnd\tConfidence\tRules\tRuleWeights\tContext\tDocument");
       vocabWriter.newLine();
     } catch (IOException e) {
-      log.error("Couldnt write to " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
     }
   }
 
@@ -247,7 +247,7 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
       vocabWriter.flush();
       vocabWriter.close();
     } catch (IOException e) {
-      log.error("Couldnt close  " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt close  " + vocabFile.getName(), e);
     }
   }
 
@@ -288,12 +288,12 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
       vocabWriter.write(document.getName());
       vocabWriter.newLine();
     } catch (IOException e) {
-      log.error("Couldnt write to " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
     }
     try {
       vocabWriter.flush();
     } catch (IOException e) {
-      log.error("Error when flushing writer", e);
+      LOGGER.error("Error when flushing writer", e);
     }
   }
 
@@ -333,12 +333,12 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
       vocabWriter.write(document.getName());
       vocabWriter.newLine();
     } catch (IOException e) {
-      log.error("Couldnt write to " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
     }
     try {
       vocabWriter.flush();
     } catch (IOException e) {
-      log.error("Error when flushing writer", e);
+      LOGGER.error("Error when flushing writer", e);
     }
   }
 

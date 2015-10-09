@@ -55,10 +55,10 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
   List<String> featureNames = new ArrayList<String>();
   Long contxtSize = 75L;
   // Log object
-  private static Logger log = LoggerFactory.getLogger(AnnotationDumpPR.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(AnnotationDumpPR.class);
 
   private void initialize() {
-    log.info("Initializing ");
+    LOGGER.info("Initializing ");
     docCount = 0;
     openFiles();
   }
@@ -92,7 +92,7 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     // get all of the annotations of interest from the annotationset given
     AnnotationSet annoSet = document.getAnnotations(annotationSetName).get(annotationName);
     docCount++;
-    log.info("(" + docCount + ") " + document.getName() + " has " + annoSet.size() + " " + annotationName
+    LOGGER.info("(" + docCount + ") " + document.getName() + " has " + annoSet.size() + " " + annotationName
         + " annotations");
     // loop over all selected annotations
     for (Annotation anno : annoSet) {
@@ -133,10 +133,10 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
     try {
       vocabWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(vocabFile), "UTF-8"));
     } catch (UnsupportedEncodingException e1) {
-      log.error("Couldnt open " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt open " + vocabFile.getName(), e1);
       return;
     } catch (FileNotFoundException e1) {
-      log.error("Couldnt open " + vocabFile.getName(), e1);
+      LOGGER.error("Couldnt open " + vocabFile.getName(), e1);
       return;
     }
     // write header
@@ -156,7 +156,7 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
       vocabWriter.write("Document");
       vocabWriter.newLine();
     } catch (IOException e) {
-      log.error("Couldnt write to " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
       return;
     }
   }
@@ -167,7 +167,7 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
       vocabWriter.flush();
       vocabWriter.close();
     } catch (IOException e) {
-      log.error("Couldnt close " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt close " + vocabFile.getName(), e);
     }
   }
 
@@ -198,12 +198,12 @@ public class AnnotationDumpPR extends AbstractLanguageAnalyser implements Proces
       vocabWriter.write(document.getName());
       vocabWriter.newLine();
     } catch (IOException e) {
-      log.error("Couldnt write to " + vocabFile.getName(), e);
+      LOGGER.error("Couldnt write to " + vocabFile.getName(), e);
     }
     try {
       vocabWriter.flush();
     } catch (IOException e) {
-      log.error("Error when flushing " + vocabFile.getName(), e);
+      LOGGER.error("Error when flushing " + vocabFile.getName(), e);
     }
   }
 

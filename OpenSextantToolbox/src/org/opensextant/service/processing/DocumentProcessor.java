@@ -7,10 +7,15 @@ import gate.Factory;
 import gate.creole.ExecutionException;
 import gate.creole.ResourceInstantiationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DocumentProcessor {
 
   private CorpusController controller;
   private Corpus corpus;
+  // Log object. 
+  private static final Logger LOGGER = LoggerFactory.getLogger(DocumentProcessor.class);
 
   public DocumentProcessor(CorpusController cont) {
     this.controller = cont;
@@ -30,7 +35,7 @@ public class DocumentProcessor {
       try {
         corpus = Factory.newCorpus("DP Corpus");
       } catch (ResourceInstantiationException e) {
-        e.printStackTrace();
+        LOGGER.error("Couldnt create new corpus", e);
       }
     }
 
@@ -41,7 +46,7 @@ public class DocumentProcessor {
       try {
         controller.execute();
       } catch (ExecutionException e) {
-        e.printStackTrace();
+        LOGGER.error("Couldnt execute document processing", e);
       }
     } finally {
       controller.setCorpus(null);

@@ -30,12 +30,16 @@ import org.opensextant.matching.MatcherFactory;
 import org.opensextant.matching.PlacenameMatcher;
 import org.opensextant.placedata.Place;
 import org.opensextant.placedata.PlaceCandidate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-// TODO: Auto-generated Javadoc
 /**
  * Simple example of using the PlaceNameMatcher which uses the Solr gazetteer to find candidate place names in text.
  */
 public class MatcherTest {
+
+  /** Log object. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(MatcherTest.class);
 
   /**
    * Instantiates a new matcher test.
@@ -81,7 +85,7 @@ public class MatcherTest {
     try {
       sampleText = FileUtils.readFileToString(testText, "UTF-8");
     } catch (IOException e) {
-      System.err.println("Exception reading text from file" + testText.getName());
+      LOGGER.error("Exception reading text from file" + testText.getName(), e);
       return;
     }
 
