@@ -49,7 +49,7 @@ public class PoolDriver {
 
     for (File f : filesToProcess) {
       DocumentBean result = dpPool.process("general", f);
-      System.out.println(f.getName());
+      LOGGER.info(f.getName());
       holdem.add(result);
     }
 
@@ -59,6 +59,6 @@ public class PoolDriver {
   }
 
   public static void dump(DocumentBean doc) {
-    System.out.println(doc.getContent());
+    LOGGER.info(doc.getContent());
   }
 }

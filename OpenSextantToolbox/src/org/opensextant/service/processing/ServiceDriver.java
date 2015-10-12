@@ -9,8 +9,13 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ServiceDriver {
+
+  /** Log object. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(ServiceClient.class);
 
   private ServiceDriver() {
 
@@ -61,7 +66,7 @@ public class ServiceDriver {
       try {
         Thread.sleep(500);
       } catch (InterruptedException e) {
-        System.err.println();
+        LOGGER.error("Execution interupted", e);
       }
     }
 
@@ -70,7 +75,7 @@ public class ServiceDriver {
     double dur = (end - start) / 1000000000.0;
     int numDocs = filesToProcess.size();
     double avg = filesToProcess.size() / dur;
-    System.out.println(numDocs + " docs took " + dur + " secs. Average= " + avg);
+    LOGGER.info(numDocs + " docs took " + dur + " secs. Average= " + avg);
 
   }
 

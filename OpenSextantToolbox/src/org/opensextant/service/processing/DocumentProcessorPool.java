@@ -221,31 +221,32 @@ public class DocumentProcessorPool {
       Anno tmpAnno = new Anno(a);
 
       String type = a.getType();
+      if ("ENTITY".equalsIgnoreCase(type)) {
+        continue;
+      }
+
       tmpAnno.setStart(a.getStartNode().getOffset());
       tmpAnno.setEnd(a.getEndNode().getOffset());
       tmpAnno.setType(type);
       tmpAnno.setMatchText(Utils.cleanStringFor(doc, a));
 
+      /** special handling for PLACEs */
       if ("PLACE".equalsIgnoreCase(type)) {
         FeatureMap fm = a.getFeatures();
 
         tmpAnno.getFeatures().put("place", fm.get("bestPlace"));
         tmpAnno.getFeatures().put("hierarchy", fm.get("hierarchy"));
         db.addAnno(tmpAnno);
-        continue;
+      } else {
+        FeatureMap fm = a.getFeatures();
+        for (Entry<Object, Object> e : fm.entrySet()) {
+          String k = (String) e.getKey();
+          Object v = e.getValue();
+          tmpAnno.getFeatures().put(k, v);
+        }
+        db.addAnno(tmpAnno);
       }
 
-      if ("ENTITY".equalsIgnoreCase(type)) {
-        continue;
-      }
-
-      FeatureMap fm = a.getFeatures();
-      for (Entry<Object, Object> e : fm.entrySet()) {
-        String k = (String) e.getKey();
-        Object v = e.getValue();
-        tmpAnno.getFeatures().put(k, v);
-      }
-      db.addAnno(tmpAnno);
     }
 
     // cleanup resources

@@ -111,9 +111,9 @@ public class ServiceClient implements Runnable {
     try {
       txt = extractResult.getText();
       if (txt == null || txt.length() < 100) {
-        System.err.println("Bad response");
+        LOGGER.error("Bad response");
       } else {
-        System.out.println(txt.length());
+        LOGGER.info(txt);
       }
     } catch (IOException e) {
       LOGGER.error("Couldn't get text from response", e);

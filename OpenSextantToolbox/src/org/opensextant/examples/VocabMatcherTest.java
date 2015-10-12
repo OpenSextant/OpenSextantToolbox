@@ -63,7 +63,7 @@ public class VocabMatcherTest {
     // could be a directory, URL or missing
     String solrHome = "";
     if (args.length == 2) {
-      System.out.println("Using supplied arg for location of solr gazetteer");
+      LOGGER.info("Using supplied arg for location of solr gazetteer");
       solrHome = args[1];
     } else {
       LOGGER.info("No arg supplied for location of solr gazetteer. Using environment variable");
@@ -77,7 +77,7 @@ public class VocabMatcherTest {
     VocabMatcher m = MatcherFactory.getVocabMatcher();
     // check to see if its there
     if (null == m) {
-      System.err.println("Got a null Matcher from Factory.");
+      LOGGER.error("Got a null Matcher from Factory.");
       return;
     }
 
@@ -94,15 +94,12 @@ public class VocabMatcherTest {
     List<VocabMatch> matches = m.matchText(sampleText, "test document");
 
     // see what got tagged
-    System.out.println("Found " + matches.size() + " matches");
+    LOGGER.info("Found " + matches.size() + " matches");
     for (VocabMatch mt : matches) {
       String matchText = mt.getTextMatch();
       List<Vocab> vs = mt.getVocabs();
-      System.out.println("\t" + matchText + " " + vs.size() + " possibilities:" + vs);
+      LOGGER.info("\t" + matchText + " " + vs.size() + " possibilities:" + vs);
     }
-
-    // make sure all gets written
-    System.out.flush();
 
     // cleanup the matcher
     m.cleanup();

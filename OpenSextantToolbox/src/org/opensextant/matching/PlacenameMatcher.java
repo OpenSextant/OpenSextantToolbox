@@ -48,7 +48,7 @@ public class PlacenameMatcher {
     List<PlaceCandidate> candidates = new ArrayList<PlaceCandidate>();
     // Setup request to tag
     tagRequest = new SolrTaggerRequest(matchParams, SolrRequest.METHOD.POST);
-    tagRequest.input = buffer;
+    tagRequest.setInput(buffer);
 
     QueryResponse response = null;
 

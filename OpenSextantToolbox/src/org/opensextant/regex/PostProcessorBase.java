@@ -159,6 +159,6 @@ public abstract class PostProcessorBase implements PostProcessor {
    * decide() method.
    * @return the comparator to be used to sort
    */
-  public abstract Comparator<? super RegexAnnotation> getComparator();
+  public abstract Comparator<RegexAnnotation> getComparator();
 
 }

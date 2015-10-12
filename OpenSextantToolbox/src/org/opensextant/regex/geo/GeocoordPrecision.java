@@ -34,7 +34,7 @@ public class GeocoordPrecision {
   /**
    * +/- # of Meters of error.
    */
-  public double precision;
+  private double precision;
   /**
    * # of M/S/s digits in a D:M:S string for a lat or lon
    */
@@ -43,7 +43,29 @@ public class GeocoordPrecision {
    * # of decimal places in D.ddd... string for a lat or lon
    */
 
-  public int digits;
+  private int digits;
+
+  /**
+   * @return the precision
+   */
+  public double getPrecision() {
+    return precision;
+  }
+
+  /**
+   * @param precision
+   *          the precision to set
+   */
+  public void setPrecision(double precision) {
+    this.precision = precision;
+  }
+
+  /**
+   * @return the digits
+   */
+  public int getDigits() {
+    return digits;
+  }
 
   /**
    * Augment number of digits in precision -- choose the maximum amount if in coord (a,b) if a has more digits of

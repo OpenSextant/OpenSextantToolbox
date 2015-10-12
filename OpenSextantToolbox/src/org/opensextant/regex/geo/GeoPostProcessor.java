@@ -34,7 +34,7 @@ import org.opensextant.regex.RegexAnnotation;
 public class GeoPostProcessor extends PostProcessorBase {
 
   @Override
-  public Comparator<? super RegexAnnotation> getComparator() {
+  public Comparator<RegexAnnotation> getComparator() {
     return new GeocoordComparator();
   }
 

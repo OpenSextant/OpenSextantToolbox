@@ -85,7 +85,7 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
    */
   @Override
   public void reInit() throws ResourceInstantiationException {
-
+    init();
   }
 
   /**

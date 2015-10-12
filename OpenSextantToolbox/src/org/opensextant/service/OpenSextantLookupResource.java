@@ -1,22 +1,15 @@
 package org.opensextant.service;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.opensextant.matching.MatcherFactory;
 import org.opensextant.matching.PlacenameSearcher;
 import org.opensextant.placedata.Place;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.data.Reference;
-import org.restlet.ext.fileupload.RestletFileUpload;
 import org.restlet.ext.jackson.JacksonRepresentation;
-import org.restlet.representation.InputRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.Get;
@@ -93,58 +86,13 @@ public class OpenSextantLookupResource extends ServerResource {
   @Put
   public Representation doPut() {
 
-    return handle(getRequest());
+    return new StringRepresentation("PUT is not supported, use GET");
   }
 
   @Post
   public Representation doPost() {
 
-    return handle(getRequest());
-  }
-
-  private Representation handle(Request req) {
-
-    ConcurrentMap<String, Object> attrs = req.getAttributes();
-    Representation ent = req.getEntity();
-
-    RestletFileUpload fileupload = new RestletFileUpload(new DiskFileItemFactory());
-    List<FileItem> fileItems = null;
-    try {
-      fileItems = fileupload.parseRepresentation(ent);
-    } catch (FileUploadException e) {
-      LOGGER.error("Couldn't parse request reprsentation", e);
-    }
-
-    for (FileItem fileItem : fileItems) {
-      String fieldName = fileItem.getFieldName();
-      String contentType = fileItem.getContentType();
-      LOGGER.info("fieldname=" + fieldName);
-      LOGGER.info("contentType =" + contentType);
-      InputStream is = null;
-      try {
-        is = fileItem.getInputStream();
-      } catch (IOException e) {
-        LOGGER.error("Couldn't handle request, couldn't open stream", e);
-      }
-      if (is != null) {
-        Representation in = new InputRepresentation(is);
-        try {
-          in.write(System.out);
-        } catch (IOException e) {
-          LOGGER.error("Couldn't write Representation", e);
-        }
-      }
-    }
-
-    String meth = req.getMethod().getName();
-    String attrString = "";
-    for (String n : attrs.keySet()) {
-      attrString = attrString + "\n" + n + "=" + attrs.get(n);
-    }
-
-    String retString = "You requested a " + meth + " Lookup with attributes= " + attrString;
-
-    return new StringRepresentation(retString);
+    return new StringRepresentation("POST is not supported, use GET");
   }
 
   private String ifNull(String in) {

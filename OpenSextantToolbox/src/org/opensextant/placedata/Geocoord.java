@@ -31,11 +31,10 @@ public class Geocoord implements java.io.Serializable {
   Double longitude;
   /** The phrase as found in the document. */
   String expression = "";
-  public int precision = -1;
   /**
    * Set to false if expression cannot be interpreted as meaningful lat/lon.
    */
-  public boolean isValid;
+  private boolean isValid;
 
   /** Radius of the earth in kilometers, used for distance calc. */
   public static final double R = 6372.8;
@@ -49,35 +48,6 @@ public class Geocoord implements java.io.Serializable {
     isValid = true;
     setLatitude(lat);
     setLongitude(lon);
-  }
-
-  /**
-   * This returns distance in degrees. Only to be used for fast comparison of relative distances from the same point.
-   * @return distance from the given latitude and longitude, in degrees.
-   * @deprecated use {@link distance(double lat, double lon)} instead.
-   */
-  @Deprecated
-  public Double distanceDeg(double lat, double lon) {
-    Double d = Double.MAX_VALUE;
-    if (isValid) {
-      d = Math.sqrt(Math.pow(this.latitude - lat, 2.0) + Math.pow(this.longitude - lon, 2.0));
-    }
-    return d;
-  }
-
-  /**
-   * This returns distance in degrees. Only to be used for fast comparison of relative distances from the same point.
-   * @return distance from the given Geocoord, in degrees.
-   * @deprecated use {@link distance()} instead.
-   */
-  @Deprecated
-  public Double distanceDeg(Geocoord another) {
-    Double d = Double.MAX_VALUE;
-    if (isValid && another != null) {
-      d = Math.sqrt(Math.pow(this.latitude - another.getLatitude(), 2.0)
-          + Math.pow(this.longitude - another.getLongitude(), 2.0));
-    }
-    return d;
   }
 
   /**

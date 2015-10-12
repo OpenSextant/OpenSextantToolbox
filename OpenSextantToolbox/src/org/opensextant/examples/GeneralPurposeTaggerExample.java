@@ -35,6 +35,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A simple example of how to use the OpenSextant General Purpose extractor pipeline.<br>
@@ -42,6 +44,9 @@ import org.apache.commons.io.FileUtils;
  * some basic results of what it found.
  */
 public class GeneralPurposeTaggerExample {
+
+  /** Log object. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(GeneralPurposeTaggerExample.class);
 
   /**
    * Instantiates a new general purpose tagger example.
@@ -68,7 +73,7 @@ public class GeneralPurposeTaggerExample {
     // directory containing the files to be processed
     File inDir = new File(args[1]);
 
-    System.out.println("Initializing");
+    LOGGER.info("Initializing");
 
     // get the list of files to be processed
     Collection<File> files = FileUtils.listFiles(inDir, null, true);
@@ -85,8 +90,8 @@ public class GeneralPurposeTaggerExample {
 
     // associate the corpus with the application
     application.setCorpus(corpus);
+    LOGGER.info("Done Initializing");
 
-    System.out.println("Done Initializing");
     Double initTime = (System.nanoTime() - start) / 1000000000.0;
 
     // run the files through the tagger
@@ -119,11 +124,11 @@ public class GeneralPurposeTaggerExample {
       Set<String> entityTypesFound = entitySet.getAllTypes();
 
       // loop over all found entities and print some basic info
-      System.out.println("Document " + doc.getName() + " contains annotations of type (count):");
+      LOGGER.info("Document " + doc.getName() + " contains annotations of type (count):");
       for (String a : entityTypesFound) {
         // get all annotations of a type
         gate.AnnotationSet tmpSet = entitySet.get(a);
-        System.out.println("\t" + a + " (" + tmpSet.size() + ")");
+        LOGGER.info("\t" + a + " (" + tmpSet.size() + ")");
         // loop over all instance of this type and print some basic info
         for (Annotation s : tmpSet) {
           // get a clean string representation of the tagged text
@@ -131,13 +136,10 @@ public class GeneralPurposeTaggerExample {
           // get the taxonomic categorization for this entity
           String taxo = (String) s.getFeatures().get("hierarchy");
           // could also get the start/end points, other features ...
-          System.out.println("\t\t" + text + " (" + taxo + ")");
+          LOGGER.info("\t\t" + text + " (" + taxo + ")");
         }
 
       }
-
-      // make sure all gets written
-      System.out.flush();
 
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
@@ -156,7 +158,7 @@ public class GeneralPurposeTaggerExample {
     double totalDuration = (end - start) / 1000000000.0;
     double rate = numDocs / (totalDuration - initTime);
 
-    System.out.println("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate
+    LOGGER.info("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate
         + " documents/sec");
 
   }

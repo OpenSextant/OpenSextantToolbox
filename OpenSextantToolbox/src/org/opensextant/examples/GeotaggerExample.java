@@ -37,6 +37,8 @@ import java.util.Collection;
 import org.apache.commons.io.FileUtils;
 import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -45,6 +47,9 @@ import org.opensextant.placedata.Place;
  * results of what it found.
  */
 public class GeotaggerExample {
+
+  /** Log object. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(GeotaggerExample.class);
 
   /**
    * Instantiates a new geotagger example.
@@ -71,7 +76,7 @@ public class GeotaggerExample {
     // directory containing the files to be processed
     File inDir = new File(args[1]);
 
-    System.out.println("Initializing");
+    LOGGER.info("Initializing");
 
     // get the list of files to be processed
     Collection<File> files = FileUtils.listFiles(inDir, null, true);
@@ -88,8 +93,7 @@ public class GeotaggerExample {
 
     // associate the corpus with the application
     application.setCorpus(corpus);
-
-    System.out.println("Done Initializing");
+    LOGGER.info("Done Initializing");
     Double initTime = (System.nanoTime() - start) / 1000000000.0;
 
     // run the files through the tagger
@@ -115,8 +119,9 @@ public class GeotaggerExample {
       AnnotationSet geocoordResults = doc.getAnnotations().get("GEOCOORD");
       AnnotationSet placeNameResults = doc.getAnnotations().get("PLACE");
 
-      System.out.println("In document " + doc.getName());
-      System.out.println("\tGeocoords Found (" + geocoordResults.size() + ")");
+      LOGGER.info("In document " + doc.getName());
+      LOGGER.info("\tGeocoords Found (" + geocoordResults.size() + ")");
+
       for (Annotation a : geocoordResults) {
         // get a clean string for the geocoord found in the text
         String text = gate.Utils.cleanStringFor(doc, a);
@@ -127,10 +132,9 @@ public class GeotaggerExample {
         double lat = coord.getLatitude();
         double lon = coord.getLongitude();
         fm.clear();
-        System.out.println("\t\t" + text + "->" + lat + "," + lon);
+        LOGGER.info("\t\t" + text + "->" + lat + "," + lon);
       }
-
-      System.out.println("\tPlaces Found (" + placeNameResults.size() + ")");
+      LOGGER.info("\tPlaces Found (" + placeNameResults.size() + ")");
       for (Annotation a : placeNameResults) {
         // get a clean string for the place found in the text
         String text = gate.Utils.cleanStringFor(doc, a);
@@ -146,11 +150,8 @@ public class GeotaggerExample {
         fm.clear();
         // could also see lots more details: alternative places, scores, evidence ...
         // by getting the placeCandidate object attached
-        System.out.println("\t\t" + text + "->" + name + "," + cc + "(" + lat + "," + lon + ")");
+        LOGGER.info("\t\t" + text + "->" + name + "," + cc + "(" + lat + "," + lon + ")");
       }
-
-      // make sure all gets written
-      System.out.flush();
 
       // cleanup the document, the file and the content
       Factory.deleteResource(doc);
@@ -171,8 +172,7 @@ public class GeotaggerExample {
     // print some summary stats
     double totalDuration = (end - start) / 1000000000.0;
     double rate = numDocs / (totalDuration - initTime);
-
-    System.out.println("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate
+    LOGGER.info("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate
         + " documents/sec");
 
   }

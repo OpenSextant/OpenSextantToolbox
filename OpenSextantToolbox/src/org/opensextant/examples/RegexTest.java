@@ -38,6 +38,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.opensextant.regex.RegexAnnotation;
 import org.opensextant.regex.RegexMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -53,6 +55,9 @@ import org.opensextant.regex.RegexMatcher;
  * See LanguageResources/resources/patterns for regex pattern definitions
  */
 public class RegexTest {
+
+  /** Log object. */
+  private static final Logger LOGGER = LoggerFactory.getLogger(RegexTest.class);
 
   /**
    * Instantiates a new regex test.
@@ -83,10 +88,10 @@ public class RegexTest {
     try {
       resWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(resFile), "UTF-8"));
     } catch (UnsupportedEncodingException e) {
-      System.err.println("Couldnt write to " + resFile.getName() + ":" + e.getMessage());
+      LOGGER.error("Couldnt write to " + resFile.getName() + ":" + e.getMessage(), e);
       return;
     } catch (FileNotFoundException e) {
-      System.err.println("Couldnt write to " + resFile.getName() + ":" + e.getMessage());
+      LOGGER.error("Couldnt write to " + resFile.getName() + ":" + e.getMessage(), e);
       return;
     }
 
@@ -96,27 +101,27 @@ public class RegexTest {
           .write("Entity Type\tPos\\Neg\tTest Input\tScore\tComplete\tCount\tTypes Found\tRules Matched\tAnnotations Found");
       resWriter.newLine();
     } catch (IOException e) {
-      System.err.println("Couldnt write to " + resFile.getName() + ":" + e.getMessage());
+      LOGGER.error("Couldnt write to " + resFile.getName() + ":" + e.getMessage(), e);
     }
 
     // get the pattern file as a URL
     try {
       patternFile = new File(patternFileName).toURI().toURL();
     } catch (MalformedURLException e) {
-      System.err.println("Couldn't use pattern file " + patternFileName + ":" + e.getMessage());
+      LOGGER.error("Couldn't use pattern file " + patternFileName + ":" + e.getMessage(), e);
     }
 
     // initialize the regex matcher
     RegexMatcher reger = new RegexMatcher(patternFile);
-    System.out.println("Loaded " + reger.getRules().size() + " rules " + " for types " + reger.getTypes());
-    System.out.println("Writing results to " + resFile.getAbsolutePath());
+    LOGGER.info("Loaded " + reger.getRules().size() + " rules " + " for types " + reger.getTypes());
+    LOGGER.info("Writing results to " + resFile.getAbsolutePath());
 
     // loop over the lines of the test file
     LineIterator iter = null;
     try {
       iter = FileUtils.lineIterator(testFile, "UTF-8");
     } catch (IOException e) {
-      System.err.println("Couldnt read from " + testFile.getName() + ":" + e.getMessage());
+      LOGGER.error("Couldnt read from " + testFile.getName() + ":" + e.getMessage(), e);
     }
 
     int lineCount = 0;
@@ -147,21 +152,20 @@ public class RegexTest {
         resWriter.write(line + "\t" + results);
         resWriter.newLine();
       } catch (IOException e) {
-        System.err.println("Couldn't write to " + resFile.getName() + ":" + e.getMessage());
+        LOGGER.error("Couldn't write to " + resFile.getName() + ":" + e.getMessage(), e);
       }
 
     }
 
     iter.close();
-
-    System.out.println("Tagged and scored  " + lineCount + " test lines");
+    LOGGER.info("Tagged and scored  " + lineCount + " test lines");
 
     // cleanup
     try {
       resWriter.flush();
       resWriter.close();
     } catch (IOException e) {
-      System.err.println("Couldn't close " + resFile.getName() + ":" + e.getMessage());
+      LOGGER.error("Couldn't close " + resFile.getName() + ":" + e.getMessage(), e);
     }
 
   }

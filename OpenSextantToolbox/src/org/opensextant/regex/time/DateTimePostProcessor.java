@@ -35,7 +35,7 @@ import org.opensextant.regex.RegexAnnotation;
 public class DateTimePostProcessor extends PostProcessorBase {
 
   @Override
-  public Comparator<? super RegexAnnotation> getComparator() {
+  public Comparator<RegexAnnotation> getComparator() {
     return new DateResolutionComparator();
   }
 

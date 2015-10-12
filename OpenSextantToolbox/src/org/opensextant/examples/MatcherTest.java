@@ -62,10 +62,10 @@ public class MatcherTest {
     // could be a directory, URL or missing
     String solrHome = "";
     if (args.length == 2) {
-      System.out.println("Using supplied arg for location of solr gazetteer");
+      LOGGER.info("Using supplied arg for location of solr gazetteer");
       solrHome = args[1];
     } else {
-      System.out.println("No arg supplied for location of solr gazetteer. Using environment variable");
+      LOGGER.info("No arg supplied for location of solr gazetteer. Using environment variable");
     }
 
     // configure and start the Matcher Factory
@@ -76,7 +76,7 @@ public class MatcherTest {
     PlacenameMatcher m = MatcherFactory.getMatcher();
     // check to see if its there
     if (null == m) {
-      System.err.println("Got a null Matcher from Factory.");
+      LOGGER.error("Got a null Matcher from Factory.");
       return;
     }
 
@@ -96,7 +96,7 @@ public class MatcherTest {
     List<PlaceCandidate> cands = m.matchText(sampleText, "test document");
 
     // see what got tagged
-    System.out.println("Without questionable abbreviations,found " + cands.size() + " place candidates");
+    LOGGER.info("Without questionable abbreviations,found " + cands.size() + " place candidates");
     for (PlaceCandidate pc : cands) {
       String placeName = pc.getPlaceName();
 
@@ -106,7 +106,7 @@ public class MatcherTest {
       // if you want only the apriori most likely
       Place samplePlace = pc.getBestPlace();
 
-      System.out.println("\t" + placeName + " could be " + allPlaces.size() + " places, like " + samplePlace);
+      LOGGER.info("\t" + placeName + " could be " + allPlaces.size() + " places, like " + samplePlace);
     }
 
     // Now turn on tagging of questionable abbreviations and tag again to see differences
@@ -114,7 +114,7 @@ public class MatcherTest {
     List<PlaceCandidate> cands2 = m.matchText(sampleText, "test document");
 
     // see what got tagged this time
-    System.out.println("Tagging questionable abbreviations,found " + cands2.size() + " place candidates");
+    LOGGER.info("Tagging questionable abbreviations,found " + cands2.size() + " place candidates");
     for (PlaceCandidate pc : cands2) {
       String placeName = pc.getPlaceName();
 
@@ -124,11 +124,8 @@ public class MatcherTest {
       // if you want only the apriori most likely
       Place samplePlace = pc.getBestPlace();
 
-      System.out.println("\t" + placeName + " could be " + allPlaces.size() + " places, like " + samplePlace);
+      LOGGER.info("\t" + placeName + " could be " + allPlaces.size() + " places, like " + samplePlace);
     }
-
-    // make sure all gets written
-    System.out.flush();
 
     // cleanup the matcher
     m.cleanup();

@@ -39,7 +39,7 @@ public class VocabMatcher {
     List<VocabMatch> matches = new ArrayList<VocabMatch>();
     // Setup request to tag
     tagRequest = new SolrTaggerRequest(matchParams, SolrRequest.METHOD.POST);
-    tagRequest.input = buffer;
+    tagRequest.setInput(buffer);
 
     QueryResponse response = null;
 

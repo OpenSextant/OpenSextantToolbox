@@ -14,7 +14,7 @@ public class DebugPostProcessor extends PostProcessorBase {
   private static final Logger LOGGER = LoggerFactory.getLogger(DebugPostProcessor.class);
 
   @Override
-  public Comparator<? super RegexAnnotation> getComparator() {
+  public Comparator<RegexAnnotation> getComparator() {
     return new PositionComparator();
   }
 
