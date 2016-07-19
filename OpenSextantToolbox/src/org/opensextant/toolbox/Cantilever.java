@@ -70,59 +70,63 @@ public class Cantilever {
       // add the PC to the name's list
       pcsByName.get(baseName).add(pc);
     }
+
     // Now,propagate evidence among all PCs with the same name
     // for each name
     for (String name : pcsByName.keySet()) {
       // get all the PCs for this name
       List<PlaceCandidate> pcs = pcsByName.get(name);
       // nothing to propagate if only one PC
-      if (pcs.size() > 1) {
-        // create a List to hold the joint evidence
-        List<PlaceEvidence> jointEvidence = new ArrayList<PlaceEvidence>();
-        // the sum of place confidences
-        double totalPlaceConfidence = 0.0;
-        // accumulate all the evidence into one joint evidence list
-        // for each PC with this name
-        for (PlaceCandidate pc : pcs) {
-          // accumulate the place confidence scores
-          totalPlaceConfidence = totalPlaceConfidence + pc.getPlaceConfidenceScore();
-          // for each bit of evidence on this PC
-          for (PlaceEvidence e : pc.getEvidence()) {
-            // only propagate LOCAL scope evidence
-            if (PlaceEvidence.Scope.LOCAL.equals(e.getScope())) {
-              // create a new Evidence based on the existing
-              PlaceEvidence tmpEvid = new PlaceEvidence(e);
-              // adjust the weight and scope to show that it is
-              // coreferenced evidence
-              tmpEvid.setWeight(weightPropFactor * tmpEvid.getWeight());
-              tmpEvid.setScope(Scope.COREF);
-              // add to joint list
-              jointEvidence.add(tmpEvid);
-            } // end if local block
-              // TODO if we were collecting DOCUMENT level
-              // evidence, we could do it here
-          } // end evidence loop for a PC
-        } // end evidence loop for all PCs same name
-          // convert total place confidence to (an approx) average by
-          // dividing by number of PCs which contributed their (LOCAL)
-          // evidence
-        totalPlaceConfidence = totalPlaceConfidence / pcs.size();
-        // adjust confidence for being co-referenced
-        totalPlaceConfidence = confidencePropFactor * totalPlaceConfidence;
-        // Now do the actual propagation by adding the jointEvidence (if
-        // any) and the averaged place confidence score to each PC
-        for (PlaceCandidate p : pcs) {
-          // don't add zero confidences and only propagate to no
-          // opinion pcs
-          if (Math.abs(totalPlaceConfidence) > 0.0001 && Math.abs(p.getPlaceConfidenceScore()) < 0.00001) {
-            p.addRuleAndConfidence("CoRefConfidence", totalPlaceConfidence);
-          }
-          // if we have any evidence to propagate
-          if (jointEvidence.isEmpty()) {
-            p.getEvidence().addAll(jointEvidence);
-          }
+      if (pcs.size() == 1) {
+        continue;
+      }
+
+      // create a List to hold the joint evidence
+      List<PlaceEvidence> jointEvidence = new ArrayList<PlaceEvidence>();
+      // the sum of place confidences
+      double totalPlaceConfidence = 0.0;
+      // accumulate all the evidence into one joint evidence list
+      // for each PC with this name
+      for (PlaceCandidate pc : pcs) {
+        // accumulate the place confidence scores
+        totalPlaceConfidence = totalPlaceConfidence + pc.getPlaceConfidenceScore();
+        // for each bit of evidence on this PC
+        for (PlaceEvidence e : pc.getEvidence()) {
+          // only propagate LOCAL scope evidence
+          if (PlaceEvidence.Scope.LOCAL.equals(e.getScope())) {
+            // create a new Evidence based on the existing
+            PlaceEvidence tmpEvid = new PlaceEvidence(e);
+            // adjust the weight and scope to show that it is
+            // coreferenced evidence
+            tmpEvid.setWeight(weightPropFactor * tmpEvid.getWeight());
+            tmpEvid.setScope(Scope.COREF);
+            // add to joint list
+            jointEvidence.add(tmpEvid);
+          } // end if local block
+            // TODO if we were collecting DOCUMENT level
+            // evidence, we could do it here
+        } // end evidence loop for a PC
+      } // end evidence loop for all PCs same name
+        // convert total place confidence to (an approx) average by
+        // dividing by number of PCs which contributed their (LOCAL)
+        // evidence
+      totalPlaceConfidence = totalPlaceConfidence / pcs.size();
+      // adjust confidence for being co-referenced
+      totalPlaceConfidence = confidencePropFactor * totalPlaceConfidence;
+      // Now do the actual propagation by adding the jointEvidence (if
+      // any) and the averaged place confidence score to each PC
+      for (PlaceCandidate p : pcs) {
+        // don't add zero confidences and only propagate to no
+        // opinion pcs
+        if (Math.abs(totalPlaceConfidence) > 0.0001 && Math.abs(p.getPlaceConfidenceScore()) < 0.00001) {
+          p.addRuleAndConfidence("CoRefConfidence", totalPlaceConfidence);
+        }
+        // if we have any evidence to propagate
+        if (jointEvidence.isEmpty()) {
+          p.getEvidence().addAll(jointEvidence);
         }
       }
+
     } // end propagate same name loop
       // TODO it would be better to aggregate the evidence into
       // n (ideally one) consistent PlaceEvidence(s).

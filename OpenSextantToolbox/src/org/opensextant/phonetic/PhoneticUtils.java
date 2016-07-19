@@ -1670,10 +1670,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u247D' : // ⑽ [PARENTHESIZED NUMBER TEN]
-            out.append('(');
-            out.append('1');
-            out.append('0');
-            out.append(')');
+            out.append("(10)");
             break;
           case '\u246A' : // ⑪ [CIRCLED NUMBER ELEVEN]
           case '\u24EB' : // ⓫ [NEGATIVE CIRCLED NUMBER ELEVEN]
@@ -1686,10 +1683,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u247E' : // ⑾ [PARENTHESIZED NUMBER ELEVEN]
-            out.append('(');
-            out.append('1');
-            out.append('1');
-            out.append(')');
+            out.append("(11)");
             break;
           case '\u246B' : // ⑫ [CIRCLED NUMBER TWELVE]
           case '\u24EC' : // ⓬ [NEGATIVE CIRCLED NUMBER TWELVE]
@@ -1702,10 +1696,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u247F' : // ⑿ [PARENTHESIZED NUMBER TWELVE]
-            out.append('(');
-            out.append('1');
-            out.append('2');
-            out.append(')');
+            out.append("(12)");
             break;
           case '\u246C' : // ⑬ [CIRCLED NUMBER THIRTEEN]
           case '\u24ED' : // ⓭ [NEGATIVE CIRCLED NUMBER THIRTEEN]
@@ -1718,10 +1709,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2480' : // ⒀ [PARENTHESIZED NUMBER THIRTEEN]
-            out.append('(');
-            out.append('1');
-            out.append('3');
-            out.append(')');
+            out.append("(13)");
             break;
           case '\u246D' : // ⑭ [CIRCLED NUMBER FOURTEEN]
           case '\u24EE' : // ⓮ [NEGATIVE CIRCLED NUMBER FOURTEEN]
@@ -1734,10 +1722,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2481' : // ⒁ [PARENTHESIZED NUMBER FOURTEEN]
-            out.append('(');
-            out.append('1');
-            out.append('4');
-            out.append(')');
+            out.append("(14)");
             break;
           case '\u246E' : // ⑮ [CIRCLED NUMBER FIFTEEN]
           case '\u24EF' : // ⓯ [NEGATIVE CIRCLED NUMBER FIFTEEN]
@@ -1750,10 +1735,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2482' : // ⒂ [PARENTHESIZED NUMBER FIFTEEN]
-            out.append('(');
-            out.append('1');
-            out.append('5');
-            out.append(')');
+            out.append("(15)");
             break;
           case '\u246F' : // ⑯ [CIRCLED NUMBER SIXTEEN]
           case '\u24F0' : // ⓰ [NEGATIVE CIRCLED NUMBER SIXTEEN]
@@ -1766,10 +1748,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2483' : // ⒃ [PARENTHESIZED NUMBER SIXTEEN]
-            out.append('(');
-            out.append('1');
-            out.append('6');
-            out.append(')');
+            out.append("(16)");
             break;
           case '\u2470' : // ⑰ [CIRCLED NUMBER SEVENTEEN]
           case '\u24F1' : // ⓱ [NEGATIVE CIRCLED NUMBER SEVENTEEN]
@@ -1782,10 +1761,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2484' : // ⒄ [PARENTHESIZED NUMBER SEVENTEEN]
-            out.append('(');
-            out.append('1');
-            out.append('7');
-            out.append(')');
+            out.append("(17)");
             break;
           case '\u2471' : // ⑱ [CIRCLED NUMBER EIGHTEEN]
           case '\u24F2' : // ⓲ [NEGATIVE CIRCLED NUMBER EIGHTEEN]
@@ -1798,10 +1774,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2485' : // ⒅ [PARENTHESIZED NUMBER EIGHTEEN]
-            out.append('(');
-            out.append('1');
-            out.append('8');
-            out.append(')');
+            out.append("(18)");
             break;
           case '\u2472' : // ⑲ [CIRCLED NUMBER NINETEEN]
           case '\u24F3' : // ⓳ [NEGATIVE CIRCLED NUMBER NINETEEN]
@@ -1814,10 +1787,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2486' : // ⒆ [PARENTHESIZED NUMBER NINETEEN]
-            out.append('(');
-            out.append('1');
-            out.append('9');
-            out.append(')');
+            out.append("(19)");
             break;
           case '\u2473' : // ⑳ [CIRCLED NUMBER TWENTY]
           case '\u24F4' : // ⓴ [NEGATIVE CIRCLED NUMBER TWENTY]
@@ -1830,10 +1800,7 @@ public class PhoneticUtils {
             out.append('.');
             break;
           case '\u2487' : // ⒇ [PARENTHESIZED NUMBER TWENTY]
-            out.append('(');
-            out.append('2');
-            out.append('0');
-            out.append(')');
+            out.append("(20)");
             break;
           case '\u00AB' : // « [LEFT-POINTING DOUBLE ANGLE QUOTATION MARK]
           case '\u00BB' : // » [RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK]

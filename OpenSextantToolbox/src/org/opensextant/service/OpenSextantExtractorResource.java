@@ -195,7 +195,9 @@ public class OpenSextantExtractorResource extends ServerResource {
       if ("file".equalsIgnoreCase(content.getProtocol())) {
         String tempFilePath = content.getPath();
         File tmpFile = new File(tempFilePath);
-        tmpFile.delete();
+        if(!tmpFile.delete()){
+          LOGGER.error("Unable to delete temp file" + tmpFile.getPath());
+        }
       }
 
       if (doc != null) {

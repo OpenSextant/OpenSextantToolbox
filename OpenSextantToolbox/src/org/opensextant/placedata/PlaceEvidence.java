@@ -23,6 +23,8 @@ package org.opensextant.placedata;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * A PlaceEvidence represents a fragment of evidence about a Place. Its intended purpose is to represent evidence about
  * a Place's identity which has been extracted from a document. This evidence is used to help disambiguate (distinguish
@@ -91,18 +93,24 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
     if (!(other instanceof PlaceEvidence)) {
       return false;
     }
+    if(other == this){
+      return true;
+    }
+
     PlaceEvidence tmp = (PlaceEvidence) other;
 
     return this.weight == tmp.weight;
   }
 
-  /*
+  /**
    * (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode() {
-    return super.hashCode();
+    return new HashCodeBuilder(17, 31).
+        append(weight).
+        toHashCode();
   }
 
   /** The getters and setters. */

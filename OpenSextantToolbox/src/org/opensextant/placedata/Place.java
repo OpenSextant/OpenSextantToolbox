@@ -23,6 +23,8 @@ package org.opensextant.placedata;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * A Place represents a named geographic location, a "place". It contains basic information about that place, such as
  * its name, its geographic location, the country it is part of or located in, what type of place it is (e.g. city,
@@ -120,7 +122,9 @@ public class Place implements Comparable<Object>, Serializable {
    */
   @Override
   public int hashCode() {
-    return super.hashCode();
+    return new HashCodeBuilder(7, 31).
+        append(placeID).
+        toHashCode();
   }
 
   /**

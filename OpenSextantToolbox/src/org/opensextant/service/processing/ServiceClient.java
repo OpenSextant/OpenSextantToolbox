@@ -113,7 +113,7 @@ public class ServiceClient implements Runnable {
       if (txt == null || txt.length() < 100) {
         LOGGER.error("Bad response");
       } else {
-        LOGGER.info(txt);
+        LOGGER.info("Good response with " + txt.length() + " characters");
       }
     } catch (IOException e) {
       LOGGER.error("Couldn't get text from response", e);

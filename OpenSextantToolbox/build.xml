@@ -568,7 +568,7 @@ Build file for OpenSextantToolbox.
 			<!-- add some memory -->
 			<jvmarg value="-Xmx500M" />
 			<!-- point to the log config file -->
-			<jvmarg value="-Dlog4j.configuration=file:${toobox.home}/etc/log4j.properties" />
+			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<!-- directory containing the test doc -->
 			<arg value="${test.testdocs.dir}" />
 			<!-- host of the extractor service -->

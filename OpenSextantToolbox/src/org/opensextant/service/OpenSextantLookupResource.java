@@ -47,7 +47,6 @@ public class OpenSextantLookupResource extends ServerResource {
       query = Reference.decode(rawQuery);
     }
 
-    LOGGER.info("Query is" + query);
     List<Place> placesFound = s.searchByQueryString(query);
     LOGGER.info("Found " + placesFound.size() + " places");
 

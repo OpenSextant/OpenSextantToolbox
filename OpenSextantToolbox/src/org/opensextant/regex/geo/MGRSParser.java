@@ -126,7 +126,7 @@ public class MGRSParser {
     try {
       dt = df1.parse(tmp);
     } catch (ParseException e) {
-      // eat the exception
+      LOGGER.debug(tmp + " looks like a date not an MGRS" );
     }
 
     if (dt != null) {
@@ -137,7 +137,7 @@ public class MGRSParser {
     try {
       dt = df2.parse(tmp);
     } catch (ParseException e) {
-      // eat the exception
+      LOGGER.debug(tmp + " looks like a date not an MGRS" );
     }
 
     if (dt != null) {
@@ -151,12 +151,14 @@ public class MGRSParser {
   }
 
   protected static int parseInt(String x) {
+
     try {
       return Integer.parseInt(x);
-    } catch (Exception e) {
+    } catch (NumberFormatException e) {
       LOGGER.error("Could parse integer:", e);
       return -1;
     }
+
   }
 
   public static String deleteWhitespace(String t) {

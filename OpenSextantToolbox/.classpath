@@ -18,7 +18,6 @@
 	<classpathentry kind="lib" path="lib/GATE/fontbox.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-asm.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-compiler-jdt.jar"/>
-	<classpathentry kind="lib" path="lib/GATE/gate-core.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/hamcrest-core.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ivy.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/jackson-annotations.jar"/>
@@ -117,5 +116,6 @@
 	<classpathentry kind="lib" path="lib/Standalone/woodstox-core-asl.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/wstx-asl.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/zookeeper.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/gate-core.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

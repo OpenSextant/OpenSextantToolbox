@@ -332,8 +332,11 @@ public class PlaceNameRuleDumpPR extends AbstractLanguageAnalyser implements Pro
 
   @CreoleParameter(defaultValue = "C:\\dump\\vocab")
   public void setOutputDir(File outputDir) {
-    outputDir.mkdirs();
-    this.outputDir = outputDir;
+    if(outputDir.mkdirs()){
+      this.outputDir = outputDir;
+    }else{
+      LOGGER.error("Could not create output directory" + outputDir.getPath());
+    }
   }
 
   public String getOutFileName() {

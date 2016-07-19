@@ -21,6 +21,9 @@
  **/
 package org.opensextant.placedata;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
  * A class to hold a Place and a score together. Used by PlaceCandidate to rank places.
  */
@@ -60,17 +63,31 @@ public class ScoredPlace implements Comparable<Object> {
   }
 
   @Override
-  public boolean equals(Object o) {
-    return o instanceof ScoredPlace && getScore() - ((ScoredPlace) o).getScore() <= 0.0;
+  public boolean equals(Object other) {
+    if( !(other instanceof ScoredPlace)){
+      return false;
+    }
+
+    if (other == this){
+      return true;
+    }
+
+    ScoredPlace osc = (ScoredPlace)other;
+
+    return new EqualsBuilder().
+        append(score, osc.score).
+        isEquals();
   }
 
-  /*
+  /**
    * (non-Javadoc)
    * @see java.lang.Object#hashCode()
    */
   @Override
   public int hashCode() {
-    return super.hashCode();
+    return new HashCodeBuilder(17, 31).
+        append(score).
+        toHashCode();
   }
 
 }

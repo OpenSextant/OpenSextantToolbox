@@ -218,11 +218,7 @@ public class Scorer {
       return geoMidScore * weight;
     }
     // must be far away
-    if (weight > 0.0) {
-      return MIN_EVIDENCE;
-    } else {
-      return MIN_EVIDENCE; // no opinion on double negative
-    }
+    return MIN_EVIDENCE; // no opinion on double negative
   }
 
   /* ---------------------Feature Type Similarity ------------------ */

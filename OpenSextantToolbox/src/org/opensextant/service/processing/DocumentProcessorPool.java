@@ -116,6 +116,11 @@ public class DocumentProcessorPool {
       LOGGER.error("Couldn't get a processor from the pool", e);
     }
 
+    if(processor == null){
+      LOGGER.error("Couldn't get a processor from the pool");
+      return doc;
+    }
+
     try {
       processor.process(doc);
     } catch (Exception e) {
@@ -201,7 +206,7 @@ public class DocumentProcessorPool {
     try {
       gateDoc = Factory.newDocument(content);
     } catch (ResourceInstantiationException e) {
-      LOGGER.error("Couldnt create content from " + content.toExternalForm(), e);
+      LOGGER.error("Couldnt create content from given URL", e);
       return null;
     }
 
@@ -230,22 +235,19 @@ public class DocumentProcessorPool {
       tmpAnno.setType(type);
       tmpAnno.setMatchText(Utils.cleanStringFor(doc, a));
 
-      /** special handling for PLACEs */
+      FeatureMap fm = a.getFeatures();
+      /* special handling for PLACEs */
       if ("PLACE".equalsIgnoreCase(type)) {
-        FeatureMap fm = a.getFeatures();
-
         tmpAnno.getFeatures().put("place", fm.get("bestPlace"));
         tmpAnno.getFeatures().put("hierarchy", fm.get("hierarchy"));
-        db.addAnno(tmpAnno);
       } else {
-        FeatureMap fm = a.getFeatures();
         for (Entry<Object, Object> e : fm.entrySet()) {
           String k = (String) e.getKey();
           Object v = e.getValue();
           tmpAnno.getFeatures().put(k, v);
         }
-        db.addAnno(tmpAnno);
       }
+      db.addAnno(tmpAnno);
 
     }
 
