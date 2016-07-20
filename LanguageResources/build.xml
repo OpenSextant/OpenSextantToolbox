@@ -1,4 +1,4 @@
-<project name="LanguageResources" basedir="." default="build" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="LanguageResources" basedir="." default="build">
 
 	<!-- include properties -->
 	<property file="build.properties" />
@@ -8,11 +8,16 @@
 
 	<property name="version" value="2.1" />
 
+	<!--Version as tagged in Gazettteer Release -->
+	<property name="gazetteerVersion" value="v20160717" />
+	<property name="gaz.file.name" value="opensextant-gazetteer.zip" />
+	<property name="gazetteer.url" value="https://github.com/OpenSextant/Gazetteer/releases/download/${gazetteerVersion}/${gaz.file.name}" />
+
+
 	<!-- directory to contain the created artifacts -->
 	<property name="build.dir" location="build" />
 
-	<property name="publish.gaz.name" value="opensextant-gazetteer.zip" />
-	
+
 	<!--====================== Targets ============================-->
 
 	<!-- delete and re-create build dir -->
@@ -27,15 +32,16 @@
 		<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
 	</target>
 
-	<!-- get all the ivy defined dependencies -->
-	<target name="getDependencies" depends="setProxy,clean">
-		<ivy:retrieve pattern="${build.dir}/[artifact].[ext]" />
-		<ivy:report todir="${build.dir}/ivy-report" graph="false"/>
-		<unzip src="${build.dir}/${publish.gaz.name}" dest="${basedir}/resources/geoGazetteer" />
+
+
+	<target name="getGazetteer" depends="setProxy,clean">
+		<get src="${gazetteer.url}" dest="${build.dir}" />
+		<unzip src="${build.dir}/${gaz.file.name}" dest="${basedir}/resources/geoGazetteer" />
 	</target>
-	
+
+
 	<!-- zip all of the resources together -->
-	<target name="zip" depends="getDependencies">
+	<target name="zip" depends="getGazetteer">
 		<!-- zip up the finished release -->
 		<zip destfile="${build.dir}/opensextant-lang-resource.zip">
 			<zipfileset dir="${basedir}/docs" prefix="LanguageResources/docs" />
@@ -50,20 +56,6 @@
 	<target name="build" depends="zip">
 	</target>
 
-	<!-- Publish the opensextant lang resources to the local Ivy repo-->
-	<target name="publish-local" depends="build">
-		<ivy:resolve />
-		<ivy:publish resolver="local" overwrite="true" forcedeliver="true" pubrevision="${version}.${DSTAMP}">
-			<artifacts pattern="${build.dir}/[artifact].[ext]" />
-		</ivy:publish>
-	</target>
 
-	<!-- Publish the opensextant lang resources to the shared Ivy repo-->
-	<target name="publish-shared" depends="build">
-		<ivy:resolve />
-		<ivy:publish resolver="shared" overwrite="true" update="true" pubrevision="${version}.${DSTAMP}">
-			<artifacts pattern="${build.dir}/[artifact].[ext]" />
-		</ivy:publish>
-	</target>
 
 </project>
