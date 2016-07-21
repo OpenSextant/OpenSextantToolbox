@@ -1,18 +1,5 @@
 package org.opensextant.service.processing;
 
-import gate.Annotation;
-import gate.AnnotationSet;
-import gate.CorpusController;
-import gate.Document;
-import gate.Factory;
-import gate.FeatureMap;
-import gate.Gate;
-import gate.Utils;
-import gate.creole.ResourceInstantiationException;
-import gate.persist.PersistenceException;
-import gate.util.GateException;
-import gate.util.persistence.PersistenceManager;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -29,6 +16,19 @@ import java.util.concurrent.BlockingQueue;
 import org.opensextant.service.OpenSextantExtractorResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import gate.Annotation;
+import gate.AnnotationSet;
+import gate.CorpusController;
+import gate.Document;
+import gate.Factory;
+import gate.FeatureMap;
+import gate.Gate;
+import gate.Utils;
+import gate.creole.ResourceInstantiationException;
+import gate.persist.PersistenceException;
+import gate.util.GateException;
+import gate.util.persistence.PersistenceManager;
 
 public class DocumentProcessorPool {
 
@@ -116,7 +116,7 @@ public class DocumentProcessorPool {
       LOGGER.error("Couldn't get a processor from the pool", e);
     }
 
-    if(processor == null){
+    if (processor == null) {
       LOGGER.error("Couldn't get a processor from the pool");
       return doc;
     }
@@ -223,13 +223,13 @@ public class DocumentProcessorPool {
     db.setContent(doc.getContent().toString());
 
     for (Annotation a : entitySet) {
-      Anno tmpAnno = new Anno(a);
 
       String type = a.getType();
       if ("ENTITY".equalsIgnoreCase(type)) {
         continue;
       }
 
+      Anno tmpAnno = new Anno();
       tmpAnno.setStart(a.getStartNode().getOffset());
       tmpAnno.setEnd(a.getEndNode().getOffset());
       tmpAnno.setType(type);

@@ -387,7 +387,7 @@ public class MatcherFactory {
 
   /**
    * Get a VocabMatcher.
-   * @return a PlacenameSearcher
+   * @return a VocabMatcher
    */
   public static VocabMatcher getVocabMatcher() {
 

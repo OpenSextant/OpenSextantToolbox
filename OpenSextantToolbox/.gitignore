@@ -4,3 +4,5 @@ classes
 doc/javadoc
 release
 lib
+/sonar-project.properties
+/.sonar/

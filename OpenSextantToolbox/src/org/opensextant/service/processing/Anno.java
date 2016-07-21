@@ -1,7 +1,5 @@
 package org.opensextant.service.processing;
 
-import gate.Annotation;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,8 +7,8 @@ public class Anno {
 
   private long start;
   private long end;
-  private String type;
-  private String matchText;
+  private String type = "";
+  private String matchText = "";
   private Map<String, Object> features = new HashMap<String, Object>();
 
   public Anno(String type, String text, int start, int end) {
@@ -20,7 +18,7 @@ public class Anno {
     this.matchText = text;
   }
 
-  public Anno(Annotation a) {
+  public Anno() {
   }
 
   public long getStart() {

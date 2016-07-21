@@ -28,5 +28,5 @@ docs - some documentation to include the annotation model ("schema")
 
 
 NOTE: the data in geoGazetteer comes from processing public available gazetteer data. The software to do that processing is in the OpenSextant Gazetteer project (https://github.com/OpenSextant/Gazetteer).
-The data sets are large and the process can be time consuming so a pre-processed version of that data is also available at http://www.opensextant.org/downloads.html. The prebuilt version should suffice for
+The data sets are large and the process can be time consuming so a pre-processed version of that data is also available at https://github.com/OpenSextant/Gazetteer/releases/latest. The prebuilt version should suffice for
 most purposes but if you wish to do it yourself, checkout and run the OpenSextant Gazetteer project and copy the output into geoGazetteer. The LanguageResource build process includes downloading the prebuilt version.

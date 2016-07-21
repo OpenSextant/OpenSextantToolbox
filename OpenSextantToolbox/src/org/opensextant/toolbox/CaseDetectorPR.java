@@ -100,10 +100,8 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
     Map<String, Integer> caseCounts = new HashMap<String, Integer>();
     // find out how many sentences there are in the document
     AnnotationSet sentenceSet = annotSet.get(sentenceAnnoName);
-    Integer sentenceCount = sentenceSet.size();
-    if (sentenceCount == null) {
-      sentenceCount = 1;
-    }
+    int sentenceCount = sentenceSet.size();
+
     // get the tokens
     AnnotationSet tokenSet = annotSet.get(tokenAnnoName);
     // see if there any tokens to work with

@@ -136,10 +136,6 @@ Build file for OpenSextantToolbox.
 		</delete>
 	</target>
 
-	<!-- clean up the ivy cache  -->
-	<target name="clean.ivy.cache" depends="clean">
-		<ivy:cleancache />
-	</target>
 
 	<!-- set the proxy if behind a firewall (needed for ivy) -->
 	<!-- the host and proxy values are set in the build.properties file -->
@@ -279,23 +275,6 @@ Build file for OpenSextantToolbox.
 	<!-- Build the jars and load the gazetteer (which takes a while)  -->
 	<target name="buildWithGaz" depends="plugin,build.gaz" />
 
-	<!-- Publish the opensextant jars to the local Ivy repo-->
-	<target name="publish-local" depends="build">
-	    <ivy:deliver deliverpattern="${build.dir}/ivy.xml" pubrevision="${version}" status="${releaseStatus}"/>
-		<ivy:makepom ivyfile="${build.dir}/ivy.xml" pomfile="${build.dir}/pom.xml"/>
-		<ivy:publish resolver="local" overwrite="true" pubrevision="${version}" publishivy="true" >
-			<artifacts pattern="${build.dir}/[artifact].[ext]"/>
-		</ivy:publish>
-	</target>
-	
-	<!-- Publish the opensextant jars to the shared Ivy repo-->
-	<target name="publish-shared" depends="build">
-		<ivy:publish resolver="shared" overwrite="true" pubrevision="${version}"   >
-			<artifacts pattern="${build.dir}/[artifact].[ext]"/>
-		</ivy:publish>
-	</target>
-	
-	
 	<!-- create release directory structure -->
 	<target name="release.prepare">
 		<delete dir="${release.dir}" />
