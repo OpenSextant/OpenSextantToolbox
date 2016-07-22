@@ -27,7 +27,6 @@ Build file for OpenSextantToolbox.
 
 	<!-- lib directories  -->
 	<property name="lib.dir" location="lib" />
-	<!--property name="externals.dir" location="externals" /-->
 
 	<!-- directory to contain the release -->
 	<property name="release.dir" location="${basedir}/release" />
@@ -50,6 +49,11 @@ Build file for OpenSextantToolbox.
 		<fileset dir="${lib.dir}/Standalone" includes="**/*.jar" />
 	</path>
 
+	<!--Gazetteer URL and  version as tagged in Gazettteer Release -->
+	<property name="gazetteerVersion" value="v20160717" />
+	<property name="gaz.file.name" value="opensextant-gazetteer.zip" />
+	<property name="gazetteer.url" value="https://github.com/OpenSextant/Gazetteer/releases/download/${gazetteerVersion}/${gaz.file.name}" />
+
 	<!-- Classpath to run solr gazetteer loader -->
 	<path id="solr.runtime.classpath">
 		<fileset dir="${build.dir}" includes="opensextant.jar" />
@@ -61,10 +65,10 @@ Build file for OpenSextantToolbox.
 	
 	<!-- For testing we can use "MergedGazetteer_SMALL.txt", for production use MergedGazetteer.txt -->
 	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" /-->
-	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" /-->
+	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" />
 	
 	<!-- For testing in Travis, must have some data checked into GitHub -->
-	<property name="csv.gaz" value="${resources.home}/TestData/testGazetteer/MergedGazetteer_SMALL.txt" />
+	<!--property name="csv.gaz" value="${resources.home}/TestData/testGazetteer/MergedGazetteer_SMALL.txt" /-->
 	
 	<!--property name="fieldnames.gaz" value="id,place_id,name,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,conflate_key,name_bias,id_bias,name_type,name_type_system,partition" /-->
 	<property name="index.vocab" value="${resources.home}/resources/Vocabularies/vocab.def" />
@@ -115,7 +119,7 @@ Build file for OpenSextantToolbox.
 	<!-- NOTE: this leaves the created Gazetteer (see clean.gaz target) -->
 	<target name="clean" depends="setup">
 		<delete includeEmptyDirs="true">
-			<fileset dir="${build.dir}" excludes="solr/**" />
+			<fileset dir="${build.dir}" excludes="solr/**,opensextant-gazetteer.zip" />
 		</delete>
 
 		<delete dir="${release.dir}" />
@@ -150,8 +154,18 @@ Build file for OpenSextantToolbox.
 	<target name="getDependencies" depends="setProxy,clean">
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" />
 		<ivy:report todir="${build.dir}/ivy-report" graph="true"/>
+		<antcall target="getGazetteer"/>
 	</target>
 
+	<target name="check-gazetteer">
+	    <available file="${build.dir}/${gaz.file.name}" property="gaz.present"/>
+	</target>
+	
+	<target name="getGazetteer" depends="check-gazetteer" unless="gaz.present"  >
+		<get src="${gazetteer.url}" dest="${build.dir}" />
+		<unzip src="${build.dir}/${gaz.file.name}" dest="${resources.home}/resources/geoGazetteer" />
+	</target>
+	
 
 	<!-- compile the source  -->
 	<target name="compile" depends="setup,getDependencies">
@@ -415,15 +429,6 @@ Build file for OpenSextantToolbox.
 		</zip>
 	</target>
 
-
-	<!-- zip and post the generated release to the distro site -->
-	<target name="post" depends = "release">
-
-		<!--  upload to site -->
-		<!--ftp server="${post.site}" remotedir="${post.dir}" userid="${post.user}" password="${post.password}">
-			<fileset file="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip" />
-		</ftp-->
-	</target>
 
 	<!-- the following targets asssume a release has been built but doesn't trigger one if it is not -->
 
