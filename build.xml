@@ -1,4 +1,4 @@
-<project name="OpenSextantToolbox Master" basedir="." default="">
+<project name="OpenSextantToolbox Master" basedir="." default="build">
 
     <property name="version" value="2.0" />
 

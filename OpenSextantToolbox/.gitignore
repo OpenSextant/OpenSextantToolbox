@@ -6,3 +6,4 @@ release
 lib
 /sonar-project.properties
 /.sonar/
+opensextant-toolbox-*.zip
