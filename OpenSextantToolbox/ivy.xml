@@ -93,9 +93,6 @@
 		<!--  GeoJSON beans used in the REST server -->
 		<dependency org="de.grundid.opendatalab" name="geojson-jackson" rev="1.1" conf="Standalone->*"/>
 
-		<!-- Carrot used in the cluster PR -->
-		<dependency org="org.carrot2" name="carrot2-mini" rev="3.9.3" conf="Standalone->*" />
-
 		<!-- all the logging stuff -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"
 			conf="Standalone->*" />
