@@ -125,7 +125,7 @@ public class PlacenameMatcher {
             nameBias = nBias;
           }
         }
-      }// end placeID loop
+      } // end placeID loop
 
       if (!isValid || !pc.hasPlaces()) {
         continue;

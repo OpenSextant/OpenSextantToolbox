@@ -21,6 +21,15 @@
  **/
 package org.opensextant.examples;
 
+import java.io.File;
+import java.util.Collection;
+
+import org.apache.commons.io.FileUtils;
+import org.opensextant.placedata.Geocoord;
+import org.opensextant.placedata.Place;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Corpus;
@@ -30,15 +39,6 @@ import gate.Factory;
 import gate.FeatureMap;
 import gate.Gate;
 import gate.util.persistence.PersistenceManager;
-
-import java.io.File;
-import java.util.Collection;
-
-import org.apache.commons.io.FileUtils;
-import org.opensextant.placedata.Geocoord;
-import org.opensextant.placedata.Place;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -172,8 +172,8 @@ public class GeotaggerExample {
     // print some summary stats
     double totalDuration = (end - start) / 1000000000.0;
     double rate = numDocs / (totalDuration - initTime);
-    LOGGER.info("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate
-        + " documents/sec");
+    LOGGER.info(
+        "Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate + " documents/sec");
 
   }
 

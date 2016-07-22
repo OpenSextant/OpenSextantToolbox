@@ -44,7 +44,7 @@ public class SimplePhonetic0SolrPlusEncoder implements StringEncoder {
 
   @Override
   public String encode(String word) throws EncoderException {
-    return PhoneticUtils.removeCase(PhoneticUtils.foldToASCII(PhoneticUtils.removeDiacritics(PhoneticUtils
-        .removePunctuation(word))));
+    return PhoneticUtils
+        .removeCase(PhoneticUtils.foldToASCII(PhoneticUtils.removeDiacritics(PhoneticUtils.removePunctuation(word))));
   }
 }

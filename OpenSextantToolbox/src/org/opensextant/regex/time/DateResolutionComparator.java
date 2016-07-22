@@ -23,21 +23,21 @@ package org.opensextant.regex.time;
 
 import java.util.Comparator;
 
-import org.opensextant.regex.RegexAnnotation;
+import org.opensextant.placedata.AnnotationOS;
 import org.opensextant.regex.time.DateTimeNormalizer2.TimeResolution;
 
 /**
  * The Class DateResolutionComparator.<br>
- * This comparator can be used to sort RegexAnnotation of type Date,Time and DayOfTheMonth by their temporal resolution
+ * This comparator can be used to sort AnnotationOS of type Date,Time and DayOfTheMonth by their temporal resolution
  */
-public class DateResolutionComparator implements Comparator<RegexAnnotation> {
+public class DateResolutionComparator implements Comparator<AnnotationOS> {
 
   /**
    * (non-Javadoc)
    * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
    */
   @Override
-  public int compare(RegexAnnotation a1, RegexAnnotation a2) {
+  public int compare(AnnotationOS a1, AnnotationOS a2) {
     int result;
 
     String type1 = a1.getType();
@@ -69,9 +69,9 @@ public class DateResolutionComparator implements Comparator<RegexAnnotation> {
 
     // if resolutions and family are equal, compare lengths, select the longer
     if (result == 0) {
-      int len1 = a1.getEnd() - a1.getStart();
-      int len2 = a2.getEnd() - a2.getStart();
-      result = Integer.compare(len2, len1);
+      long len1 = a1.getEnd() - a1.getStart();
+      long len2 = a2.getEnd() - a2.getStart();
+      result = Long.compare(len2, len1);
     }
 
     return result;

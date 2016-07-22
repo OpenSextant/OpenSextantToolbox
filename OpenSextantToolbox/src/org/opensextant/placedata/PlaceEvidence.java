@@ -93,7 +93,7 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
     if (!(other instanceof PlaceEvidence)) {
       return false;
     }
-    if(other == this){
+    if (other == this) {
       return true;
     }
 
@@ -108,9 +108,7 @@ public class PlaceEvidence implements Comparable<Object>, Serializable {
    */
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 31).
-        append(weight).
-        toHashCode();
+    return new HashCodeBuilder(17, 31).append(weight).toHashCode();
   }
 
   /** The getters and setters. */

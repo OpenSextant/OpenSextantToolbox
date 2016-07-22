@@ -3,15 +3,17 @@ package org.opensextant.regex;
 import java.util.Map;
 import java.util.regex.MatchResult;
 
+import org.opensextant.placedata.AnnotationOS;
+
 public class DebugNormalizer implements Normalizer {
 
   /**
    * Log object private static final Logger LOGGER = LoggerFactory.getLogger(DebugNormalizer.class);
    */
   @Override
-  public void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
+  public void normalize(AnnotationOS annotation, RegexRule r, MatchResult matchResult) {
 
-    Map<String, Object> annoFeatures = anno.getFeatures();
+    Map<String, Object> annoFeatures = annotation.getFeatures();
 
     int numGroups = matchResult.groupCount();
 

@@ -27,6 +27,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import org.opensextant.placedata.AnnotationOS;
+
 /**
  * The Class PostProcessorBase.<br>
  * This abstract class provides a base class for PostProcessor implementations which perform de-duping or disambiguation
@@ -40,43 +42,43 @@ import java.util.Set;
 public abstract class PostProcessorBase implements PostProcessor {
 
   /**
-   * Find all sets of interacting (overlapping, containing/contained by) RegexAnnotations.
-   * @param annos
+   * Find all sets of interacting (overlapping, containing/contained by) Annos.
+   * @param annotations
    *          the annotations to analyze for interactions
    * @return the list of lists of interacting annotations
    */
-  public List<List<RegexAnnotation>> findInteractions(List<RegexAnnotation> annos) {
+  public List<List<AnnotationOS>> findInteractions(List<AnnotationOS> annotations) {
 
     // the list of lists of interacting annos, to be returned
-    List<List<RegexAnnotation>> inters = new ArrayList<List<RegexAnnotation>>();
+    List<List<AnnotationOS>> inters = new ArrayList<List<AnnotationOS>>();
 
     // null or empty list as input, no interactions, return list with one empty list
-    if (annos == null || annos.isEmpty()) {
-      inters.add(new ArrayList<RegexAnnotation>());
+    if (annotations == null || annotations.isEmpty()) {
+      inters.add(new ArrayList<AnnotationOS>());
       return inters;
     }
 
     // sort the annotations into the order in which they appear in the document
-    Collections.sort(annos, new PositionComparator());
+    Collections.sort(annotations, new PositionComparator());
 
     // the current group of interacting annos
-    List<RegexAnnotation> currentGroup = new ArrayList<RegexAnnotation>();
+    List<AnnotationOS> currentGroup = new ArrayList<AnnotationOS>();
 
     // add the first anno to the current group to start
-    RegexAnnotation a = annos.get(0);
+    AnnotationOS a = annotations.get(0);
     currentGroup.add(a);
 
     // loop over all the rest of the annos
-    for (int i = 1; i < annos.size(); i++) {
+    for (int i = 1; i < annotations.size(); i++) {
 
       // get the next anno to compare
-      RegexAnnotation b = annos.get(i);
+      AnnotationOS b = annotations.get(i);
 
       if (!interactsWithGroup(currentGroup, b)) {// end of current group, b goes in next group
         // add the current group to the list
         inters.add(currentGroup);
         // get a new group and add to list
-        currentGroup = new ArrayList<RegexAnnotation>();
+        currentGroup = new ArrayList<AnnotationOS>();
         inters.add(currentGroup);
       }
       currentGroup.add(b);
@@ -93,9 +95,9 @@ public abstract class PostProcessorBase implements PostProcessor {
   }
 
   /** Check for interactions between an annotation and an existing group. */
-  private boolean interactsWithGroup(List<RegexAnnotation> group, RegexAnnotation b) {
+  private boolean interactsWithGroup(List<AnnotationOS> group, AnnotationOS b) {
 
-    for (RegexAnnotation g : group) {
+    for (AnnotationOS g : group) {
       if (g.interactsWith(b)) {
         return true;
       }
@@ -109,29 +111,29 @@ public abstract class PostProcessorBase implements PostProcessor {
    * @see org.opensextant.regex.PostProcessor#postProcess(java.util.List, java.util.Set)
    */
   @Override
-  public void postProcess(List<RegexAnnotation> annos, Set<String> types) {
+  public void postProcess(List<AnnotationOS> annotations, Set<String> types) {
 
     // null or empty input list, do nothing
-    if (annos == null || annos.isEmpty()) {
+    if (annotations == null || annotations.isEmpty()) {
       return;
     }
 
     // the subset of all annos to keeep
-    List<RegexAnnotation> keeperAnnos = new ArrayList<RegexAnnotation>();
+    List<AnnotationOS> keeperAnnos = new ArrayList<AnnotationOS>();
 
     // the list of groups of interacting (overlapping,contained/containing) annos
-    List<List<RegexAnnotation>> interactors = findInteractions(annos);
+    List<List<AnnotationOS>> interactors = findInteractions(annotations);
 
     // for each group of interacting annos decide which if any to keep
-    for (List<RegexAnnotation> inters : interactors) {
+    for (List<AnnotationOS> inters : interactors) {
       // pass to decision logic
-      List<RegexAnnotation> keepers = decide(inters);
+      List<AnnotationOS> keepers = decide(inters);
       // add returned list to annotations to kepp
       keeperAnnos.addAll(keepers);
     }
 
     // keep only those annotations selected by decision logic
-    annos.retainAll(keeperAnnos);
+    annotations.retainAll(keeperAnnos);
     return;
 
   }
@@ -142,8 +144,8 @@ public abstract class PostProcessorBase implements PostProcessor {
    *          a list of interacting annotation
    * @return the list of annotations to keep
    */
-  public List<RegexAnnotation> decide(List<RegexAnnotation> inters) {
-    List<RegexAnnotation> keepers = new ArrayList<RegexAnnotation>();
+  public List<AnnotationOS> decide(List<AnnotationOS> inters) {
+    List<AnnotationOS> keepers = new ArrayList<AnnotationOS>();
 
     if (inters != null && !inters.isEmpty()) {
       // sort the annotations by temporal resolution
@@ -159,6 +161,6 @@ public abstract class PostProcessorBase implements PostProcessor {
    * decide() method.
    * @return the comparator to be used to sort
    */
-  public abstract Comparator<RegexAnnotation> getComparator();
+  public abstract Comparator<AnnotationOS> getComparator();
 
 }

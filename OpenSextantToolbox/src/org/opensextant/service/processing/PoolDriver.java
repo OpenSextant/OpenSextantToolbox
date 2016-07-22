@@ -12,6 +12,7 @@ import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.opensextant.placedata.DocumentOS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,7 @@ public class PoolDriver {
   public static void main(String[] args) {
 
     Properties prop = null;
-    List<DocumentBean> holdem = new ArrayList<DocumentBean>();
+    List<DocumentOS> holdem = new ArrayList<DocumentOS>();
     try {
       prop = new Properties();
       InputStream input = new FileInputStream(args[0]);
@@ -48,7 +49,7 @@ public class PoolDriver {
         FileFilterUtils.trueFileFilter());
 
     for (File f : filesToProcess) {
-      DocumentBean result = dpPool.process("general", f);
+      DocumentOS result = dpPool.process("general", f);
       LOGGER.info(f.getName());
       holdem.add(result);
     }
@@ -58,7 +59,7 @@ public class PoolDriver {
 
   }
 
-  public static void dump(DocumentBean doc) {
+  public static void dump(DocumentOS doc) {
     LOGGER.info(doc.getContent());
   }
 }

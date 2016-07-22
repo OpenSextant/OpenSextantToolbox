@@ -126,7 +126,7 @@ public class MGRSParser {
     try {
       dt = df1.parse(tmp);
     } catch (ParseException e) {
-      LOGGER.debug(tmp + " looks like a date not an MGRS" );
+      LOGGER.debug(tmp + " looks like a date not an MGRS");
     }
 
     if (dt != null) {
@@ -137,7 +137,7 @@ public class MGRSParser {
     try {
       dt = df2.parse(tmp);
     } catch (ParseException e) {
-      LOGGER.debug(tmp + " looks like a date not an MGRS" );
+      LOGGER.debug(tmp + " looks like a date not an MGRS");
     }
 
     if (dt != null) {

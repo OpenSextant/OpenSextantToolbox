@@ -151,9 +151,8 @@ public class Scorer {
     double adminStructureScore = scoreAdminStructure(ev, place);
     // calculate the total score from the weighted component scores
 
-    return (nameWeight * nameScore + geocoordWeight * geocoordScore + featureTypeWeight * featureTypeScore + adminStructureWeight
-        * adminStructureScore)
-        / totalWeight;
+    return (nameWeight * nameScore + geocoordWeight * geocoordScore + featureTypeWeight * featureTypeScore
+        + adminStructureWeight * adminStructureScore) / totalWeight;
   }
 
   /* ---------------------Name Similarity ------------------ */

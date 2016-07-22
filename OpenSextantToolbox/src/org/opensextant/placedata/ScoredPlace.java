@@ -64,19 +64,17 @@ public class ScoredPlace implements Comparable<Object> {
 
   @Override
   public boolean equals(Object other) {
-    if( !(other instanceof ScoredPlace)){
+    if (!(other instanceof ScoredPlace)) {
       return false;
     }
 
-    if (other == this){
+    if (other == this) {
       return true;
     }
 
-    ScoredPlace osc = (ScoredPlace)other;
+    ScoredPlace osc = (ScoredPlace) other;
 
-    return new EqualsBuilder().
-        append(score, osc.score).
-        isEquals();
+    return new EqualsBuilder().append(score, osc.score).isEquals();
   }
 
   /**
@@ -85,9 +83,7 @@ public class ScoredPlace implements Comparable<Object> {
    */
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(17, 31).
-        append(score).
-        toHashCode();
+    return new HashCodeBuilder(17, 31).append(score).toHashCode();
   }
 
 }

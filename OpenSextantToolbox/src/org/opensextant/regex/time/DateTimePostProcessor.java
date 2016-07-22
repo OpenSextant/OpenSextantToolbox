@@ -23,8 +23,8 @@ package org.opensextant.regex.time;
 
 import java.util.Comparator;
 
+import org.opensextant.placedata.AnnotationOS;
 import org.opensextant.regex.PostProcessorBase;
-import org.opensextant.regex.RegexAnnotation;
 
 /**
  * The Class DateTimePostProcessor.<br>
@@ -35,7 +35,7 @@ import org.opensextant.regex.RegexAnnotation;
 public class DateTimePostProcessor extends PostProcessorBase {
 
   @Override
-  public Comparator<RegexAnnotation> getComparator() {
+  public Comparator<AnnotationOS> getComparator() {
     return new DateResolutionComparator();
   }
 

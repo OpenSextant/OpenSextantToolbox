@@ -36,7 +36,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.opensextant.regex.RegexAnnotation;
+import org.opensextant.placedata.AnnotationOS;
 import org.opensextant.regex.RegexMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,8 +97,8 @@ public class RegexTest {
 
     // write the results header
     try {
-      resWriter
-          .write("Entity Type\tPos\\Neg\tTest Input\tScore\tComplete\tCount\tTypes Found\tRules Matched\tAnnotations Found");
+      resWriter.write(
+          "Entity Type\tPos\\Neg\tTest Input\tScore\tComplete\tCount\tTypes Found\tRules Matched\tAnnotations Found");
       resWriter.newLine();
     } catch (IOException e) {
       LOGGER.error("Couldnt write to " + resFile.getName() + ":" + e.getMessage(), e);
@@ -143,10 +143,10 @@ public class RegexTest {
       String testText = pieces[2];
 
       // send the test text to regex matcher
-      List<RegexAnnotation> annos = reger.match(testText);
+      List<AnnotationOS> annotations = reger.match(testText);
       // examine the results and return a line to be sent to the results file
-      String results = score(entityType, posOrNeg, testText, annos);
-      annos.clear();
+      String results = score(entityType, posOrNeg, testText, annotations);
+      annotations.clear();
       try {
         // write the original line and the results to the results file
         resWriter.write(line + "\t" + results);
@@ -176,14 +176,14 @@ public class RegexTest {
    *          the correct type
    * @param posOrNeg
    *          the pos or neg
-   * @param annos
+   * @param annotations
    *          the annos
    * @return the string
    */
-  public static String score(String correctType, String posOrNeg, String testText, List<RegexAnnotation> annos) {
+  public static String score(String correctType, String posOrNeg, String testText, List<AnnotationOS> annotations) {
 
     String assessment = "??";
-    int annoCount = annos.size();
+    int annoCount = annotations.size();
     int correctMatchLength = testText.trim().length();
     Set<String> typesFound = new TreeSet<String>();
     Set<String> rulesFired = new TreeSet<String>();
@@ -191,9 +191,9 @@ public class RegexTest {
 
     int maxMatchedLength = 0;
 
-    for (RegexAnnotation a : annos) {
+    for (AnnotationOS a : annotations) {
       typesFound.add(a.getType());
-      rulesFired.add(a.getRule());
+      rulesFired.add(a.getFeatures().get("rule").toString());
       int matchLen = a.getMatchText().trim().length();
       if (matchLen > maxMatchedLength) {
         maxMatchedLength = matchLen;

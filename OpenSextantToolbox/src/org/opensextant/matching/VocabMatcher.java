@@ -82,7 +82,7 @@ public class VocabMatcher {
       mt.setStart(x1);
       mt.setEnd(x2);
       matchText = buffer.substring(x1, x2);
-      mt.setTextMatch(matchText);
+      mt.setMatchText(matchText);
       for (Integer vocabID : vocabIDList) {
         Vocab v = vocabIDMap.get(vocabID);
         mt.addVocab(v);

@@ -2,12 +2,12 @@ package org.opensextant.regex.geo;
 
 import java.util.Comparator;
 
-import org.opensextant.regex.RegexAnnotation;
+import org.opensextant.placedata.AnnotationOS;
 
-public class GeocoordComparator implements Comparator<RegexAnnotation> {
+public class GeocoordComparator implements Comparator<AnnotationOS> {
 
   @Override
-  public int compare(RegexAnnotation o1, RegexAnnotation o2) {
+  public int compare(AnnotationOS o1, AnnotationOS o2) {
 
     if (!"GEOCOORD".equalsIgnoreCase(o1.getType()) || !"GEOCOORD".equalsIgnoreCase(o2.getType())) {
       return 0;
@@ -28,10 +28,10 @@ public class GeocoordComparator implements Comparator<RegexAnnotation> {
       return -1;
     }
 
-    int len1 = o1.getEnd() - o1.getStart();
-    int len2 = o2.getEnd() - o2.getStart();
+    long len1 = o1.getEnd() - o1.getStart();
+    long len2 = o2.getEnd() - o2.getStart();
 
-    return Integer.compare(len1, len2);
+    return Long.compare(len1, len2);
 
   }
 

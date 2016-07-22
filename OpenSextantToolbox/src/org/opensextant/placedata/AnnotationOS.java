@@ -1,24 +1,25 @@
-package org.opensextant.service.processing;
+package org.opensextant.placedata;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Anno {
+public class AnnotationOS {
 
   private long start;
   private long end;
   private String type = "";
   private String matchText = "";
   private Map<String, Object> features = new HashMap<String, Object>();
+  private boolean valid = true;
 
-  public Anno(String type, String text, int start, int end) {
+  public AnnotationOS(String type, String text, int start, int end) {
     this.start = start;
     this.end = end;
     this.type = type;
     this.matchText = text;
   }
 
-  public Anno() {
+  public AnnotationOS() {
   }
 
   public long getStart() {
@@ -59,6 +60,33 @@ public class Anno {
 
   public void setFeatures(Map<String, Object> features) {
     this.features = features;
+  }
+
+  public void addFeatures(String name, Object value) {
+    this.features.put(name, value);
+  }
+
+  @Override
+  public String toString() {
+    return String.format("%s (%s %s %s %s)", matchText, type, start, end, features);
+  }
+
+  public boolean isValid() {
+    return valid;
+  }
+
+  public void setValid(boolean valid) {
+    this.valid = valid;
+  }
+
+  public boolean interactsWith(AnnotationOS other) {
+
+    long s1 = this.getStart();
+    long e1 = this.getEnd();
+    long s2 = other.getStart();
+    long e2 = other.getEnd();
+
+    return (s1 >= s2 || e1 >= s2) && (s2 >= s1 || e2 >= s1);
   }
 
 }

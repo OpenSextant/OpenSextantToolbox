@@ -69,8 +69,7 @@ public class PhoneticUtils {
     char[] chars = tmpWord.toCharArray();
     // now, discard any characters from one of the "Mark" categories.
     for (char c : chars) {
-      if (Character.getType(c) != Character.NON_SPACING_MARK
-          && Character.getType(c) != Character.COMBINING_SPACING_MARK
+      if (Character.getType(c) != Character.NON_SPACING_MARK && Character.getType(c) != Character.COMBINING_SPACING_MARK
           && Character.getType(c) != Character.ENCLOSING_MARK) {
         newWord.append(c);
       }

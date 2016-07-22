@@ -24,21 +24,23 @@ package org.opensextant.regex;
 import java.util.List;
 import java.util.Set;
 
+import org.opensextant.placedata.AnnotationOS;
+
 /**
  * The Interface PostProcessor. <br>
- * This interface provides the contract for any type of processing done to the collection of RegexAnnotations which has
- * been found by the RegexMatcher and specified via the "#POST" element of a RegexMatcher configuration file.
+ * This interface provides the contract for any type of processing done to the collection of Annos which has been found
+ * by the RegexMatcher and specified via the "#POST" element of a RegexMatcher configuration file.
  */
 public interface PostProcessor {
 
   /**
-   * Post process a list of RegexAnnotations. Post processing could include removing duplicates, selecting a single
-   * annotation from multiple ambigous possibilities, deriving new annotations from ones in the provided list ...
-   * @param annos
-   *          the RegexAnnotations to post process
+   * Post process a list of Annos. Post processing could include removing duplicates, selecting a single annotation from
+   * multiple ambigous possibilities, deriving new annotations from ones in the provided list ...
+   * @param annotations
+   *          the Annos to post process
    * @param types
-   *          the types of RegexAnnotations to process (implementation specific)
+   *          the types of Annos to process (implementation specific)
    */
-  void postProcess(List<RegexAnnotation> annos, Set<String> types);
+  void postProcess(List<AnnotationOS> annotations, Set<String> types);
 
 }

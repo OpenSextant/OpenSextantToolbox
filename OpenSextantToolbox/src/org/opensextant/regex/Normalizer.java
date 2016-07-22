@@ -2,6 +2,8 @@ package org.opensextant.regex;
 
 import java.util.regex.MatchResult;
 
+import org.opensextant.placedata.AnnotationOS;
+
 public interface Normalizer {
-  void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult);
+  void normalize(AnnotationOS annotation, RegexRule r, MatchResult matchResult);
 }

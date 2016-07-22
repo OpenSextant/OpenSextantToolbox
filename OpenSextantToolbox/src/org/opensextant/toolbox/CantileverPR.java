@@ -21,6 +21,17 @@
  **/
 package org.opensextant.toolbox;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.opensextant.placedata.PlaceCandidate;
+import org.opensextant.placedata.PlaceEvidence;
+import org.opensextant.placedata.PlaceEvidence.Scope;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.ProcessingResource;
@@ -32,17 +43,6 @@ import gate.creole.metadata.CreoleParameter;
 import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.Optional;
 import gate.creole.metadata.RunTime;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.opensextant.placedata.PlaceCandidate;
-import org.opensextant.placedata.PlaceEvidence;
-import org.opensextant.placedata.PlaceEvidence.Scope;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This is the GATE ProcessingResource wrapper for the Cantilever class. It performs a geospatial-specific form of
@@ -86,8 +86,9 @@ public class CantileverPR extends AbstractLanguageAnalyser implements Processing
     // the list of PC objects
     List<PlaceCandidate> pcList = new ArrayList<PlaceCandidate>();
     // get the annotation set
-    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet)) ? document
-        .getAnnotations() : document.getAnnotations(outputAnnotationSet);
+    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet))
+        ? document.getAnnotations()
+        : document.getAnnotations(outputAnnotationSet);
     // Get all of the placecandidate annotations
     AnnotationSet candidateSet = annotSet.get(candidateAnnotationName);
     // add each of the PlaceCandidate objs which are attached to the

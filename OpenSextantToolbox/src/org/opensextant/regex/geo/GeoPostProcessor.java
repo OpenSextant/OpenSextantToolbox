@@ -23,8 +23,8 @@ package org.opensextant.regex.geo;
 
 import java.util.Comparator;
 
+import org.opensextant.placedata.AnnotationOS;
 import org.opensextant.regex.PostProcessorBase;
-import org.opensextant.regex.RegexAnnotation;
 
 /**
  * The Class GeoPostProcessor.<br>
@@ -34,7 +34,7 @@ import org.opensextant.regex.RegexAnnotation;
 public class GeoPostProcessor extends PostProcessorBase {
 
   @Override
-  public Comparator<RegexAnnotation> getComparator() {
+  public Comparator<AnnotationOS> getComparator() {
     return new GeocoordComparator();
   }
 

@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.opensextant.placedata.AnnotationOS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,10 +51,10 @@ public class RegexMatcher {
     initialize(patternFile);
   }
 
-  public List<RegexAnnotation> match(String input) {
+  public List<AnnotationOS> match(String input) {
 
     // The matches to return
-    List<RegexAnnotation> matches = new ArrayList<RegexAnnotation>();
+    List<AnnotationOS> matches = new ArrayList<AnnotationOS>();
 
     if (!isInited) {
       LOGGER.error("Tried to use RegexMatcher without initializing first");
@@ -66,8 +67,8 @@ public class RegexMatcher {
       // Do the matching, looping over the rules
       Matcher matcher = r.getPattern().matcher(input);
       while (matcher.find()) {
-        // for each hit from the regex, create a RegexAnnotation
-        RegexAnnotation tmp = new RegexAnnotation(t, matcher.group(0), matcher.start(), matcher.end());
+        // for each hit from the regex, create a AnnotationOS
+        AnnotationOS tmp = new AnnotationOS(t, matcher.group(0), matcher.start(), matcher.end());
         // if the a normalizer has been specified,
         if (normer != null) {
           normer.normalize(tmp, r, matcher.toMatchResult());
@@ -81,7 +82,7 @@ public class RegexMatcher {
             tmp.getFeatures().put("isEntity", true);
           }
 
-          tmp.setRule(r.getRuleFamily() + "-" + r.getRuleName());
+          tmp.addFeatures("rule", r.getRuleFamily() + "-" + r.getRuleName());
           matches.add(tmp);
         }
       }
@@ -243,7 +244,7 @@ public class RegexMatcher {
       } else { // nothing in file
         r.setTaxo("");
       }
-    }// end rule loop
+    } // end rule loop
 
     // create the postprocessors
 

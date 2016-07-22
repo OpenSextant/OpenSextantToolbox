@@ -86,7 +86,7 @@ public class ServiceClient implements Runnable {
           // do something with extraction results
           handleResults(extractResult);
         } else {
-          LOGGER.error("FAILE response from POST " + resp);
+          LOGGER.error("FAILED response from POST " + resp);
         }
 
       } catch (ResourceException e) {

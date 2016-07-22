@@ -224,8 +224,8 @@ public class MatcherFactory {
     if (pingGeo.getStatus() == 0) {
       isStarted = true;
     } else {
-      LOGGER.error("Solr Server (Geo) responded with error code from ping from MatcherFactory. Got code:"
-          + pingGeo.getStatus());
+      LOGGER.error(
+          "Solr Server (Geo) responded with error code from ping from MatcherFactory. Got code:" + pingGeo.getStatus());
       isStarted = false;
     }
 
