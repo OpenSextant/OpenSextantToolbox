@@ -122,7 +122,9 @@ public class Place implements Comparable<Object>, Serializable {
    */
   @Override
   public int hashCode() {
-    return new HashCodeBuilder(7, 31).append(placeID).toHashCode();
+    return new HashCodeBuilder(7, 31).
+        append(placeID).
+        toHashCode();
   }
 
   /**

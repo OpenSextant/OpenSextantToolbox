@@ -57,8 +57,7 @@ public class OpenSextantLookupResource extends ServerResource {
     if ("csv".equalsIgnoreCase(format)) {
       StringBuilder buff = new StringBuilder();
 
-      buff.append(
-          "PlaceName\tExpandedPlaceName\tNameType\tNameTypeSystem\tCountryCode\tAdmin1\tAdmin2\tFeatureClass\tFeatureCode\tLatitude\tLongitude\tSource\n");
+      buff.append("PlaceName\tExpandedPlaceName\tNameType\tNameTypeSystem\tCountryCode\tAdmin1\tAdmin2\tFeatureClass\tFeatureCode\tLatitude\tLongitude\tSource\n");
 
       for (Place pl : placesFound) {
         buff.append(ifNull(pl.getPlaceName())).append("\t");

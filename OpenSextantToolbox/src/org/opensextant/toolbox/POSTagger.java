@@ -4,17 +4,6 @@
  */
 package org.opensextant.toolbox;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import eu.danieldk.nlp.jitar.data.Model;
 import eu.danieldk.nlp.jitar.languagemodel.LanguageModel;
 import eu.danieldk.nlp.jitar.languagemodel.LinearInterpolationLM;
@@ -34,6 +23,17 @@ import gate.creole.metadata.CreoleParameter;
 import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.Optional;
 import gate.creole.metadata.RunTime;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @CreoleResource(name = "OpenSextant_POS_Tagger", comment = "A POS tagger based on the JITAR ngram model")
 public class POSTagger extends AbstractLanguageAnalyser implements ProcessingResource {
@@ -56,9 +56,8 @@ public class POSTagger extends AbstractLanguageAnalyser implements ProcessingRes
     try {
       model = Model.readModel(new BufferedReader(new InputStreamReader(lexiconFileURL.openStream(), "UTF-8")),
           new BufferedReader(new InputStreamReader(ngramFileURL.openStream(), "UTF-8")));
-      guesserModel = Model.readModel(
-          new BufferedReader(new InputStreamReader(guesserLexiconFileURL.openStream(), "UTF-8")),
-          new BufferedReader(new InputStreamReader(guesserNgramFileURL.openStream(), "UTF-8")));
+      guesserModel = Model.readModel(new BufferedReader(new InputStreamReader(guesserLexiconFileURL.openStream(),
+          "UTF-8")), new BufferedReader(new InputStreamReader(guesserNgramFileURL.openStream(), "UTF-8")));
     } catch (IOException e) {
       LOGGER.error("Unable to read the POS model!", e);
 

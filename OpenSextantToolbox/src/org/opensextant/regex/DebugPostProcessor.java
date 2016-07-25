@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.opensextant.placedata.AnnotationOS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +14,13 @@ public class DebugPostProcessor extends PostProcessorBase {
   private static final Logger LOGGER = LoggerFactory.getLogger(DebugPostProcessor.class);
 
   @Override
-  public Comparator<AnnotationOS> getComparator() {
+  public Comparator<RegexAnnotation> getComparator() {
     return new PositionComparator();
   }
 
   @Override
-  public List<AnnotationOS> decide(List<AnnotationOS> inters) {
-    List<AnnotationOS> keepers = new ArrayList<AnnotationOS>();
+  public List<RegexAnnotation> decide(List<RegexAnnotation> inters) {
+    List<RegexAnnotation> keepers = new ArrayList<RegexAnnotation>();
 
     if (inters != null && !inters.isEmpty()) {
       // sort the annotations by document order
@@ -30,7 +29,7 @@ public class DebugPostProcessor extends PostProcessorBase {
       // build up a message showing the alternative annotations
       StringBuilder tmp = new StringBuilder();
       tmp.append("Must decide amongst these ").append(inters.size()).append(" annotations\n");
-      for (AnnotationOS a : inters) {
+      for (RegexAnnotation a : inters) {
         tmp.append("\t").append(a).append("\n");
       }
       tmp.append("-------\n");

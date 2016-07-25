@@ -20,10 +20,10 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
 import org.geojson.Point;
-import org.opensextant.placedata.AnnotationOS;
-import org.opensextant.placedata.DocumentOS;
 import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
+import org.opensextant.service.processing.Anno;
+import org.opensextant.service.processing.DocumentBean;
 import org.opensextant.service.processing.DocumentProcessorPool;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
@@ -170,15 +170,15 @@ public class OpenSextantExtractorResource extends ServerResource {
 
       }
 
-    } // end fileitems loop
-      // didnt find a field of the correct name
+    }// end fileitems loop
+     // didnt find a field of the correct name
     return null;
   }
 
   private Representation extract(String extractType, String resultFormat, String content) {
 
     if (dpPool.getProcessNames().contains(extractType)) {
-      DocumentOS result = dpPool.process(extractType, content);
+      DocumentBean result = dpPool.process(extractType, content);
 
       return convertResult(result, resultFormat);
     } else {
@@ -189,13 +189,13 @@ public class OpenSextantExtractorResource extends ServerResource {
   private Representation extract(String extractType, String resultFormat, URL content) {
 
     if (dpPool.getProcessNames().contains(extractType)) {
-      DocumentOS doc = dpPool.process(extractType, content);
+      DocumentBean doc = dpPool.process(extractType, content);
 
       // clean up temp file if used
       if ("file".equalsIgnoreCase(content.getProtocol())) {
         String tempFilePath = content.getPath();
         File tmpFile = new File(tempFilePath);
-        if (!tmpFile.delete()) {
+        if(!tmpFile.delete()){
           LOGGER.error("Unable to delete temp file" + tmpFile.getPath());
         }
       }
@@ -211,16 +211,16 @@ public class OpenSextantExtractorResource extends ServerResource {
     }
   }
 
-  private Representation convertResult(DocumentOS db, String resultFormat) {
+  private Representation convertResult(DocumentBean db, String resultFormat) {
 
     if ("json".equalsIgnoreCase(resultFormat)) {
-      return new JacksonRepresentation<DocumentOS>(db);
+      return new JacksonRepresentation<DocumentBean>(db);
     }
 
     if ("geojson".equalsIgnoreCase(resultFormat)) {
       FeatureCollection coll = new FeatureCollection();
 
-      for (AnnotationOS a : db.getAnnoList()) {
+      for (Anno a : db.getAnnoList()) {
         Feature ft = new Feature();
         String t = a.getType();
         Map<String, Object> fm = a.getFeatures();
@@ -262,17 +262,16 @@ public class OpenSextantExtractorResource extends ServerResource {
     }
 
     if ("xml".equalsIgnoreCase(resultFormat)) {
-      return new JacksonRepresentation<DocumentOS>(MediaType.TEXT_XML, db);
+      return new JacksonRepresentation<DocumentBean>(MediaType.TEXT_XML, db);
     }
 
     if ("csv".equalsIgnoreCase(resultFormat)) {
 
       StringBuilder buff = new StringBuilder();
 
-      buff.append(
-          "MatchText\tType\tHierarchy\tStart\tEnd\tSnippet\tDate\tPlaceName\tCountryCode\tFeatureClass\tFeatureCode\tLatitude\tLongitude\n");
+      buff.append("MatchText\tType\tHierarchy\tStart\tEnd\tSnippet\tDate\tPlaceName\tCountryCode\tFeatureClass\tFeatureCode\tLatitude\tLongitude\n");
 
-      for (AnnotationOS a : db.getAnnoList()) {
+      for (Anno a : db.getAnnoList()) {
         String t = a.getType();
         Map<String, Object> fm = a.getFeatures();
         Object h = fm.get("hierarchy");
@@ -316,7 +315,7 @@ public class OpenSextantExtractorResource extends ServerResource {
       return new StringRepresentation(buff.toString());
     }
 
-    return new JacksonRepresentation<DocumentOS>(db);
+    return new JacksonRepresentation<DocumentBean>(db);
   }
 
   /** Create a URL based on an InputStream. */

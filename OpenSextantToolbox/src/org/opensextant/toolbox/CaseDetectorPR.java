@@ -21,12 +21,6 @@
  **/
 package org.opensextant.toolbox;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.FeatureMap;
@@ -40,6 +34,12 @@ import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.Optional;
 import gate.creole.metadata.RunTime;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * * This GATE Processing Resource determines if a document appears to be in all/mostly lower case, all/mostly upper
  * case or proper mixed case. Its primary purpose is to allow downstream rule sets to be applied only where their case
@@ -50,7 +50,7 @@ import gate.creole.metadata.RunTime;
 public class CaseDetectorPR extends AbstractLanguageAnalyser implements ProcessingResource {
   /**
    *
-  */
+ */
   private static final long serialVersionUID = -8638479048484746444L;
   // The parameters passed in by the user
   String inputASName; // The name of the input AnnotationSet
@@ -94,9 +94,8 @@ public class CaseDetectorPR extends AbstractLanguageAnalyser implements Processi
   @Override
   public void execute() throws ExecutionException {
     // If no Annotation set was given, use the default
-    AnnotationSet annotSet = (inputASName == null || "".equals(inputASName))
-        ? document.getAnnotations()
-        : document.getAnnotations(inputASName);
+    AnnotationSet annotSet = (inputASName == null || "".equals(inputASName)) ? document.getAnnotations() : document
+        .getAnnotations(inputASName);
     // the histogram of case types counts seen in the document
     Map<String, Integer> caseCounts = new HashMap<String, Integer>();
     // find out how many sentences there are in the document

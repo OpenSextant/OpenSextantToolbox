@@ -87,8 +87,8 @@ public class Geocoord implements java.io.Serializable {
     double lat1Rads = Math.toRadians(lat1);
     double lat2Rads = Math.toRadians(lat2);
 
-    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
-        + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1Rads) * Math.cos(lat2Rads);
+    double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1Rads)
+        * Math.cos(lat2Rads);
     double c = 2 * Math.asin(Math.sqrt(a));
     return R * c;
   }

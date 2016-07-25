@@ -1,16 +1,16 @@
-package org.opensextant.placedata;
+package org.opensextant.service.processing;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocumentOS {
+public class DocumentBean {
 
   private String content;
-  private List<AnnotationOS> annoList;
+  private List<Anno> annoList;
 
-  public DocumentOS() {
+  public DocumentBean() {
     this.content = "";
-    annoList = new ArrayList<AnnotationOS>();
+    annoList = new ArrayList<Anno>();
   }
 
   public String getContent() {
@@ -21,20 +21,20 @@ public class DocumentOS {
     this.content = content;
   }
 
-  public List<AnnotationOS> getAnnoList() {
+  public List<Anno> getAnnoList() {
     return annoList;
   }
 
-  public void setAnnoList(List<AnnotationOS> annoList) {
+  public void setAnnoList(List<Anno> annoList) {
     this.annoList = annoList;
   }
 
-  public void addAnno(AnnotationOS tmpAnno) {
+  public void addAnno(Anno tmpAnno) {
     this.annoList.add(tmpAnno);
 
   }
 
-  public String getSnippet(AnnotationOS an, int size) {
+  public String getSnippet(Anno an, int size) {
     int start = (int) (an.getStart() - size);
     int end = (int) (an.getEnd() + size);
 

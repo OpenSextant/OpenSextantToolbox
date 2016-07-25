@@ -21,14 +21,6 @@
  **/
 package org.opensextant.toolbox;
 
-import java.util.List;
-
-import org.opensextant.matching.MatcherFactory;
-import org.opensextant.matching.PlacenameMatcher;
-import org.opensextant.placedata.PlaceCandidate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gate.AnnotationSet;
 import gate.Factory;
 import gate.FeatureMap;
@@ -42,6 +34,14 @@ import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.Optional;
 import gate.creole.metadata.RunTime;
 import gate.util.InvalidOffsetException;
+
+import java.util.List;
+
+import org.opensextant.matching.MatcherFactory;
+import org.opensextant.matching.PlacenameMatcher;
+import org.opensextant.placedata.PlaceCandidate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Solr-based ProcessingResource that tags mentions of geospatial candidates found in a dcoument.
@@ -135,7 +135,7 @@ public class NaiveTaggerSolrPR extends AbstractLanguageAnalyser implements Proce
   }
 
   /**
-  
+
    */
   @Override
   public void execute() throws ExecutionException {

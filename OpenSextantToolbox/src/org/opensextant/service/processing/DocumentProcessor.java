@@ -1,14 +1,14 @@
 package org.opensextant.service.processing;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gate.Corpus;
 import gate.CorpusController;
 import gate.Document;
 import gate.Factory;
 import gate.creole.ExecutionException;
 import gate.creole.ResourceInstantiationException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DocumentProcessor {
 

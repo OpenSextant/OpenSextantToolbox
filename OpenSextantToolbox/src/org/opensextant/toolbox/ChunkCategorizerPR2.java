@@ -9,16 +9,6 @@ Copyright 2010 The MITRE Corporation. All Rights Reserved.
  */
 package org.opensextant.toolbox;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Controller;
@@ -33,6 +23,16 @@ import gate.creole.metadata.CreoleParameter;
 import gate.creole.metadata.CreoleResource;
 import gate.creole.metadata.RunTime;
 import gate.util.InvalidOffsetException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This PR categorizes noun phrases by looking at the vocabulary and other entities that they contain. *
@@ -85,9 +85,8 @@ public class ChunkCategorizerPR2 extends AbstractLanguageAnalyser implements Pro
   @Override
   public void execute() throws ExecutionException {
     // get the annotation set into which we will place any annotations
-    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet))
-        ? document.getAnnotations()
-        : document.getAnnotations(outputAnnotationSet);
+    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet)) ? document
+        .getAnnotations() : document.getAnnotations(outputAnnotationSet);
 
     // get all of the noun phrase chunks annotations
     AnnotationSet npSet = document.getAnnotations().get(nounPhraseAnnoName);

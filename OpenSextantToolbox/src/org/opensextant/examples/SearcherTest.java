@@ -97,8 +97,8 @@ public class SearcherTest {
     // do a geo (circle) search around a given point
     LOGGER.info("Doing geo search");
     List<ScoredPlace> placesWithDist = s.searchByCircle(lat, lon, distance);
-    LOGGER.info(
-        "Found " + placesWithDist.size() + " places within " + distance + " kilometers of (" + lat + "," + lon + ")");
+    LOGGER.info("Found " + placesWithDist.size() + " places within " + distance + " kilometers of (" + lat + "," + lon
+        + ")");
     for (ScoredPlace p : placesWithDist) {
       LOGGER.info("\t" + p.getPlace().getPlaceName() + " (" + p.getPlace().getLatitude() + ","
           + p.getPlace().getLongitude() + ") is " + p.getScore() + " kms from center");

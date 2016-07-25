@@ -8,8 +8,8 @@ import java.util.regex.MatchResult;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.opensextant.placedata.AnnotationOS;
 import org.opensextant.regex.Normalizer;
+import org.opensextant.regex.RegexAnnotation;
 import org.opensextant.regex.RegexRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,25 +56,25 @@ public class DateTimeNormalizer2 implements Normalizer {
   private static final Logger LOGGER = LoggerFactory.getLogger(DateTimeNormalizer2.class);
 
   @Override
-  public void normalize(AnnotationOS annotation, RegexRule r, MatchResult matchResult) {
+  public void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
 
-    if ("Date".equalsIgnoreCase(annotation.getType())) {
-      normalizeDate(annotation, r, matchResult);
+    if ("Date".equalsIgnoreCase(anno.getType())) {
+      normalizeDate(anno, r, matchResult);
     }
 
-    if ("Time".equalsIgnoreCase(annotation.getType())) {
-      normalizeTime(annotation, r, matchResult);
+    if ("Time".equalsIgnoreCase(anno.getType())) {
+      normalizeTime(anno, r, matchResult);
     }
 
-    if ("DayOfTheMonth".equalsIgnoreCase(annotation.getType())) {
-      normalizeDay(annotation, r, matchResult);
+    if ("DayOfTheMonth".equalsIgnoreCase(anno.getType())) {
+      normalizeDay(anno, r, matchResult);
     }
 
   }
 
-  public void normalizeDate(AnnotationOS annotation, RegexRule r, MatchResult matchResult) {
+  public void normalizeDate(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
 
-    Map<String, Object> normalizedResults = annotation.getFeatures();
+    Map<String, Object> normalizedResults = anno.getFeatures();
     Map<String, String> elementsFound = new HashMap<String, String>();
     int numGroups = matchResult.groupCount();
     for (int i = 0; i < numGroups + 1; i++) {
@@ -129,9 +129,9 @@ public class DateTimeNormalizer2 implements Normalizer {
     try {
       fmt = DateTimeFormat.forPattern(jodaPattern.toString());
     } catch (Exception e) {
-      LOGGER.warn("Could not use format " + jodaPattern + " derived from " + annotation.getMatchText()
+      LOGGER.warn("Could not use format " + jodaPattern + " derived from " + anno.getMatchText()
           + " setting annotation as invalid", e);
-      annotation.setValid(false);
+      anno.setValid(false);
       return;
     }
 
@@ -148,11 +148,11 @@ public class DateTimeNormalizer2 implements Normalizer {
     DateTime dt = null;
     try {
       dt = fmt.parseDateTime(reducedMatch.toString());
-      LOGGER.debug("Parsing ->" + annotation.getMatchText() + "<- reduced to ->" + reducedMatch + "<- as format ->"
+      LOGGER.debug("Parsing ->" + anno.getMatchText() + "<- reduced to ->" + reducedMatch + "<- as format ->"
           + jodaPattern + "<- got " + dt);
     } catch (Exception e) {
-      LOGGER.warn("Cannot normalize " + annotation.getMatchText() + " using " + r, e);
-      annotation.setValid(false);
+      LOGGER.warn("Cannot normalize " + anno.getMatchText() + " using " + r, e);
+      anno.setValid(false);
       return;
     }
 
@@ -161,7 +161,7 @@ public class DateTimeNormalizer2 implements Normalizer {
     // look for phrases like "the 1990's" or "the 1800s"
     if ("YEAR".equalsIgnoreCase(r.getRuleFamily())) {
       // get phrase, remove apostrophes and tics
-      String phrase = annotation.getMatchText().trim().replaceAll("['`]", "");
+      String phrase = anno.getMatchText().trim().replaceAll("['`]", "");
 
       if (phrase.endsWith("0s")) {
         mostPrec = TimeResolution.DECADE;
@@ -181,8 +181,8 @@ public class DateTimeNormalizer2 implements Normalizer {
     return;
   }
 
-  private void normalizeTime(AnnotationOS annotation, RegexRule r, MatchResult matchResult) {
-    Map<String, Object> normalizedResults = annotation.getFeatures();
+  private void normalizeTime(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
+    Map<String, Object> normalizedResults = anno.getFeatures();
     Map<String, String> elementsFound = new HashMap<String, String>();
     int numGroups = matchResult.groupCount();
     for (int i = 0; i < numGroups + 1; i++) {
@@ -200,8 +200,8 @@ public class DateTimeNormalizer2 implements Normalizer {
     return;
   }
 
-  private void normalizeDay(AnnotationOS annotation, RegexRule r, MatchResult matchResult) {
-    Map<String, Object> normalizedResults = annotation.getFeatures();
+  private void normalizeDay(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
+    Map<String, Object> normalizedResults = anno.getFeatures();
     Map<String, String> elementsFound = new HashMap<String, String>();
     int numGroups = matchResult.groupCount();
     for (int i = 0; i < numGroups + 1; i++) {
@@ -253,8 +253,9 @@ public class DateTimeNormalizer2 implements Normalizer {
     }
 
     // convert Z,ZULU and UTC timezones to GMT
-    if ("z".equals(elemName) && ("Z".equalsIgnoreCase(cleanValue) || "ZULU".equalsIgnoreCase(cleanValue)
-        || "UTC".equalsIgnoreCase(cleanValue))) {
+    if ("z".equals(elemName)
+        && ("Z".equalsIgnoreCase(cleanValue) || "ZULU".equalsIgnoreCase(cleanValue) || "UTC"
+            .equalsIgnoreCase(cleanValue))) {
       cleanValue = "GMT";
     }
 

@@ -21,6 +21,14 @@
  **/
 package org.opensextant.examples;
 
+import gate.Annotation;
+import gate.Corpus;
+import gate.CorpusController;
+import gate.Document;
+import gate.Factory;
+import gate.Gate;
+import gate.util.persistence.PersistenceManager;
+
 import java.io.File;
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,14 +37,6 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import gate.Annotation;
-import gate.Corpus;
-import gate.CorpusController;
-import gate.Document;
-import gate.Factory;
-import gate.Gate;
-import gate.util.persistence.PersistenceManager;
 
 /**
  * A simple example of how to use the OpenSextant General Purpose extractor pipeline.<br>
@@ -158,8 +158,8 @@ public class GeneralPurposeTaggerExample {
     double totalDuration = (end - start) / 1000000000.0;
     double rate = numDocs / (totalDuration - initTime);
 
-    LOGGER.info(
-        "Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate + " documents/sec");
+    LOGGER.info("Document count=" + numDocs + "\t" + "Total time=" + totalDuration + "\t" + "Rate=" + rate
+        + " documents/sec");
 
   }
 

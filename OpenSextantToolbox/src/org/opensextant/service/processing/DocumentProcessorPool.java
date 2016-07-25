@@ -13,8 +13,6 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import org.opensextant.placedata.AnnotationOS;
-import org.opensextant.placedata.DocumentOS;
 import org.opensextant.service.OpenSextantExtractorResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -176,7 +174,7 @@ public class DocumentProcessorPool {
     return buff.toString();
   }
 
-  public DocumentOS process(String extractType, String content) {
+  public DocumentBean process(String extractType, String content) {
     Document gateDoc = null;
 
     try {
@@ -188,7 +186,7 @@ public class DocumentProcessorPool {
     return gateDocToBean(process(extractType, gateDoc));
   }
 
-  public DocumentOS process(String extractType, File content) {
+  public DocumentBean process(String extractType, File content) {
     Document gateDoc = null;
 
     try {
@@ -202,7 +200,7 @@ public class DocumentProcessorPool {
     return gateDocToBean(process(extractType, gateDoc));
   }
 
-  public DocumentOS process(String extractType, URL content) {
+  public DocumentBean process(String extractType, URL content) {
     Document gateDoc = null;
 
     try {
@@ -215,13 +213,13 @@ public class DocumentProcessorPool {
     return gateDocToBean(process(extractType, gateDoc));
   }
 
-  private DocumentOS gateDocToBean(Document doc) {
+  private DocumentBean gateDocToBean(Document doc) {
 
     Set<String> featureNameSet = new HashSet<String>();
     featureNameSet.add("isEntity");
     AnnotationSet entitySet = doc.getAnnotations().get(null, featureNameSet);
 
-    DocumentOS db = new DocumentOS();
+    DocumentBean db = new DocumentBean();
     db.setContent(doc.getContent().toString());
 
     for (Annotation a : entitySet) {
@@ -231,7 +229,7 @@ public class DocumentProcessorPool {
         continue;
       }
 
-      AnnotationOS tmpAnno = new AnnotationOS();
+      Anno tmpAnno = new Anno();
       tmpAnno.setStart(a.getStartNode().getOffset());
       tmpAnno.setEnd(a.getEndNode().getOffset());
       tmpAnno.setType(type);

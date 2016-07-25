@@ -3,12 +3,41 @@ package org.opensextant.vocab;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.opensextant.placedata.AnnotationOS;
+public class VocabMatch {
 
-public class VocabMatch extends AnnotationOS {
+  /** The vocabulary match as it appeared in the document. */
+  private String textMatch;
+
+  /** The location this was found in the document. */
+  private long start;
+  private long end;
 
   /** The vocab entries this has been matched to. */
   private List<Vocab> vocabs = new ArrayList<Vocab>();
+
+  public String getTextMatch() {
+    return textMatch;
+  }
+
+  public void setTextMatch(String textMatch) {
+    this.textMatch = textMatch;
+  }
+
+  public long getStart() {
+    return start;
+  }
+
+  public void setStart(long start) {
+    this.start = start;
+  }
+
+  public long getEnd() {
+    return end;
+  }
+
+  public void setEnd(long end) {
+    this.end = end;
+  }
 
   public List<Vocab> getVocabs() {
     return vocabs;

@@ -96,7 +96,7 @@ public class VocabMatcherTest {
     // see what got tagged
     LOGGER.info("Found " + matches.size() + " matches");
     for (VocabMatch mt : matches) {
-      String matchText = mt.getMatchText();
+      String matchText = mt.getTextMatch();
       List<Vocab> vs = mt.getVocabs();
       LOGGER.info("\t" + matchText + " " + vs.size() + " possibilities:" + vs);
     }

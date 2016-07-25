@@ -38,24 +38,28 @@ import java.util.Map;
  * <li>bestPlace - Of all the places with the same/similar names, which place is it?
  * </ul>
  */
-public class PlaceCandidate extends AnnotationOS implements Serializable {
+public class PlaceCandidate implements Serializable {
   private static final long serialVersionUID = 1L;
 
-  /**
-   * --------------Place/NotPlace stuff ----------------
-   */
+  /** The place name as it appeared in the document. */
+  private String placeName;
 
-  /** which rules have expressed a Place/NotPlace opinion on this PC. */
+  /** The location this was found in the document. */
+  private long start;
+  private long end;
+
+  /**
+   * --------------Place/NotPlace stuff ---------------------- which rules have expressed a Place/NotPlace opinion on
+   * this PC.
+   */
   private transient List<String> rules;
 
   /** The confidence adjustments provided by the Place/NotPlace rules. */
   private transient List<Double> placeConfidences;
 
   /**
-   * --------------Disambiguation stuff ----------------------
+   * --------------Disambiguation stuff ---------------------- the places along with their disambiguation scores.
    */
-
-  /** the places along with their disambiguation scores. */
   private transient Map<Place, Double> scoredPlaces;
 
   /** Temporary lists to hold the ranked places and scores. */
@@ -67,6 +71,9 @@ public class PlaceCandidate extends AnnotationOS implements Serializable {
 
   /** Basic constructor. */
   public PlaceCandidate() {
+    this.placeName = "";
+    start = 0L;
+    end = 0L;
     scoredPlaces = new HashMap<Place, Double>();
     rankedPlaces = new ArrayList<Place>();
     rankedScores = new ArrayList<Double>();
@@ -76,15 +83,6 @@ public class PlaceCandidate extends AnnotationOS implements Serializable {
   }
 
   // ---- the getters and setters ---------
-
-  public String getPlaceName() {
-    return this.getMatchText();
-  }
-
-  public void setPlaceName(String name) {
-    this.setMatchText(name);
-  }
-
   /**
    * Get the most highly ranked Place, or Null if empty list.
    */
@@ -114,6 +112,38 @@ public class PlaceCandidate extends AnnotationOS implements Serializable {
    */
   public boolean isPlace() {
     return getPlaceConfidenceScore() > 0.0;
+  }
+
+  public String getPlaceName() {
+    return placeName;
+  }
+
+  public void setPlaceName(String placeName) {
+    this.placeName = placeName;
+  }
+
+  public Long getStart() {
+    return start;
+  }
+
+  public void setStart(int start) {
+    this.start = start;
+  }
+
+  public void setStart(Long start) {
+    this.start = start;
+  }
+
+  public Long getEnd() {
+    return end;
+  }
+
+  public void setEnd(int end) {
+    this.end = end;
+  }
+
+  public void setEnd(Long end) {
+    this.end = end;
   }
 
   /**
@@ -241,8 +271,7 @@ public class PlaceCandidate extends AnnotationOS implements Serializable {
   }
 
   /** Some convenience methods to add evidence. */
-  public void addEvidence(String rule, double weight, String cc, String adm1, String fclass, String fcode,
-      Geocoord geo) {
+  public void addEvidence(String rule, double weight, String cc, String adm1, String fclass, String fcode, Geocoord geo) {
     PlaceEvidence ev = new PlaceEvidence();
     ev.setRule(rule);
     ev.setWeight(weight);
@@ -331,7 +360,7 @@ public class PlaceCandidate extends AnnotationOS implements Serializable {
   /** An overide of toString to get a meaningful representation of this PC. */
   @Override
   public String toString() {
-    String tmp = this.getMatchText() + "(" + getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")" + "\n";
+    String tmp = placeName + "(" + getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")" + "\n";
     tmp = tmp + "Rules=" + this.rules + "\n";
     tmp = tmp + "Evidence=" + this.evidence + "\n";
     sort();
