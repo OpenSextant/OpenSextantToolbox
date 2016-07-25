@@ -48,8 +48,6 @@
 	<classpathentry kind="lib" path="lib/GATE/xstream.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/activation.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/annotations.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/attributes-binder.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/carrot2-mini.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/commons-cli.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/commons-codec.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/commons-fileupload.jar"/>
@@ -94,8 +92,6 @@
 	<classpathentry kind="lib" path="lib/Standalone/lucene-queryparser.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/lucene-spatial.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/lucene-suggest.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/mahout-collections.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/mahout-math.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/mail.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/noggit.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.fileupload.jar"/>
@@ -103,7 +99,6 @@
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.ext.json.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/org.restlet.lib.org.json.jar"/>
-	<classpathentry kind="lib" path="lib/Standalone/simple-xml.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/slf4j-api.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/slf4j-log4j12.jar"/>
 	<classpathentry kind="lib" path="lib/Standalone/snakeyaml.jar"/>

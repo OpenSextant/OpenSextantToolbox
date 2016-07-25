@@ -26,7 +26,7 @@ of GATE processing resources (plugins) which are assembled together to form a do
 
   `ant`  
 
-  The release package will appear in the base directory of the OpenSextantToolbox project as opensextant-toolbox-VERSION-RELEASE_DATE.zip
+  The release package will appear in the base directory of the OpenSextantToolbox project as opensextant-toolbox-VERSION.zip
 
 
 * **To build a release and then run all the examples**

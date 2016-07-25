@@ -1,7 +1,12 @@
 language: java
-
 before_install: ant init-ivy
 script: ant test
-
 jdk:
-  - oraclejdk8
+- oraclejdk8
+deploy:
+  provider: releases
+  api_key:
+    secure: AN9DQWwiTz8h3r1blGpItOfs2nNm3D5LAwqZMNNVLXelyGyaY9NohitHgtzFYltJmV5rt2AgEc4+0+5KssjOj5wpcqW0jFze9pZ023KurV+F7XRMyHgXhNwR9yz+WD6E7pe4DJNmJ1rmBKoY83saZb48A/Y5Be9c+u0rKBxXfng=
+  file: OpenSextantToolbox/OpenSextantToolbox/opensextant-toolbox.zip
+  on:
+    repo: OpenSextant/OpenSextantToolbox

@@ -64,8 +64,8 @@ Build file for OpenSextantToolbox.
 	<property name="solr.home" location="${basedir}/build/solr" />
 	
 	<!-- For testing we can use "MergedGazetteer_SMALL.txt", for production use MergedGazetteer.txt -->
-	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" /-->
-	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" />
+	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" />
+	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" /-->
 	
 	<!-- For testing in Travis, must have some data checked into GitHub -->
 	<!--property name="csv.gaz" value="${resources.home}/TestData/testGazetteer/MergedGazetteer_SMALL.txt" /-->
@@ -421,10 +421,10 @@ Build file for OpenSextantToolbox.
 		<antcall target="release.misc" />
 		
 		<!-- delete existing release zip if there -->
-		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip" />
+		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}.zip" />
 
 		<!-- zip up the finished release -->
-		<zip destfile="${basedir}/opensextant-toolbox-${version}-${DSTAMP}.zip">
+		<zip destfile="${basedir}/opensextant-toolbox-${version}.zip">
 			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}"/>
 		</zip>
 	</target>
