@@ -1,6 +1,6 @@
 language: java
 before_install: ant init-ivy
-script: ant test
+script: travis_wait ant test
 jdk:
 - oraclejdk8
 deploy:
