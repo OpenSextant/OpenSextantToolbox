@@ -244,7 +244,6 @@ Build file for OpenSextantToolbox.
 	<target name="load.gazetteer">
 		<java classname="org.opensextant.matching.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx3G" />
-			<jvmarg value="-XX:MaxPermSize=256m" />
 			<jvmarg value="-Dlog4j.configuration=file:${basedir}/etc/log4j.properties" />
 			<jvmarg value="-Dsolr.home=${solr.home}" />
 			<arg value="gazetteer" />
