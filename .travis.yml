@@ -1,6 +1,6 @@
 language: java
 sudo: false
 before_install: ant init-ivy
-script: travis_wait 60 ant test
+script: ant test
 jdk:
 - oraclejdk8
