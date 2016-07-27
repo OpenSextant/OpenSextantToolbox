@@ -1,7 +1,7 @@
 <!--======================================================================
 Build file for OpenSextantToolbox.  
 =======================================================================-->
-<project name="OpenSextantToolbox" basedir="." default="build" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project name="OpenSextantToolbox" basedir="." default="release" xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<!-- include properties -->
 	<property file="build.properties" />
@@ -11,7 +11,7 @@ Build file for OpenSextantToolbox.
 
 	<!-- Project level properties -->
 	<property name="project.name" value="OpenSextantToolbox" />
-	<property name="version" value="2.2" />
+	<property name="version" value="3.0" />
 	<property name="releaseStatus" value="integration" />
 	<property name="java_target_version" value="1.8" />
 
@@ -108,11 +108,47 @@ Build file for OpenSextantToolbox.
 	<property name="toolbox.plugin.dir" location="${gate.plugin.dir}/OpenSextantToolbox" />
 
 
+	<property name="ivy.install.version" value="2.1.0-rc2" />
+	  <condition property="ivy.home" value="${env.IVY_HOME}">
+	    <isset property="env.IVY_HOME" />
+	  </condition>
+	<property name="ivy.home" value="${user.home}/.ivy2" />
+	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
+	
+	
+	
 	<!--====================== Targets ============================-->
 	<target name="setup">
 		<mkdir dir="${build.dir}" />
+		<antcall target="setProxy"/>
+		<antcall target="init-ivy"/>
 	</target>
 
+	<target name="download-ivy" unless="offline">
+
+	  <mkdir dir="${ivy.jar.dir}"/>
+	  <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
+	       dest="${ivy.jar.file}"
+	       usetimestamp="true"/>
+	</target>
+
+	<target name="init-ivy" depends="download-ivy">
+	  <path id="ivy.lib.path">
+	    <fileset dir="${ivy.jar.dir}"
+	             includes="*.jar"/>
+
+	  </path>
+	  <taskdef resource="org/apache/ivy/ant/antlib.xml"
+	           uri="antlib:org.apache.ivy.ant"
+	           classpathref="ivy.lib.path"/>
+	</target>
+	
+	
+	
+	
+	
+	
 	<!-- delete created jars,retrieved dependencies,javadocs and previous releases-->
 	<!-- NOTE: this leaves the created Gazetteer (see clean.gaz target) -->
 	<target name="clean" depends="setup">
@@ -149,7 +185,7 @@ Build file for OpenSextantToolbox.
 	</target>
 
 	<!-- get all the ivy defined dependencies -->
-	<target name="getDependencies" depends="setProxy,clean">
+	<target name="getDependencies" depends="clean">
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" />
 		<ivy:report todir="${build.dir}/ivy-report" graph="true"/>
 		<antcall target="getGazetteer"/>
