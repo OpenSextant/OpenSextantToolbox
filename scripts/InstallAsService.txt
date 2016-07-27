@@ -1,0 +1,23 @@
+  How to install OpenSextant as a linux service
+  		login with account with sudo access
+  		add opensextant user and group
+		   sudo useradd -s /sbin/nologin -r -U opensextant
+		create opensextant dir and unzip release into it 
+		   sudo mkdir /opt/opensextant
+		   sudo unzip opensextant-toolbox-<release-version>.zip -d /opt/opensextant
+
+		set owner, group and permissions
+		   sudo chown -R opensextant:opensextant /opt/opensextant
+		   sudo chmod +x /opt/opensextant/opensextant-toolbox-2.2/scripts/start.sh
+		// set up service
+		   sudo cp /opt/opensextant/opensextant-toolbox-2.2/scripts/opensextant to /etc/init.d
+		   sudo chmod +x /etc/init.d/opensextant
+		   sudo chkconfig --add opensextant
+		   
+service will start at boot
+
+to run manually:
+	cd /opt/opensextant/opensextant-toolbox-2.2
+	sudo ./scripts/start.sh
+to use as service
+	sudo service opensextant start/stop/status		   

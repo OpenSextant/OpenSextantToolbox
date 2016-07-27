@@ -1,2 +1,12 @@
 /build.properties
 /.ant/lib/ivy.jar
+/bin/
+/build/
+/build.properties
+classes
+doc/javadoc
+release
+lib
+/sonar-project.properties
+/.sonar/
+opensextant-toolbox-*.zip
