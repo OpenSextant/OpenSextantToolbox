@@ -462,7 +462,8 @@ Build file for OpenSextantToolbox.
 		</zip>
 	</target>
 
-
+	<target name="test" depends="release,run.examples"/>
+		
 	<!-- the following targets asssume a release has been built but doesn't trigger one if it is not -->
 
 	<!-- run some simple examples -->
