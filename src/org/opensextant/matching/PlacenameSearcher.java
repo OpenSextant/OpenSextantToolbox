@@ -1,10 +1,11 @@
 package org.opensextant.matching;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -18,13 +19,13 @@ import org.slf4j.LoggerFactory;
 
 public class PlacenameSearcher {
 
-  private SolrServer solrServer;
+  private SolrClient solrServer;
   private ModifiableSolrParams baseSearchParams = new ModifiableSolrParams();
 
   /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(PlacenameSearcher.class);
 
-  protected PlacenameSearcher(SolrServer svr, ModifiableSolrParams prms) {
+  protected PlacenameSearcher(SolrClient svr, ModifiableSolrParams prms) {
     solrServer = svr;
     baseSearchParams = new ModifiableSolrParams(prms);
   }
@@ -36,7 +37,7 @@ public class PlacenameSearcher {
     QueryResponse response = null;
     try {
       response = solrServer.query(prms);
-    } catch (SolrServerException e) {
+    } catch (SolrServerException | IOException e) {
       LOGGER.error("Got exception when processing query.", e);
       return places;
     }
@@ -59,7 +60,7 @@ public class PlacenameSearcher {
     QueryResponse response = null;
     try {
       response = solrServer.query(srchParams);
-    } catch (SolrServerException e) {
+    } catch (SolrServerException | IOException e) {
       LOGGER.error("Got exception when processing query.", e);
       return null;
     }
@@ -110,7 +111,7 @@ public class PlacenameSearcher {
     QueryResponse response = null;
     try {
       response = solrServer.query(srchParams);
-    } catch (SolrServerException e) {
+    } catch (SolrServerException | IOException e) {
       LOGGER.error("Got exception when processing query.", e);
       return places;
     }

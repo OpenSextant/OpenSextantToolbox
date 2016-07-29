@@ -1,12 +1,13 @@
 package org.opensextant.matching;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrRequest;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
@@ -20,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class VocabMatcher {
 
-  private SolrServer solrServer;
+  private SolrClient solrServer;
   private ModifiableSolrParams matchParams;
 
   private SolrTaggerRequest tagRequest;
@@ -29,7 +30,7 @@ public class VocabMatcher {
   /** Log object. */
   private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcher.class);
 
-  protected VocabMatcher(SolrServer svr, ModifiableSolrParams prms) {
+  protected VocabMatcher(SolrClient svr, ModifiableSolrParams prms) {
     this.solrServer = svr;
     matchParams = new ModifiableSolrParams(prms);
   }
@@ -45,7 +46,7 @@ public class VocabMatcher {
 
     try {
       response = tagRequest.process(solrServer);
-    } catch (SolrServerException e) {
+    } catch (SolrServerException | IOException e) {
       LOGGER.error("Got exception when attempting to match " + docName, e);
       return matches;
     }

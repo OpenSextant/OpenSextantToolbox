@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.SolrPingResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.params.CommonParams;
@@ -45,8 +45,8 @@ public class MatcherFactory {
   private static boolean isStarted;
 
   /** The solr servers which are the heart of the MatcherFactory. */
-  private static SolrServer solrServerGeo;
-  private static SolrServer solrServerVocab;
+  private static SolrClient solrServerGeo;
+  private static SolrClient solrServerVocab;
 
   /**
    * All of the Matchers,Searchers and VocabMatchers the Factory has created weak references so they can be GC'ed.
@@ -189,7 +189,7 @@ public class MatcherFactory {
 
     // if remote, use HttpSolrServer
     if (isRemote) {
-      HttpSolrServer server = new HttpSolrServer(homeLocation);
+      HttpSolrClient server = new HttpSolrClient(homeLocation);
       server.setAllowCompression(true);
       solrServerGeo = server;
       solrServerVocab = server;
@@ -458,22 +458,30 @@ public class MatcherFactory {
   public static void shutdown(boolean force) {
 
     if (force) {
-      if (solrServerGeo != null) {
-        solrServerGeo.shutdown();
-      }
-      if (solrServerVocab != null) {
-        solrServerVocab.shutdown();
-      }
+      try {
+		if (solrServerGeo != null) {
+		    solrServerGeo.close();
+		  }
+		  if (solrServerVocab != null) {
+		    solrServerVocab.close();
+		  }
+	} catch (IOException e) {
+		LOGGER.error("Error trying close MatcherFactory" + e.getMessage());
+	}
       isStarted = false;
     } else {
-      if (solrServerGeo != null && !factoryInUse()) {
-        solrServerGeo.shutdown();
-        isStarted = false;
-      }
-      if (solrServerVocab != null && !factoryInUse()) {
-        solrServerVocab.shutdown();
-        isStarted = false;
-      }
+      try {
+		if (solrServerGeo != null && !factoryInUse()) {
+		    solrServerGeo.close();
+		    isStarted = false;
+		  }
+		  if (solrServerVocab != null && !factoryInUse()) {
+		    solrServerVocab.close();
+		    isStarted = false;
+		  }
+	} catch (IOException e) {
+		LOGGER.error("Error trying close MatcherFactory" + e.getMessage());
+	}
 
     }
   }
@@ -577,11 +585,11 @@ public class MatcherFactory {
     return vocabFieldNames;
   }
 
-  protected static SolrServer getSolrServerGeo() {
+  protected static SolrClient getSolrServerGeo() {
     return solrServerGeo;
   }
 
-  protected static SolrServer getSolrServerVocab() {
+  protected static SolrClient getSolrServerVocab() {
     return solrServerVocab;
   }
 

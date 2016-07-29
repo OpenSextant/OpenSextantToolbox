@@ -37,8 +37,6 @@ Build file for OpenSextantToolbox.
 	<!-- location for the generated JAR files -->
 	<property name="core.jar.location" location="${build.dir}/opensextant.jar" />
 	<property name="toolbox.jar.location" location="${build.dir}/opensextant-toolbox.jar" />
-	<property name="phonetics.jar.location" location="${build.dir}/opensextant-phonetics.jar" />
-	<property name="examples.jar.location" location="${build.dir}/opensextant-examples.jar" />
 
 	<!-- location of the license file -->
 	<property name="license.location" location="../LICENSE.txt" />
@@ -62,12 +60,12 @@ Build file for OpenSextantToolbox.
 
 	<!-- Properties for creating/loading the Solr gazetteer -->
 	<property name="solr.home" location="${basedir}/build/solr" />
-	
+
 	<!-- For testing we can use "MergedGazetteer_SMALL.txt", for production use MergedGazetteer.txt -->
 	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" />
 	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" /-->
-	
-	
+
+
 	<!--property name="fieldnames.gaz" value="id,place_id,name,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,conflate_key,name_bias,id_bias,name_type,name_type_system,partition" /-->
 	<property name="index.vocab" value="${resources.home}/resources/Vocabularies/vocab.def" />
 	<!--property name="fieldnames.vocab" value="id,phrase,category,taxonomy" /-->
@@ -108,46 +106,40 @@ Build file for OpenSextantToolbox.
 	<property name="toolbox.plugin.dir" location="${gate.plugin.dir}/OpenSextantToolbox" />
 
 
+	<!-- properties for ivy config -->
 	<property name="ivy.install.version" value="2.1.0-rc2" />
-	  <condition property="ivy.home" value="${env.IVY_HOME}">
-	    <isset property="env.IVY_HOME" />
-	  </condition>
+	<condition property="ivy.home" value="${env.IVY_HOME}">
+		<isset property="env.IVY_HOME" />
+	</condition>
 	<property name="ivy.home" value="${user.home}/.ant" />
 	<property name="ivy.jar.dir" value="${ivy.home}/lib" />
 	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy.jar" />
-	
-	
-	
+
+
+
 	<!--====================== Targets ============================-->
 	<target name="setup">
 		<mkdir dir="${build.dir}" />
-		<antcall target="setProxy"/>
+		<antcall target="setProxy" />
 	</target>
 
+	<!--Make sure ivy is installed -->
 	<target name="download-ivy" unless="offline">
 
-	  <mkdir dir="${ivy.jar.dir}"/>
-	  <get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar"
-	       dest="${ivy.jar.file}"
-	       usetimestamp="true"/>
+		<mkdir dir="${ivy.jar.dir}" />
+		<get src="http://repo2.maven.org/maven2/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}" usetimestamp="true" />
 	</target>
 
 	<target name="init-ivy" depends="download-ivy">
-	  <path id="ivy.lib.path">
-	    <fileset dir="${ivy.jar.dir}"
-	             includes="*.jar"/>
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
 
-	  </path>
-	  <taskdef resource="org/apache/ivy/ant/antlib.xml"
-	           uri="antlib:org.apache.ivy.ant"
-	           classpathref="ivy.lib.path"/>
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
 	</target>
-	
-	
-	
-	
-	
-	
+
+
+
 	<!-- delete created jars,retrieved dependencies,javadocs and previous releases-->
 	<!-- NOTE: this leaves the created Gazetteer (see clean.gaz target) -->
 	<target name="clean" depends="setup">
@@ -179,30 +171,30 @@ Build file for OpenSextantToolbox.
 	<!-- omit from build.properties if no proxy -->
 	<target name="setProxy">
 		<property name="proxy.host" value="" />
-		<property name="proxy.port" value="80" />	
+		<property name="proxy.port" value="80" />
 		<setproxy proxyhost="${proxy.host}" proxyport="${proxy.port}" />
 	</target>
 
-	<!-- get all the ivy defined dependencies -->
+	<!-- get all the ivy defined dependencies and the gazetteer -->
 	<target name="getDependencies" depends="clean">
 		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" />
-		<ivy:report todir="${build.dir}/ivy-report" graph="true"/>
-		<antcall target="getGazetteer"/>
+		<ivy:report todir="${build.dir}/ivy-report" graph="true" />
+		<antcall target="getGazetteer" />
 	</target>
 
 	<target name="check-gazetteer">
-	    <available file="${build.dir}/${gaz.file.name}" property="gaz.present"/>
+		<available file="${build.dir}/${gaz.file.name}" property="gaz.present" />
 	</target>
-	
-	<target name="getGazetteer" depends="check-gazetteer" unless="gaz.present"  >
+
+	<target name="getGazetteer" depends="check-gazetteer" unless="gaz.present">
 		<get src="${gazetteer.url}" dest="${build.dir}" />
 		<unzip src="${build.dir}/${gaz.file.name}" dest="${resources.home}/resources/geoGazetteer" />
 	</target>
-	
+
 
 	<!-- compile the source  -->
 	<target name="compile" depends="setup,getDependencies">
-		<javac classpathref="compile.classpath" srcdir="${src.dir}" destdir="${build.dir}" debug="true" debuglevel="lines,source" source="${java_target_version}"  encoding="utf-8" />
+		<javac classpathref="compile.classpath" srcdir="${src.dir}" destdir="${build.dir}" debug="true" debuglevel="lines,source" source="${java_target_version}" encoding="utf-8" />
 	</target>
 
 	<!-- create the JAR files -->
@@ -211,21 +203,10 @@ Build file for OpenSextantToolbox.
 		<jar destfile="${core.jar.location}" update="false" basedir="${build.dir}">
 			<include name="org/opensextant/**" />
 			<exclude name="org/opensextant/toolbox/**" />
-			<exclude name="org/opensextant/examples/**" />
 		</jar>
 
 		<jar destfile="${toolbox.jar.location}" update="false" basedir="${build.dir}">
 			<include name="org/opensextant/toolbox/**" />
-		</jar>
-
-		<jar destfile="${phonetics.jar.location}" update="false" basedir="${build.dir}">
-			<include name="org/opensextant/phonetic/**" />
-		</jar>
-
-		<!-- include source for examples in jar -->
-		<jar destfile="${examples.jar.location}" update="false" basedir="${build.dir}">
-			<include name="org/opensextant/examples/**" />
-			<fileset dir="${src.dir}" includes="org/opensextant/examples/*.java" />
 		</jar>
 
 	</target>
@@ -233,11 +214,11 @@ Build file for OpenSextantToolbox.
 	<target name="plugin" depends="jar">
 		<!-- zip up the toolbox jar and the creole.xml  -->
 		<zip destfile="${build.dir}/opensextant-toolbox-plugin.zip">
-			<zipfileset file= "${basedir}/gate/creole.xml" prefix= "OpenSextantToolbox" />
-			<zipfileset file= "${build.dir}/opensextant-toolbox.jar" prefix= "OpenSextantToolbox/lib" />
+			<zipfileset file="${basedir}/gate/creole.xml" prefix="OpenSextantToolbox" />
+			<zipfileset file="${build.dir}/opensextant-toolbox.jar" prefix="OpenSextantToolbox/lib" />
 		</zip>
 	</target>
-	
+
 	<!-- Build and populate the Solr gazetteer -->
 	<target name="build.gaz">
 		<antcall target="clean.gaz" />
@@ -248,28 +229,9 @@ Build file for OpenSextantToolbox.
 
 	<!-- create the empty solr home directory -->
 	<target name="create.solr.home">
-		<mkdir dir="${solr.home}" />
-		<mkdir dir="${solr.home}/gazetteer" />
-		<mkdir dir="${solr.home}/gazetteer/data" />
-		<mkdir dir="${solr.home}/vocabulary" />
-		<mkdir dir="${solr.home}/vocabulary/data" />
-
-		<!-- Unpack Solr4 config baseline-->
-		<unzip src="${basedir}/solr/solr4-conf.zip" dest="${solr.home}/gazetteer/." />
-		<unzip src="${basedir}/solr/solr4-conf.zip" dest="${solr.home}/vocabulary/." />
-
-		<!-- Gaz and SolrTextTagger Solr config -->
-		<copy todir="${solr.home}/" file="${basedir}/solr/solr.xml" />
-		<copy todir="${solr.home}/gazetteer/conf">
-			<fileset dir="${basedir}/solr/gazetteer/conf">
-				<!-- Include character mappings, schema, server config -->
-				<include name="**/*.*" />
-			</fileset>
-		</copy>
-		<copy todir="${solr.home}/vocabulary/conf">
-			<fileset dir="${basedir}/solr/vocabulary/conf">
-				<!-- Include character mappings, schema, server config -->
-				<include name="**/*.*" />
+		<copy todir="${solr.home}">
+			<fileset dir="${basedir}/solr">
+				<include name="**/*" />
 			</fileset>
 		</copy>
 	</target>
@@ -308,7 +270,7 @@ Build file for OpenSextantToolbox.
 
 	<!-- Generate JavaDoc documentation for this project -->
 	<target name="javadoc" depends="javadoc.prepare">
-		<javadoc destdir="${javadoc.dir}" packagenames="*" classpathref="compile.classpath" encoding="utf-8" access="public" windowtitle="OpenSextant JavaDoc" >
+		<javadoc destdir="${javadoc.dir}" packagenames="*" classpathref="compile.classpath" encoding="utf-8" access="public" windowtitle="OpenSextant JavaDoc">
 			<sourcepath>
 				<pathelement location="${src.dir}" />
 			</sourcepath>
@@ -331,7 +293,6 @@ Build file for OpenSextantToolbox.
 		<mkdir dir="${release.dir}/LanguageResources" />
 		<mkdir dir="${release.dir}/solr" />
 		<mkdir dir="${release.dir}/etc" />
-		<mkdir dir="${release.dir}/examples" />
 	</target>
 
 	<!-- copy over jars to the release directory -->
@@ -339,8 +300,6 @@ Build file for OpenSextantToolbox.
 
 		<copy todir="${release.dir}/lib">
 			<fileset file="${core.jar.location}" />
-			<fileset file="${phonetics.jar.location}" />
-			<fileset file="${examples.jar.location}" />
 			<fileset dir="${basedir}/lib/Standalone" />
 		</copy>
 
@@ -349,37 +308,6 @@ Build file for OpenSextantToolbox.
 				<include name="*.jar" />
 			</fileset>
 		</copy>
-		
-		<!--copy todir="${release.dir}/lib/solr">
-			<fileset dir="${basedir}/lib/solr">
-				<include name="*.jar" />
-			</fileset>
-		</copy-->
-		
-		
-		<!--copy todir="${release.dir}/lib/solr">
-			<fileset dir="${basedir}/lib/solr">
-				<include name="*.jar" />
-			</fileset>
-		</copy-->
-
-		<!--copy todir="${release.dir}/lib/GATE">
-			<fileset dir="${basedir}/lib/GATE">
-				<include name="*.jar" />
-			</fileset>
-		</copy-->
-
-		<!--copy todir="${release.dir}/lib/Logging">
-			<fileset dir="${basedir}/lib/Logging">
-				<include name="*.jar" />
-			</fileset>
-		</copy-->
-
-		<!--copy todir="${release.dir}/lib/JCarafe">
-			<fileset dir="${basedir}/lib/JCarafe">
-				<include name="*.jar" />
-			</fileset>
-		</copy-->
 
 	</target>
 
@@ -400,14 +328,6 @@ Build file for OpenSextantToolbox.
 		<copy todir="${release.dir}/LanguageResources">
 			<fileset dir="${resources.home}">
 				<exclude name="**/geoGazetteer/" />
-				<exclude name="**/.settings/" />
-				<exclude name=".project" />
-				<exclude name="build/" />
-				<exclude name="build.xml" />
-				<exclude name="build.properties" />
-				<exclude name="build.local.properties" />
-				<exclude name="ivy.xml" />
-				<exclude name="ivysettings.xml" />
 			</fileset>
 		</copy>
 	</target>
@@ -417,12 +337,11 @@ Build file for OpenSextantToolbox.
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/log4j.properties" />
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/restletlog.properties" />
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/service-config.properties" />
-		<copy todir="${release.dir}/scripts"  >
+		<copy todir="${release.dir}/scripts">
 			<fileset dir="${basedir}/scripts" />
-			</copy>
+		</copy>
 		<copy todir="${release.dir}" file="${basedir}/gate/gate.xml" />
 		<copy todir="${release.dir}" file="${basedir}/gate/user-gate.xml" />
-		<copy todir="${release.dir}" file="${basedir}/examples.xml" />
 		<copy todir="${release.dir}" file="${doc.dir}/README_DISTRO.txt" />
 	</target>
 
@@ -433,14 +352,6 @@ Build file for OpenSextantToolbox.
 		</copy>
 	</target>
 
-	<!-- Copy the source for the examples to the release folder-->
-	<target name="release.examples.src">
-		<copy todir="${release.dir}/examples">
-			<fileset dir="${src.dir}/org/opensextant/examples" />
-		</copy>
-	</target>
-
-
 
 	<!-- Build a full release in the "release" directory -->
 	<target name="release" depends="buildWithGaz">
@@ -449,20 +360,19 @@ Build file for OpenSextantToolbox.
 		<antcall target="release.plugin" />
 		<antcall target="release.resources" />
 		<antcall target="release.gaz" />
-		<antcall target="release.examples.src" />
 		<antcall target="release.misc" />
-		
+
 		<!-- delete existing release zip if there -->
 		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}.zip" />
 
 		<!-- zip up the finished release -->
 		<zip destfile="${basedir}/opensextant-toolbox-${version}.zip">
-			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}"/>
+			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}" />
 		</zip>
 	</target>
 
-	<target name="test" depends="release,run.examples"/>
-		
+	<target name="test" depends="release,run.examples" />
+
 	<!-- the following targets asssume a release has been built but doesn't trigger one if it is not -->
 
 	<!-- run some simple examples -->
@@ -575,7 +485,7 @@ Build file for OpenSextantToolbox.
 	</target>
 
 
-	<target name="example.serviceClient">	
+	<target name="example.serviceClient">
 		<echo />
 		<echo>--------------------------------------------------</echo>
 		<echo>Running the Service Client Example</echo>
@@ -595,27 +505,27 @@ Build file for OpenSextantToolbox.
 		</java>
 
 	</target>
-	
-	
-	
+
+
+
 
 	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
 	<!-- NOTE: this target presumes a release has been built but doesnt trigger one -->
 	<target name="toolbox.deploy" depends="">
-		<delete dir="${toolbox.plugin.dir}"/>
+		<delete dir="${toolbox.plugin.dir}" />
 		<!-- unzip the toolbox plugin zip into GATE_HOME/plugins -->
-		<unzip src="${build.dir}/opensextant-toolbox-plugin.zip" dest="${gate.plugin.dir}"/>
+		<unzip src="${build.dir}/opensextant-toolbox-plugin.zip" dest="${gate.plugin.dir}" />
 
 		<!-- copy over the other jars libs from release -->
-			<copy todir="${toolbox.plugin.dir}/lib_extra">
-				<fileset dir="${lib.dir}/Standalone">
-					<include name="*.jar" />
-					<exclude name="**/GATE/**" />
-				</fileset>
-				<fileset file="${build.dir}/opensextant.jar" />
-			</copy>
+		<copy todir="${toolbox.plugin.dir}/lib_extra">
+			<fileset dir="${lib.dir}/Standalone">
+				<include name="*.jar" />
+				<exclude name="**/GATE/**" />
+			</fileset>
+			<fileset file="${build.dir}/opensextant.jar" />
+		</copy>
 
-			<echo> Remember to add -Dgate.class.path=GATE_HOME/plugins/OpensextantToolbox/lib_extra/*  and -Dsolr.home=WHERE.YOU.UNZIPPED.THE.RELEASE/solr to your gate.l4j.ini or other start up script </echo>
+		<echo> Remember to add -Dgate.class.path=GATE_HOME/plugins/OpensextantToolbox/lib_extra/*  and -Dsolr.home=WHERE.YOU.UNZIPPED.THE.RELEASE/solr to your gate.l4j.ini or other start up script </echo>
 
 	</target>
 </project>

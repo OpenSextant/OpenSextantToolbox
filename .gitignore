@@ -1,12 +1,11 @@
-/build.properties
-/.ant/lib/ivy.jar
-/bin/
-/build/
-/build.properties
+build.properties
+bin/
+build/
 classes
 doc/javadoc
 release
 lib
 /sonar-project.properties
-/.sonar/
+.sonar/
+LanguageResources/resources/geoGazetteer
 opensextant-toolbox-*.zip

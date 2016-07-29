@@ -26,7 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.opensextant.phonetic.Phoneticizer;
+import org.opensextant.phonetic.PhoneticUtils;
 import org.opensextant.placedata.PlaceCandidate;
 import org.opensextant.placedata.PlaceEvidence;
 import org.opensextant.placedata.PlaceEvidence.Scope;
@@ -45,9 +45,6 @@ public class Cantilever {
    * factor to weigh document level admin1 information(< 1.0) private static double AdminPropFactor = 0.1; the inexact
    * matcher used to find the "same" place
    */
-  private static Phoneticizer phoner = new Phoneticizer();
-  /** Which phonetic/inexact algorithm to use. */
-  private static String phoneticAlgName = "SimplePhonetic0";
 
   /**
    * Iterate through a List of PlaceCandidates to determine is-place confidence scores and propagate place evidence.
@@ -134,6 +131,10 @@ public class Cantilever {
 
   /** Do some simple canonicalization of name. */
   private String baseName(String name) {
-    return phoner.phoneticForm(name, phoneticAlgName);
+    return PhoneticUtils.removeCase(PhoneticUtils.removeDiacritics(PhoneticUtils.removePunctuation(name)));
   }
+  
+  
+  
+  
 }

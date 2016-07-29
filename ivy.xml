@@ -10,20 +10,10 @@
 		<conf name="Standalone" description="OpenSextant running outside the GATE framework" />
 	</configurations>
 
-	<publications>
-		<artifact name="opensextant" type="jar" conf="Standalone" />
-		<artifact name="opensextant-toolbox" type="jar" conf="Standalone,GATE" />
-		<artifact name="opensextant-phonetics" type="jar" conf="Standalone" />
-		<artifact name="opensextant-examples" type="jar" conf="Standalone" />
-		<artifact name="opensextant-toolbox-plugin" type="plugin"
-			ext="zip" conf="Standalone,GATE" />
-		<artifact name="pom" type="pom" ext="xml" conf="Standalone,GATE" />
-	</publications>
-
 	<dependencies>
 
 		<!-- Get the GATE core -->
-		<dependency org="uk.ac.gate" name="gate-core" rev="8.0"
+		<dependency org="uk.ac.gate" name="gate-core" rev="8.2"
 			conf="GATE->*">
 			<!-- need to exclude older lucene jar, conflicts with solr -->
 			<exclude name="lucene-core" />
@@ -36,7 +26,7 @@
 
 		<!-- Get the Solr Text Tagger, which brings along the rest of Solr -->
 		<dependency org="org.opensextant" name="solr-text-tagger"
-			rev="2.0" conf="Standalone->*">
+			rev="2.3" conf="Standalone->*">
 			<!-- exclude logging stuff -->
 			<exclude name="logback-core" />
 			<exclude name="logback-classic" />
@@ -79,8 +69,6 @@
 			conf="Standalone->*" />
 
 		<!-- some general stuff used by the plugin -->
-		<dependency org="commons-codec" name="commons-codec" rev="1.7"
-			conf="Standalone->*" />
 		<dependency org="commons-lang" name="commons-lang" rev="2.6"
 			conf="Standalone->*" />
 		<dependency org="commons-io" name="commons-io" rev="2.4"
