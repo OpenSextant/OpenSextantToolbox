@@ -34,7 +34,6 @@ import gate.Annotation;
 import gate.AnnotationSet;
 import gate.Corpus;
 import gate.CorpusController;
-import gate.Document;
 import gate.Factory;
 import gate.FeatureMap;
 import gate.Gate;
@@ -103,7 +102,7 @@ public class GeotaggerExample {
 
 			// If your documents are text, HTML,XML,Word, PDF, ....
 			// create a GATE document directly from the file
-			Document doc = Factory.newDocument(f.toURI().toURL(), "UTF-8");
+			gate.Document doc = Factory.newDocument(f.toURI().toURL(), "UTF-8");
 
 			// put the document in the corpus
 			corpus.add(doc);

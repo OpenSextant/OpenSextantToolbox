@@ -73,9 +73,9 @@ public class DateResolutionComparator implements Comparator<RegexAnnotation> {
 		// if resolutions and family are equal, compare lengths, select the
 		// longer
 		if (result == 0) {
-			int len1 = a1.getEnd() - a1.getStart();
-			int len2 = a2.getEnd() - a2.getStart();
-			result = Integer.compare(len2, len1);
+			long len1 = a1.getEnd() - a1.getStart();
+			long len2 = a2.getEnd() - a2.getStart();
+			result = Long.compare(len2, len1);
 		}
 
 		return result;

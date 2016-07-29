@@ -1,24 +1,24 @@
-package org.opensextant.service.processing;
+package org.opensextant.tagger;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Anno {
+public class Match {
 
-	private long start;
-	private long end;
-	private String type = "";
-	private String matchText = "";
-	private Map<String, Object> features = new HashMap<String, Object>();
+	protected long start;
+	protected long end;
+	protected String type = "";
+	protected String matchText = "";
+	protected Map<String, Object> features = new HashMap<String, Object>();
 
-	public Anno(String type, String text, int start, int end) {
+	public Match(String type, String text, int start, int end) {
 		this.start = start;
 		this.end = end;
 		this.type = type;
 		this.matchText = text;
 	}
 
-	public Anno() {
+	public Match() {
 	}
 
 	public long getStart() {

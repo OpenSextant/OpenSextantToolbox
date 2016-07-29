@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.opensextant.tagger.Match;
+
 /**
  * A PlaceCandidate represents a portion of a document which has been identified
  * as a possible named geographic location. It is used to collect together the
@@ -41,15 +43,16 @@ import java.util.Map;
  * it?
  * </ul>
  */
-public class PlaceCandidate implements Serializable {
+public class PlaceCandidate extends Match implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	/** The place name as it appeared in the document. */
-	private String placeName;
+	public String getPlaceName(){
+		return this.getMatchText();
+	}
 
-	/** The location this was found in the document. */
-	private long start;
-	private long end;
+	public void setPlaceName(String name){
+		this.setMatchText(name);
+	}
 
 	/**
 	 * --------------Place/NotPlace stuff ---------------------- which rules
@@ -77,9 +80,6 @@ public class PlaceCandidate implements Serializable {
 
 	/** Basic constructor. */
 	public PlaceCandidate() {
-		this.placeName = "";
-		start = 0L;
-		end = 0L;
 		scoredPlaces = new HashMap<Place, Double>();
 		rankedPlaces = new ArrayList<Place>();
 		rankedScores = new ArrayList<Double>();
@@ -121,37 +121,6 @@ public class PlaceCandidate implements Serializable {
 		return getPlaceConfidenceScore() > 0.0;
 	}
 
-	public String getPlaceName() {
-		return placeName;
-	}
-
-	public void setPlaceName(String placeName) {
-		this.placeName = placeName;
-	}
-
-	public Long getStart() {
-		return start;
-	}
-
-	public void setStart(int start) {
-		this.start = start;
-	}
-
-	public void setStart(Long start) {
-		this.start = start;
-	}
-
-	public Long getEnd() {
-		return end;
-	}
-
-	public void setEnd(int end) {
-		this.end = end;
-	}
-
-	public void setEnd(Long end) {
-		this.end = end;
-	}
 
 	/**
 	 * Get a ranked list of places.
@@ -370,7 +339,7 @@ public class PlaceCandidate implements Serializable {
 	/** An overide of toString to get a meaningful representation of this PC. */
 	@Override
 	public String toString() {
-		String tmp = placeName + "(" + getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")" + "\n";
+		String tmp = this.getMatchText() + "(" + getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")" + "\n";
 		tmp = tmp + "Rules=" + this.rules + "\n";
 		tmp = tmp + "Evidence=" + this.evidence + "\n";
 		sort();

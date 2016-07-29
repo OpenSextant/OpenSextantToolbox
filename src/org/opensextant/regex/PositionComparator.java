@@ -8,11 +8,11 @@ public class PositionComparator implements Comparator<RegexAnnotation> {
 		int result;
 
 		// compare start
-		result = Integer.compare(a1.getStart(), a2.getStart());
+		result = Long.compare(a1.getStart(), a2.getStart());
 
 		// if starts are equal compare ends, longest first
 		if (result == 0) {
-			result = Integer.compare(a2.getEnd(), a1.getEnd());
+			result = Long.compare(a2.getEnd(), a1.getEnd());
 		}
 
 		return result;

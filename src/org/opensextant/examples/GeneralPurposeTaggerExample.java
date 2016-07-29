@@ -30,10 +30,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import gate.Annotation;
 import gate.Corpus;
 import gate.CorpusController;
-import gate.Document;
 import gate.Factory;
 import gate.Gate;
 import gate.util.persistence.PersistenceManager;
@@ -103,7 +101,7 @@ public class GeneralPurposeTaggerExample {
 
 			// If your documents are text, HTML,XML,Word, PDF, ....
 			// create a GATE document directly from the file
-			Document doc = Factory.newDocument(f.toURI().toURL(), "UTF-8");
+			gate.Document doc = Factory.newDocument(f.toURI().toURL(), "UTF-8");
 
 			// put the document in the corpus
 			corpus.add(doc);
@@ -136,7 +134,7 @@ public class GeneralPurposeTaggerExample {
 				gate.AnnotationSet tmpSet = entitySet.get(a);
 				LOGGER.info("\t" + a + " (" + tmpSet.size() + ")");
 				// loop over all instance of this type and print some basic info
-				for (Annotation s : tmpSet) {
+				for (gate.Annotation s : tmpSet) {
 					// get a clean string representation of the tagged text
 					String text = gate.Utils.cleanStringFor(doc, s);
 					// get the taxonomic categorization for this entity

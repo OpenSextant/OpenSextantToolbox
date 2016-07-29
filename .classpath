@@ -115,7 +115,6 @@
 	<classpathentry kind="lib" path="lib/GATE/fontbox.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-asm.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/gate-compiler-jdt.jar"/>
-	<classpathentry kind="lib" path="lib/GATE/gate-core.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/hamcrest-core.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/ivy.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/jackson-annotations.jar"/>
@@ -144,5 +143,6 @@
 	<classpathentry kind="lib" path="lib/GATE/xmlunit.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/xpp3.jar"/>
 	<classpathentry kind="lib" path="lib/GATE/xstream.jar"/>
+	<classpathentry kind="lib" path="lib/GATE/gate-core.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -1,16 +1,26 @@
-package org.opensextant.service.processing;
+package org.opensextant.tagger;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocumentBean {
+public class Document {
 
+	private String title;
 	private String content;
-	private List<Anno> annoList;
+	private List<Match> annoList;
 
-	public DocumentBean() {
+	public Document() {
+		this.title = "";
 		this.content = "";
-		annoList = new ArrayList<Anno>();
+		annoList = new ArrayList<Match>();
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public String getContent() {
@@ -21,20 +31,20 @@ public class DocumentBean {
 		this.content = content;
 	}
 
-	public List<Anno> getAnnoList() {
+	public List<Match> getAnnoList() {
 		return annoList;
 	}
 
-	public void setAnnoList(List<Anno> annoList) {
+	public void setAnnoList(List<Match> annoList) {
 		this.annoList = annoList;
 	}
 
-	public void addAnno(Anno tmpAnno) {
+	public void addAnno(Match tmpAnno) {
 		this.annoList.add(tmpAnno);
 
 	}
 
-	public String getSnippet(Anno an, int size) {
+	public String getSnippet(Match an, int size) {
 		int start = (int) (an.getStart() - size);
 		int end = (int) (an.getEnd() + size);
 

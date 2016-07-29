@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import gate.Corpus;
 import gate.CorpusController;
-import gate.Document;
 import gate.Factory;
 import gate.creole.ExecutionException;
 import gate.creole.ResourceInstantiationException;
@@ -28,7 +27,7 @@ public class DocumentProcessor {
 		}
 	}
 
-	public void process(Document doc) {
+	public void process(gate.Document doc) {
 
 		if (corpus == null) {
 

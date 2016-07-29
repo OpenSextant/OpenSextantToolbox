@@ -22,8 +22,8 @@ import org.geojson.FeatureCollection;
 import org.geojson.Point;
 import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
-import org.opensextant.service.processing.Anno;
-import org.opensextant.service.processing.DocumentBean;
+import org.opensextant.tagger.Document;
+import org.opensextant.tagger.Match;
 import org.opensextant.service.processing.DocumentProcessorPool;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
@@ -178,7 +178,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 	private Representation extract(String extractType, String resultFormat, String content) {
 
 		if (dpPool.getProcessNames().contains(extractType)) {
-			DocumentBean result = dpPool.process(extractType, content);
+			Document result = dpPool.process(extractType, content);
 
 			return convertResult(result, resultFormat);
 		} else {
@@ -189,7 +189,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 	private Representation extract(String extractType, String resultFormat, URL content) {
 
 		if (dpPool.getProcessNames().contains(extractType)) {
-			DocumentBean doc = dpPool.process(extractType, content);
+			Document doc = dpPool.process(extractType, content);
 
 			// clean up temp file if used
 			if ("file".equalsIgnoreCase(content.getProtocol())) {
@@ -211,16 +211,16 @@ public class OpenSextantExtractorResource extends ServerResource {
 		}
 	}
 
-	private Representation convertResult(DocumentBean db, String resultFormat) {
+	private Representation convertResult(Document db, String resultFormat) {
 
 		if ("json".equalsIgnoreCase(resultFormat)) {
-			return new JacksonRepresentation<DocumentBean>(db);
+			return new JacksonRepresentation<Document>(db);
 		}
 
 		if ("geojson".equalsIgnoreCase(resultFormat)) {
 			FeatureCollection coll = new FeatureCollection();
 
-			for (Anno a : db.getAnnoList()) {
+			for (Match a : db.getAnnoList()) {
 				Feature ft = new Feature();
 				String t = a.getType();
 				Map<String, Object> fm = a.getFeatures();
@@ -262,7 +262,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 		}
 
 		if ("xml".equalsIgnoreCase(resultFormat)) {
-			return new JacksonRepresentation<DocumentBean>(MediaType.TEXT_XML, db);
+			return new JacksonRepresentation<Document>(MediaType.TEXT_XML, db);
 		}
 
 		if ("csv".equalsIgnoreCase(resultFormat)) {
@@ -272,7 +272,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 			buff.append(
 					"MatchText\tType\tHierarchy\tStart\tEnd\tSnippet\tDate\tPlaceName\tCountryCode\tFeatureClass\tFeatureCode\tLatitude\tLongitude\n");
 
-			for (Anno a : db.getAnnoList()) {
+			for (Match a : db.getAnnoList()) {
 				String t = a.getType();
 				Map<String, Object> fm = a.getFeatures();
 				Object h = fm.get("hierarchy");
@@ -316,7 +316,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 			return new StringRepresentation(buff.toString());
 		}
 
-		return new JacksonRepresentation<DocumentBean>(db);
+		return new JacksonRepresentation<Document>(db);
 	}
 
 	/** Create a URL based on an InputStream. */

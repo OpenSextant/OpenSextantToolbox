@@ -28,10 +28,10 @@ public class GeocoordComparator implements Comparator<RegexAnnotation> {
 			return -1;
 		}
 
-		int len1 = o1.getEnd() - o1.getStart();
-		int len2 = o2.getEnd() - o2.getStart();
+		long len1 = o1.getEnd() - o1.getStart();
+		long len2 = o2.getEnd() - o2.getStart();
 
-		return Integer.compare(len1, len2);
+		return Long.compare(len1, len2);
 
 	}
 
