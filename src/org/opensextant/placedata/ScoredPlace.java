@@ -25,69 +25,67 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * A class to hold a Place and a score together. Used by PlaceCandidate to rank places.
+ * A class to hold a Place and a score together. Used by PlaceCandidate to rank
+ * places.
  */
 public class ScoredPlace implements Comparable<Object> {
-  Place place;
-  double score;
+	Place place;
+	double score;
 
-  public ScoredPlace(Place pl, double scr) {
-    this.place = pl;
-    this.score = scr;
-  }
+	public ScoredPlace(Place pl, double scr) {
+		this.place = pl;
+		this.score = scr;
+	}
 
-  public Place getPlace() {
-    return place;
-  }
+	public Place getPlace() {
+		return place;
+	}
 
-  public void setPlace(Place place) {
-    this.place = place;
-  }
+	public void setPlace(Place place) {
+		this.place = place;
+	}
 
-  public double getScore() {
-    return score;
-  }
+	public double getScore() {
+		return score;
+	}
 
-  public void setScore(double score) {
-    this.score = score;
-  }
+	public void setScore(double score) {
+		this.score = score;
+	}
 
-  @Override
-  // compare by score
-  public int compareTo(Object o) {
-    if (o instanceof ScoredPlace) {
-      return -1 * Double.compare(getScore(), ((ScoredPlace) o).getScore());
-    } else {
-      return 0;
-    }
-  }
+	@Override
+	// compare by score
+	public int compareTo(Object o) {
+		if (o instanceof ScoredPlace) {
+			return -1 * Double.compare(getScore(), ((ScoredPlace) o).getScore());
+		} else {
+			return 0;
+		}
+	}
 
-  @Override
-  public boolean equals(Object other) {
-    if( !(other instanceof ScoredPlace)){
-      return false;
-    }
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof ScoredPlace)) {
+			return false;
+		}
 
-    if (other == this){
-      return true;
-    }
+		if (other == this) {
+			return true;
+		}
 
-    ScoredPlace osc = (ScoredPlace)other;
+		ScoredPlace osc = (ScoredPlace) other;
 
-    return new EqualsBuilder().
-        append(score, osc.score).
-        isEquals();
-  }
+		return new EqualsBuilder().append(score, osc.score).isEquals();
+	}
 
-  /**
-   * (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 31).
-        append(score).
-        toHashCode();
-  }
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31).append(score).toHashCode();
+	}
 
 }

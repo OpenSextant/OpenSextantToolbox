@@ -32,88 +32,91 @@ import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
- * Simple example of using the PlacenameSearcher to look up names in the gazetteer.
+ * Simple example of using the PlacenameSearcher to look up names in the
+ * gazetteer.
  */
 public class SearcherTest {
 
-  /** Log object. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(SearcherTest.class);
+	/** Log object. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(SearcherTest.class);
 
-  /**
-   * Instantiates a new searcher test.
-   */
-  private SearcherTest() {
+	/**
+	 * Instantiates a new searcher test.
+	 */
+	private SearcherTest() {
 
-  }
+	}
 
-  /**
-   * The main method.
-   * @param args
-   *          the arguments
-   */
-  public static void main(String[] args) {
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
+	public static void main(String[] args) {
 
-    String solrHome = "";
-    if (args.length > 0) {
-      solrHome = args[0];
-    }
+		String solrHome = "";
+		if (args.length > 0) {
+			solrHome = args[0];
+		}
 
-    LOGGER.info("Configuring");
-    MatcherFactory.config(solrHome);
-    LOGGER.info("Starting");
-    MatcherFactory.start();
+		LOGGER.info("Configuring");
+		MatcherFactory.config(solrHome);
+		LOGGER.info("Starting");
+		MatcherFactory.start();
 
-    PlacenameSearcher s = MatcherFactory.getSearcher();
+		PlacenameSearcher s = MatcherFactory.getSearcher();
 
-    if (null == s) {
-      LOGGER.error("Got a null Searcher from Factory.");
-      return;
-    }
+		if (null == s) {
+			LOGGER.error("Got a null Searcher from Factory.");
+			return;
+		}
 
-    List<Place> placesFound;
+		List<Place> placesFound;
 
-    // parameters used in the sample searches
-    String genericQuery = "source:ADHOC";
+		// parameters used in the sample searches
+		String genericQuery = "source:ADHOC";
 
-    String nameQuery = "Kabul";
-    Double lat = 34.51667;
-    Double lon = 69.18333;
-    Double distance = 50.0; // kilometers
+		String nameQuery = "Kabul";
+		Double lat = 34.51667;
+		Double lon = 69.18333;
+		Double distance = 50.0; // kilometers
 
-    // do a simple name search using both fuzzy and not fuzzy matching
-    LOGGER.info("Doing name search");
-    placesFound = s.searchByPlaceName(nameQuery, true);
-    LOGGER.info("Found " + placesFound.size() + " places using placename= \"" + nameQuery + "\"" + " fuzzy= true ");
-    for (Place p : placesFound) {
-      LOGGER.info("\t" + p);
-    }
+		// do a simple name search using both fuzzy and not fuzzy matching
+		LOGGER.info("Doing name search");
+		placesFound = s.searchByPlaceName(nameQuery, true);
+		LOGGER.info("Found " + placesFound.size() + " places using placename= \"" + nameQuery + "\"" + " fuzzy= true ");
+		for (Place p : placesFound) {
+			LOGGER.info("\t" + p);
+		}
 
-    placesFound = s.searchByPlaceName(nameQuery, false);
-    LOGGER.info("Found " + placesFound.size() + " places using placename= \"" + nameQuery + "\"" + " fuzzy= false ");
-    for (Place p : placesFound) {
-      LOGGER.info("\t" + p);
-    }
+		placesFound = s.searchByPlaceName(nameQuery, false);
+		LOGGER.info(
+				"Found " + placesFound.size() + " places using placename= \"" + nameQuery + "\"" + " fuzzy= false ");
+		for (Place p : placesFound) {
+			LOGGER.info("\t" + p);
+		}
 
-    // do a geo (circle) search around a given point
-    LOGGER.info("Doing geo search");
-    List<ScoredPlace> placesWithDist = s.searchByCircle(lat, lon, distance);
-    LOGGER.info("Found " + placesWithDist.size() + " places within " + distance + " kilometers of (" + lat + "," + lon
-        + ")");
-    for (ScoredPlace p : placesWithDist) {
-      LOGGER.info("\t" + p.getPlace().getPlaceName() + " (" + p.getPlace().getLatitude() + ","
-          + p.getPlace().getLongitude() + ") is " + p.getScore() + " kms from center");
-    }
+		// do a geo (circle) search around a given point
+		LOGGER.info("Doing geo search");
+		List<ScoredPlace> placesWithDist = s.searchByCircle(lat, lon, distance);
+		LOGGER.info("Found " + placesWithDist.size() + " places within " + distance + " kilometers of (" + lat + ","
+				+ lon + ")");
+		for (ScoredPlace p : placesWithDist) {
+			LOGGER.info("\t" + p.getPlace().getPlaceName() + " (" + p.getPlace().getLatitude() + ","
+					+ p.getPlace().getLongitude() + ") is " + p.getScore() + " kms from center");
+		}
 
-    // do a search by passing in an arbitrary solr query
-    LOGGER.info("Doing generic query");
-    placesFound = s.searchByQueryString(genericQuery);
-    LOGGER.info("Found " + placesFound.size() + " places using query= \"" + genericQuery + "\"");
-    for (Place p : placesFound) {
-      LOGGER.info("\t" + p + " (" + p.getGeocoord() + ")");
-    }
+		// do a search by passing in an arbitrary solr query
+		LOGGER.info("Doing generic query");
+		placesFound = s.searchByQueryString(genericQuery);
+		LOGGER.info("Found " + placesFound.size() + " places using query= \"" + genericQuery + "\"");
+		for (Place p : placesFound) {
+			LOGGER.info("\t" + p + " (" + p.getGeocoord() + ")");
+		}
 
-    s.cleanup();
+		s.cleanup();
 
-  }
+	}
 
 }

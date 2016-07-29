@@ -30,93 +30,94 @@ import org.opensextant.regex.geo.OrdinateParser.AXIS;
 
 public final class Ordinate {
 
-  /**
-   * Log object private static final Logger LOGGER = LoggerFactory.getLogger(Ordinate.class); the ordinate type [DD,DMS]
-   */
-  private OrdinateParser.ORDINATETYPE type = OrdinateParser.ORDINATETYPE.DD;
+	/**
+	 * Log object private static final Logger LOGGER =
+	 * LoggerFactory.getLogger(Ordinate.class); the ordinate type [DD,DMS]
+	 */
+	private OrdinateParser.ORDINATETYPE type = OrdinateParser.ORDINATETYPE.DD;
 
-  /** The magnitude of this ordinate [0.0 to LAT_MAX/LON_MAX,null] */
-  private Double ordinateValue;
+	/** The magnitude of this ordinate [0.0 to LAT_MAX/LON_MAX,null] */
+	private Double ordinateValue;
 
-  /** Hemisphere [-1,0,1]. */
-  private int hemi;
+	/** Hemisphere [-1,0,1]. */
+	private int hemi;
 
-  /** Axis [LATITUDE,LONGITUDE,null]. */
-  private OrdinateParser.AXIS axis;
+	/** Axis [LATITUDE,LONGITUDE,null]. */
+	private OrdinateParser.AXIS axis;
 
-  /** The orginal text. */
-  private String text;
+	/** The orginal text. */
+	private String text;
 
-  public Ordinate() {
+	public Ordinate() {
 
-  }
+	}
 
-  public boolean isValid() {
+	public boolean isValid() {
 
-    return ordinateValue != null && hemi != 0 && axis != null
-        && (axis != AXIS.LATITUDE || ordinateValue <= OrdinateParser.LAT_MAX)
-        && (axis != AXIS.LONGITUDE || ordinateValue <= OrdinateParser.LON_MAX);
+		return ordinateValue != null && hemi != 0 && axis != null
+				&& (axis != AXIS.LATITUDE || ordinateValue <= OrdinateParser.LAT_MAX)
+				&& (axis != AXIS.LONGITUDE || ordinateValue <= OrdinateParser.LON_MAX);
 
-  }
+	}
 
-  public Double getOrdinateValue() {
+	public Double getOrdinateValue() {
 
-    if (this.ordinateValue == null || this.hemi == 0) {
-      return null;
-    }
+		if (this.ordinateValue == null || this.hemi == 0) {
+			return null;
+		}
 
-    return hemi * ordinateValue;
-  }
+		return hemi * ordinateValue;
+	}
 
-  public void setDegrees(Double degrees) {
-    this.ordinateValue = degrees;
+	public void setDegrees(Double degrees) {
+		this.ordinateValue = degrees;
 
-  }
+	}
 
-  public void setMinutes(Double minutes) {
-    if (this.ordinateValue == null) {
-      this.ordinateValue = 0.0;
-    }
-    this.ordinateValue += minutes / 60.0;
-  }
+	public void setMinutes(Double minutes) {
+		if (this.ordinateValue == null) {
+			this.ordinateValue = 0.0;
+		}
+		this.ordinateValue += minutes / 60.0;
+	}
 
-  public void setSeconds(Double seconds) {
-    if (this.ordinateValue == null) {
-      this.ordinateValue = 0.0;
-    }
-    this.ordinateValue += seconds / 3600.0;
-  }
+	public void setSeconds(Double seconds) {
+		if (this.ordinateValue == null) {
+			this.ordinateValue = 0.0;
+		}
+		this.ordinateValue += seconds / 3600.0;
+	}
 
-  public OrdinateParser.ORDINATETYPE getType() {
-    return type;
-  }
+	public OrdinateParser.ORDINATETYPE getType() {
+		return type;
+	}
 
-  public void setType(OrdinateParser.ORDINATETYPE type) {
-    this.type = type;
-  }
+	public void setType(OrdinateParser.ORDINATETYPE type) {
+		this.type = type;
+	}
 
-  public int getHemi() {
-    return hemi;
-  }
+	public int getHemi() {
+		return hemi;
+	}
 
-  public void setHemi(int hemi) {
-    this.hemi = hemi;
-  }
+	public void setHemi(int hemi) {
+		this.hemi = hemi;
+	}
 
-  public OrdinateParser.AXIS getAxis() {
-    return axis;
-  }
+	public OrdinateParser.AXIS getAxis() {
+		return axis;
+	}
 
-  public void setAxis(OrdinateParser.AXIS axis) {
-    this.axis = axis;
-  }
+	public void setAxis(OrdinateParser.AXIS axis) {
+		this.axis = axis;
+	}
 
-  public String getText() {
-    return text;
-  }
+	public String getText() {
+		return text;
+	}
 
-  public void setText(String text) {
-    this.text = text;
-  }
+	public void setText(String text) {
+		this.text = text;
+	}
 
 }

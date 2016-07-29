@@ -1,11 +1,8 @@
-build.properties
-bin/
-build/
+build
 classes
-doc/javadoc
-release
 lib
-/sonar-project.properties
-.sonar/
+release
 LanguageResources/resources/geoGazetteer
+build.properties
+doc/javadoc
 opensextant-toolbox-*.zip

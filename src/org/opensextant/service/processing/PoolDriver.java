@@ -17,48 +17,48 @@ import org.slf4j.LoggerFactory;
 
 public class PoolDriver {
 
-  /** Log object. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(PoolDriver.class);
+	/** Log object. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(PoolDriver.class);
 
-  private PoolDriver() {
+	private PoolDriver() {
 
-  }
+	}
 
-  public static void main(String[] args) {
+	public static void main(String[] args) {
 
-    Properties prop = null;
-    List<DocumentBean> holdem = new ArrayList<DocumentBean>();
-    try {
-      prop = new Properties();
-      InputStream input = new FileInputStream(args[0]);
+		Properties prop = null;
+		List<DocumentBean> holdem = new ArrayList<DocumentBean>();
+		try {
+			prop = new Properties();
+			InputStream input = new FileInputStream(args[0]);
 
-      // load properties file
-      prop.load(input);
-    } catch (FileNotFoundException e) {
-      LOGGER.error("Couldn't load the properties file", e);
-    } catch (IOException e) {
-      LOGGER.error("Couldn't load the properties file", e);
-    }
+			// load properties file
+			prop.load(input);
+		} catch (FileNotFoundException e) {
+			LOGGER.error("Couldn't load the properties file", e);
+		} catch (IOException e) {
+			LOGGER.error("Couldn't load the properties file", e);
+		}
 
-    DocumentProcessorPool dpPool = new DocumentProcessorPool(prop);
+		DocumentProcessorPool dpPool = new DocumentProcessorPool(prop);
 
-    File inDir = new File(args[1]);
+		File inDir = new File(args[1]);
 
-    Collection<File> filesToProcess = FileUtils.listFiles(inDir, FileFilterUtils.trueFileFilter(),
-        FileFilterUtils.trueFileFilter());
+		Collection<File> filesToProcess = FileUtils.listFiles(inDir, FileFilterUtils.trueFileFilter(),
+				FileFilterUtils.trueFileFilter());
 
-    for (File f : filesToProcess) {
-      DocumentBean result = dpPool.process("general", f);
-      LOGGER.info(f.getName());
-      holdem.add(result);
-    }
+		for (File f : filesToProcess) {
+			DocumentBean result = dpPool.process("general", f);
+			LOGGER.info(f.getName());
+			holdem.add(result);
+		}
 
-    dpPool.cleanup();
-    dpPool = null;
+		dpPool.cleanup();
+		dpPool = null;
 
-  }
+	}
 
-  public static void dump(DocumentBean doc) {
-    LOGGER.info(doc.getContent());
-  }
+	public static void dump(DocumentBean doc) {
+		LOGGER.info(doc.getContent());
+	}
 }

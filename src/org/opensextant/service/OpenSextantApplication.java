@@ -11,75 +11,76 @@ import org.slf4j.LoggerFactory;
 
 public class OpenSextantApplication extends Application {
 
-  /** Log object. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
+	/** Log object. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
 
-  /** The pool of document processors. */
-  DocumentProcessorPool dpPool;
+	/** The pool of document processors. */
+	DocumentProcessorPool dpPool;
 
-  /** Properties. */
-  Properties prop;
+	/** Properties. */
+	Properties prop;
 
-  public OpenSextantApplication(Properties prop) {
-    this.prop = prop;
-  }
+	public OpenSextantApplication(Properties prop) {
+		this.prop = prop;
+	}
 
-  @Override
-  public synchronized Restlet createInboundRoot() {
+	@Override
+	public synchronized Restlet createInboundRoot() {
 
-    // initialize the pool with settings in the property file
-    LOGGER.info("Initializing pool of extractors");
-    dpPool = new DocumentProcessorPool(this.prop);
-    LOGGER.info("Warming up extractor pool");
-    // warm up the pool
-    String content = "We drove to Kabul.";
-    for (String p : dpPool.getProcessNames()) {
-      dpPool.process(p, content);
-    }
+		// initialize the pool with settings in the property file
+		LOGGER.info("Initializing pool of extractors");
+		dpPool = new DocumentProcessorPool(this.prop);
+		LOGGER.info("Warming up extractor pool");
+		// warm up the pool
+		String content = "We drove to Kabul.";
+		for (String p : dpPool.getProcessNames()) {
+			dpPool.process(p, content);
+		}
 
-    LOGGER.info(dpPool.toString());
+		LOGGER.info(dpPool.toString());
 
-    // set up the routes
-    Router router = new Router();
+		// set up the routes
+		Router router = new Router();
 
-    // extraction route
-    router.attach("/extract", OpenSextantExtractorResource.class);
-    router.attach("/extract/", OpenSextantExtractorResource.class);
-    router.attach("/extract/{extracttype}", OpenSextantExtractorResource.class);
-    router.attach("/extract/{extracttype}/", OpenSextantExtractorResource.class);
-    router.attach("/extract/{extracttype}/{resultformat}", OpenSextantExtractorResource.class);
-    router.attach("/extract/{extracttype}/{resultformat}/", OpenSextantExtractorResource.class);
-    router.attach("/extract/{extracttype}/{resultformat}/url/{url}", OpenSextantExtractorResource.class);
+		// extraction route
+		router.attach("/extract", OpenSextantExtractorResource.class);
+		router.attach("/extract/", OpenSextantExtractorResource.class);
+		router.attach("/extract/{extracttype}", OpenSextantExtractorResource.class);
+		router.attach("/extract/{extracttype}/", OpenSextantExtractorResource.class);
+		router.attach("/extract/{extracttype}/{resultformat}", OpenSextantExtractorResource.class);
+		router.attach("/extract/{extracttype}/{resultformat}/", OpenSextantExtractorResource.class);
+		router.attach("/extract/{extracttype}/{resultformat}/url/{url}", OpenSextantExtractorResource.class);
 
-    // lookup routes
-    router.attach("/lookup/{format}/query/{query}", OpenSextantLookupResource.class);
-    router.attach("/lookup/{format}/{placename}", OpenSextantLookupResource.class);
-    router.attach("/lookup/{format}/{placename}/", OpenSextantLookupResource.class);
-    router.attach("/lookup/{format}/{placename}/{country}", OpenSextantLookupResource.class);
-    router.attach("/lookup/{format}/{placename}/{country}/", OpenSextantLookupResource.class);
+		// lookup routes
+		router.attach("/lookup/{format}/query/{query}", OpenSextantLookupResource.class);
+		router.attach("/lookup/{format}/{placename}", OpenSextantLookupResource.class);
+		router.attach("/lookup/{format}/{placename}/", OpenSextantLookupResource.class);
+		router.attach("/lookup/{format}/{placename}/{country}", OpenSextantLookupResource.class);
+		router.attach("/lookup/{format}/{placename}/{country}/", OpenSextantLookupResource.class);
 
-    // admin stuff
-    router.attach("/admin", OpenSextantAdminResource.class);
-    router.attach("/admin/", OpenSextantAdminResource.class);
-    router.attach("/admin/{operation}", OpenSextantAdminResource.class);
-    router.attach("/admin/{operation}/", OpenSextantAdminResource.class);
+		// admin stuff
+		router.attach("/admin", OpenSextantAdminResource.class);
+		router.attach("/admin/", OpenSextantAdminResource.class);
+		router.attach("/admin/{operation}", OpenSextantAdminResource.class);
+		router.attach("/admin/{operation}/", OpenSextantAdminResource.class);
 
-    return router;
-  }
+		return router;
+	}
 
-  /** Accessor for the pool. */
-  public DocumentProcessorPool getPool() {
-    return this.dpPool;
-  }
+	/** Accessor for the pool. */
+	public DocumentProcessorPool getPool() {
+		return this.dpPool;
+	}
 
-  /**
-   * (non-Javadoc)
-   * @see org.restlet.Application#stop()
-   */
-  @Override
-  public synchronized void stop() throws Exception {
-    this.dpPool.cleanup();
-    super.stop();
-  }
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see org.restlet.Application#stop()
+	 */
+	@Override
+	public synchronized void stop() throws Exception {
+		this.dpPool.cleanup();
+		super.stop();
+	}
 
 }

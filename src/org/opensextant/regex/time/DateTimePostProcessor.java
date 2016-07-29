@@ -28,15 +28,16 @@ import org.opensextant.regex.RegexAnnotation;
 
 /**
  * The Class DateTimePostProcessor.<br>
- * This class extends PostProcessorBase to provide a PostProcessor that selects the "best" Date annotation, where "best"
- * means the Date annotation with the highest (most specific) temporal resolution as determined by the
+ * This class extends PostProcessorBase to provide a PostProcessor that selects
+ * the "best" Date annotation, where "best" means the Date annotation with the
+ * highest (most specific) temporal resolution as determined by the
  * DateResolutionComparator.
  */
 public class DateTimePostProcessor extends PostProcessorBase {
 
-  @Override
-  public Comparator<RegexAnnotation> getComparator() {
-    return new DateResolutionComparator();
-  }
+	@Override
+	public Comparator<RegexAnnotation> getComparator() {
+		return new DateResolutionComparator();
+	}
 
 }

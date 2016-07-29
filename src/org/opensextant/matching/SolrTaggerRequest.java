@@ -37,36 +37,37 @@ import org.apache.solr.common.util.ContentStreamBase;
 
 /**
  * *.
+ * 
  * @author dsmiley
  * @author ubaldino
  */
 @SuppressWarnings("serial")
 public class SolrTaggerRequest extends QueryRequest {
-  private String input;
+	private String input;
 
-  public SolrTaggerRequest(SolrParams p, SolrRequest.METHOD m) {
-    super(p, m);
-  }
+	public SolrTaggerRequest(SolrParams p, SolrRequest.METHOD m) {
+		super(p, m);
+	}
 
-  /**
-   * @return the input
-   */
-  public String getInput() {
-    return input;
-  }
+	/**
+	 * @return the input
+	 */
+	public String getInput() {
+		return input;
+	}
 
-  /**
-   * @param input
-   *          the input to set
-   */
-  public void setInput(String input) {
-    this.input = input;
-  }
+	/**
+	 * @param input
+	 *            the input to set
+	 */
+	public void setInput(String input) {
+		this.input = input;
+	}
 
-  @Override
-  public Collection<ContentStream> getContentStreams() {
-    ContentStreamBase.StringStream stream = new ContentStreamBase.StringStream(input);
-    stream.setContentType("application/octet-stream");
-    return Collections.singleton((ContentStream) stream);
-  }
+	@Override
+	public Collection<ContentStream> getContentStreams() {
+		ContentStreamBase.StringStream stream = new ContentStreamBase.StringStream(input);
+		stream.setContentType("application/octet-stream");
+		return Collections.singleton((ContentStream) stream);
+	}
 }

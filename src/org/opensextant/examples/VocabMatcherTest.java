@@ -35,75 +35,77 @@ import org.slf4j.LoggerFactory;
 
 // TODO: Auto-generated Javadoc
 /**
- * Simple example of using the VocabMatcher which uses the Solr gazetteer to find vocabulary in text.
+ * Simple example of using the VocabMatcher which uses the Solr gazetteer to
+ * find vocabulary in text.
  */
 public class VocabMatcherTest {
 
-  /** Log object. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcherTest.class);
+	/** Log object. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcherTest.class);
 
-  /**
-   * Instantiates a new matcher test.
-   */
-  private VocabMatcherTest() {
+	/**
+	 * Instantiates a new matcher test.
+	 */
+	private VocabMatcherTest() {
 
-  }
+	}
 
-  /**
-   * The main method.
-   * @param args
-   *          the arguments
-   */
-  public static void main(String[] args) {
+	/**
+	 * The main method.
+	 * 
+	 * @param args
+	 *            the arguments
+	 */
+	public static void main(String[] args) {
 
-    // the file with some text to be processed
-    File testText = new File(args[0]);
+		// the file with some text to be processed
+		File testText = new File(args[0]);
 
-    // location of solr containg the gazetteer
-    // could be a directory, URL or missing
-    String solrHome = "";
-    if (args.length == 2) {
-      LOGGER.info("Using supplied arg for location of solr gazetteer");
-      solrHome = args[1];
-    } else {
-      LOGGER.info("No arg supplied for location of solr gazetteer. Using environment variable");
-    }
+		// location of solr containg the gazetteer
+		// could be a directory, URL or missing
+		String solrHome = "";
+		if (args.length == 2) {
+			LOGGER.info("Using supplied arg for location of solr gazetteer");
+			solrHome = args[1];
+		} else {
+			LOGGER.info("No arg supplied for location of solr gazetteer. Using environment variable");
+		}
 
-    // configure and start the Matcher Factory
-    MatcherFactory.config(solrHome);
-    MatcherFactory.start();
+		// configure and start the Matcher Factory
+		MatcherFactory.config(solrHome);
+		MatcherFactory.start();
 
-    // get a matcher
-    VocabMatcher m = MatcherFactory.getVocabMatcher();
-    // check to see if its there
-    if (null == m) {
-      LOGGER.error("Got a null Matcher from Factory.");
-      return;
-    }
+		// get a matcher
+		VocabMatcher m = MatcherFactory.getVocabMatcher();
+		// check to see if its there
+		if (null == m) {
+			LOGGER.error("Got a null Matcher from Factory.");
+			return;
+		}
 
-    // get some sample text
-    String sampleText;
-    try {
-      sampleText = FileUtils.readFileToString(testText, "UTF-8");
-    } catch (IOException e) {
-      LOGGER.error("Exception reading text from file" + testText.getName(), e);
-      return;
-    }
+		// get some sample text
+		String sampleText;
+		try {
+			sampleText = FileUtils.readFileToString(testText, "UTF-8");
+		} catch (IOException e) {
+			LOGGER.error("Exception reading text from file" + testText.getName(), e);
+			return;
+		}
 
-    // send the sample text to be tagged
-    List<VocabMatch> matches = m.matchText(sampleText, "test document");
+		// send the sample text to be tagged
+		List<VocabMatch> matches = m.matchText(sampleText, "test document");
 
-    // see what got tagged
-    LOGGER.info("Found " + matches.size() + " matches");
-    for (VocabMatch mt : matches) {
-      String matchText = mt.getTextMatch();
-      List<Vocab> vs = mt.getVocabs();
-      LOGGER.info("\t" + matchText + " " + vs.size() + " possibilities:" + vs);
-    }
+		// see what got tagged
+		LOGGER.info("Found " + matches.size() + " matches");
+		for (VocabMatch mt : matches) {
+			String matchText = mt.getTextMatch();
+			List<Vocab> vs = mt.getVocabs();
+			LOGGER.info("\t" + matchText + " " + vs.size() + " possibilities:" + vs);
+		}
 
-    // cleanup the matcher
-    m.cleanup();
+		// cleanup the matcher
+		m.cleanup();
 
-  }
+	}
 
 }

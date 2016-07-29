@@ -21,85 +21,86 @@ import org.slf4j.LoggerFactory;
 
 public class OpenSextantLookupResource extends ServerResource {
 
-  /** Log object. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantLookupResource.class);
+	/** Log object. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantLookupResource.class);
 
-  @Get
-  public Representation doGet() {
+	@Get
+	public Representation doGet() {
 
-    Request req = getRequest();
-    // get the submitted attributes
-    ConcurrentMap<String, Object> attrs = req.getAttributes();
-    String format = (String) attrs.get("format");
-    String placeName = (String) attrs.get("placename");
-    String country = (String) attrs.get("country");
-    String rawQuery = (String) attrs.get("query");
+		Request req = getRequest();
+		// get the submitted attributes
+		ConcurrentMap<String, Object> attrs = req.getAttributes();
+		String format = (String) attrs.get("format");
+		String placeName = (String) attrs.get("placename");
+		String country = (String) attrs.get("country");
+		String rawQuery = (String) attrs.get("query");
 
-    PlacenameSearcher s = MatcherFactory.getSearcher();
-    String query;
+		PlacenameSearcher s = MatcherFactory.getSearcher();
+		String query;
 
-    if (rawQuery == null) {
-      query = "name:" + placeName;
-      if (country != null) {
-        query = query + " AND cc:" + country;
-      }
-    } else {
-      query = Reference.decode(rawQuery);
-    }
+		if (rawQuery == null) {
+			query = "name:" + placeName;
+			if (country != null) {
+				query = query + " AND cc:" + country;
+			}
+		} else {
+			query = Reference.decode(rawQuery);
+		}
 
-    List<Place> placesFound = s.searchByQueryString(query);
-    LOGGER.info("Found " + placesFound.size() + " places");
+		List<Place> placesFound = s.searchByQueryString(query);
+		LOGGER.info("Found " + placesFound.size() + " places");
 
-    if ("json".equalsIgnoreCase(format)) {
-      return new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON, placesFound);
-    }
+		if ("json".equalsIgnoreCase(format)) {
+			return new JacksonRepresentation<List<Place>>(MediaType.APPLICATION_JSON, placesFound);
+		}
 
-    if ("csv".equalsIgnoreCase(format)) {
-      StringBuilder buff = new StringBuilder();
+		if ("csv".equalsIgnoreCase(format)) {
+			StringBuilder buff = new StringBuilder();
 
-      buff.append("PlaceName\tExpandedPlaceName\tNameType\tNameTypeSystem\tCountryCode\tAdmin1\tAdmin2\tFeatureClass\tFeatureCode\tLatitude\tLongitude\tSource\n");
+			buff.append(
+					"PlaceName\tExpandedPlaceName\tNameType\tNameTypeSystem\tCountryCode\tAdmin1\tAdmin2\tFeatureClass\tFeatureCode\tLatitude\tLongitude\tSource\n");
 
-      for (Place pl : placesFound) {
-        buff.append(ifNull(pl.getPlaceName())).append("\t");
-        buff.append(ifNull(pl.getExpandedPlaceName())).append("\t");
-        buff.append(ifNull(pl.getNameType())).append("\t");
-        buff.append(ifNull(pl.getNameTypeSystem())).append("\t");
-        buff.append(ifNull(pl.getCountryCode())).append("\t");
-        buff.append(ifNull(pl.getAdmin1())).append("\t");
-        buff.append(ifNull(pl.getAdmin2())).append("\t");
-        buff.append(ifNull(pl.getFeatureClass())).append("\t");
-        buff.append(ifNull(pl.getFeatureCode())).append("\t");
-        buff.append(ifNull(pl.getLatitude().toString())).append("\t");
-        buff.append(ifNull(pl.getLongitude().toString())).append("\t");
-        buff.append(ifNull(pl.getSource())).append("\t");
-        buff.append("\n");
-      }
+			for (Place pl : placesFound) {
+				buff.append(ifNull(pl.getPlaceName())).append("\t");
+				buff.append(ifNull(pl.getExpandedPlaceName())).append("\t");
+				buff.append(ifNull(pl.getNameType())).append("\t");
+				buff.append(ifNull(pl.getNameTypeSystem())).append("\t");
+				buff.append(ifNull(pl.getCountryCode())).append("\t");
+				buff.append(ifNull(pl.getAdmin1())).append("\t");
+				buff.append(ifNull(pl.getAdmin2())).append("\t");
+				buff.append(ifNull(pl.getFeatureClass())).append("\t");
+				buff.append(ifNull(pl.getFeatureCode())).append("\t");
+				buff.append(ifNull(pl.getLatitude().toString())).append("\t");
+				buff.append(ifNull(pl.getLongitude().toString())).append("\t");
+				buff.append(ifNull(pl.getSource())).append("\t");
+				buff.append("\n");
+			}
 
-      return new StringRepresentation(buff.toString());
-    }
+			return new StringRepresentation(buff.toString());
+		}
 
-    return new StringRepresentation("Unknown format:" + format);
+		return new StringRepresentation("Unknown format:" + format);
 
-  }
+	}
 
-  @Put
-  public Representation doPut() {
+	@Put
+	public Representation doPut() {
 
-    return new StringRepresentation("PUT is not supported, use GET");
-  }
+		return new StringRepresentation("PUT is not supported, use GET");
+	}
 
-  @Post
-  public Representation doPost() {
+	@Post
+	public Representation doPost() {
 
-    return new StringRepresentation("POST is not supported, use GET");
-  }
+		return new StringRepresentation("POST is not supported, use GET");
+	}
 
-  private String ifNull(String in) {
-    if (in != null) {
-      return in;
-    }
+	private String ifNull(String in) {
+		if (in != null) {
+			return in;
+		}
 
-    return "";
-  }
+		return "";
+	}
 
 }

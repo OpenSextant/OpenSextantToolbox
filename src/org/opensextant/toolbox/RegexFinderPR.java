@@ -21,6 +21,14 @@
  **/
 package org.opensextant.toolbox;
 
+import java.net.URL;
+import java.util.List;
+
+import org.opensextant.regex.RegexAnnotation;
+import org.opensextant.regex.RegexMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import gate.AnnotationSet;
 import gate.Factory;
 import gate.FeatureMap;
@@ -35,87 +43,80 @@ import gate.creole.metadata.Optional;
 import gate.creole.metadata.RunTime;
 import gate.util.InvalidOffsetException;
 
-import java.net.URL;
-import java.util.List;
-
-import org.opensextant.regex.RegexAnnotation;
-import org.opensextant.regex.RegexMatcher;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @CreoleResource(name = "OpenSextant Regex Finder", comment = "A simple plugin that finds and normalizes entities "
-    + "based on Java regular expresssions")
+		+ "based on Java regular expresssions")
 public class RegexFinderPR extends AbstractLanguageAnalyser implements ProcessingResource {
-  private static final long serialVersionUID = 1375472181851584128L;
-  /** The Regexmatcher object which does all of the work. */
-  private transient RegexMatcher reger;
-  /** The annotationSet into which the dates will be written. */
-  private String outputAnnotationSet;
-  /** The file containing the patterns. */
-  private URL patternFile;
-  /** The log. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(RegexFinderPR.class);
+	private static final long serialVersionUID = 1375472181851584128L;
+	/** The Regexmatcher object which does all of the work. */
+	private transient RegexMatcher reger;
+	/** The annotationSet into which the dates will be written. */
+	private String outputAnnotationSet;
+	/** The file containing the patterns. */
+	private URL patternFile;
+	/** The log. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegexFinderPR.class);
 
-  /**
-   * Initializes the DateFinderPR resource.
-   */
-  private void initialize() {
-    // initialize the regex matcher
-    reger = new RegexMatcher(patternFile);
-  }
-  /** End initialize. */
+	/**
+	 * Initializes the DateFinderPR resource.
+	 */
+	private void initialize() {
+		// initialize the regex matcher
+		reger = new RegexMatcher(patternFile);
+	}
 
-  @Override
-  public Resource init() throws ResourceInstantiationException {
-    initialize();
-    return this;
-  }
+	/** End initialize. */
 
-  @Override
-  public void reInit() throws ResourceInstantiationException {
-    initialize();
-  }
+	@Override
+	public Resource init() throws ResourceInstantiationException {
+		initialize();
+		return this;
+	}
 
-  @Override
-  public void execute() throws ExecutionException {
-    // get the annotation set into which we will place any annotations found
-    AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet)) ? document
-        .getAnnotations() : document.getAnnotations(outputAnnotationSet);
-    // get the text of the document
-    String text = getDocument().getContent().toString();
-    // find the matches via the regex matcher
-    List<RegexAnnotation> matches = reger.match(text);
-    // loop over all the results
-    for (RegexAnnotation a : matches) {
-      // fill in all the annotation features
-      FeatureMap feats = Factory.newFeatureMap();
-      feats.putAll(a.getFeatures());
-      // create the GATE annotation
-      try {
-        annotSet.add((long) a.getStart(), (long) a.getEnd(), a.getType(), feats);
-      } catch (InvalidOffsetException e) {
-        LOGGER.error("Invalid Offset exception when creating  annotation", e);
-      }
-    }
-  }
+	@Override
+	public void reInit() throws ResourceInstantiationException {
+		initialize();
+	}
 
-  public String getOutputAnnotationSet() {
-    return outputAnnotationSet;
-  }
+	@Override
+	public void execute() throws ExecutionException {
+		// get the annotation set into which we will place any annotations found
+		AnnotationSet annotSet = (outputAnnotationSet == null || "".equals(outputAnnotationSet))
+				? document.getAnnotations() : document.getAnnotations(outputAnnotationSet);
+		// get the text of the document
+		String text = getDocument().getContent().toString();
+		// find the matches via the regex matcher
+		List<RegexAnnotation> matches = reger.match(text);
+		// loop over all the results
+		for (RegexAnnotation a : matches) {
+			// fill in all the annotation features
+			FeatureMap feats = Factory.newFeatureMap();
+			feats.putAll(a.getFeatures());
+			// create the GATE annotation
+			try {
+				annotSet.add((long) a.getStart(), (long) a.getEnd(), a.getType(), feats);
+			} catch (InvalidOffsetException e) {
+				LOGGER.error("Invalid Offset exception when creating  annotation", e);
+			}
+		}
+	}
 
-  @Optional
-  @RunTime
-  @CreoleParameter
-  public void setOutputAnnotationSet(String outputAnnotationSet) {
-    this.outputAnnotationSet = outputAnnotationSet;
-  }
+	public String getOutputAnnotationSet() {
+		return outputAnnotationSet;
+	}
 
-  public URL getPatternFile() {
-    return patternFile;
-  }
+	@Optional
+	@RunTime
+	@CreoleParameter
+	public void setOutputAnnotationSet(String outputAnnotationSet) {
+		this.outputAnnotationSet = outputAnnotationSet;
+	}
 
-  @CreoleParameter
-  public void setPatternFile(URL patternFile) {
-    this.patternFile = patternFile;
-  }
+	public URL getPatternFile() {
+		return patternFile;
+	}
+
+	@CreoleParameter
+	public void setPatternFile(URL patternFile) {
+		this.patternFile = patternFile;
+	}
 } // class DateFinderPR

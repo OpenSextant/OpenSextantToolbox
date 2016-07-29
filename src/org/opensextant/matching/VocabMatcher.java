@@ -21,81 +21,81 @@ import org.slf4j.LoggerFactory;
 
 public class VocabMatcher {
 
-  private SolrClient solrServer;
-  private ModifiableSolrParams matchParams;
+	private SolrClient solrServer;
+	private ModifiableSolrParams matchParams;
 
-  private SolrTaggerRequest tagRequest;
-  private Map<Integer, Vocab> vocabIDMap = new HashMap<Integer, Vocab>(100);
+	private SolrTaggerRequest tagRequest;
+	private Map<Integer, Vocab> vocabIDMap = new HashMap<Integer, Vocab>(100);
 
-  /** Log object. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcher.class);
+	/** Log object. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(VocabMatcher.class);
 
-  protected VocabMatcher(SolrClient svr, ModifiableSolrParams prms) {
-    this.solrServer = svr;
-    matchParams = new ModifiableSolrParams(prms);
-  }
+	protected VocabMatcher(SolrClient svr, ModifiableSolrParams prms) {
+		this.solrServer = svr;
+		matchParams = new ModifiableSolrParams(prms);
+	}
 
-  public List<VocabMatch> matchText(String buffer, String docName) {
+	public List<VocabMatch> matchText(String buffer, String docName) {
 
-    List<VocabMatch> matches = new ArrayList<VocabMatch>();
-    // Setup request to tag
-    tagRequest = new SolrTaggerRequest(matchParams, SolrRequest.METHOD.POST);
-    tagRequest.setInput(buffer);
+		List<VocabMatch> matches = new ArrayList<VocabMatch>();
+		// Setup request to tag
+		tagRequest = new SolrTaggerRequest(matchParams, SolrRequest.METHOD.POST);
+		tagRequest.setInput(buffer);
 
-    QueryResponse response = null;
+		QueryResponse response = null;
 
-    try {
-      response = tagRequest.process(solrServer);
-    } catch (SolrServerException | IOException e) {
-      LOGGER.error("Got exception when attempting to match " + docName, e);
-      return matches;
-    }
+		try {
+			response = tagRequest.process(solrServer);
+		} catch (SolrServerException | IOException e) {
+			LOGGER.error("Got exception when attempting to match " + docName, e);
+			return matches;
+		}
 
-    // Process Solr Response
-    SolrDocumentList docList = response.getResults();
+		// Process Solr Response
+		SolrDocumentList docList = response.getResults();
 
-    // TODO convert this section to use a StreamingResponseCallback
+		// TODO convert this section to use a StreamingResponseCallback
 
-    // convert each solrdoc (a match) to a VocabMatch and add to id map
-    for (SolrDocument solrDoc : docList) {
-      Integer id = (Integer) solrDoc.getFirstValue("id");
-      Vocab match = MatcherFactory.createVocab(solrDoc);
-      vocabIDMap.put(id, match);
-    }
+		// convert each solrdoc (a match) to a VocabMatch and add to id map
+		for (SolrDocument solrDoc : docList) {
+			Integer id = (Integer) solrDoc.getFirstValue("id");
+			Vocab match = MatcherFactory.createVocab(solrDoc);
+			vocabIDMap.put(id, match);
+		}
 
-    @SuppressWarnings("unchecked")
-    List<NamedList<?>> tags = (List<NamedList<?>>) response.getResponse().get("tags");
+		@SuppressWarnings("unchecked")
+		List<NamedList<?>> tags = (List<NamedList<?>>) response.getResponse().get("tags");
 
-    VocabMatch mt = null;
-    int x1 = -1, x2 = -1;
+		VocabMatch mt = null;
+		int x1 = -1, x2 = -1;
 
-    String matchText = null;
+		String matchText = null;
 
-    for (NamedList<?> tag : tags) {
-      // get the start, end and list of matching place IDs
-      x1 = (Integer) tag.get("startOffset");
-      x2 = (Integer) tag.get("endOffset");
-      @SuppressWarnings("unchecked")
-      List<Integer> vocabIDList = (List<Integer>) tag.get("ids");
+		for (NamedList<?> tag : tags) {
+			// get the start, end and list of matching place IDs
+			x1 = (Integer) tag.get("startOffset");
+			x2 = (Integer) tag.get("endOffset");
+			@SuppressWarnings("unchecked")
+			List<Integer> vocabIDList = (List<Integer>) tag.get("ids");
 
-      // create and populate the VocabMatch
-      mt = new VocabMatch();
-      mt.setStart(x1);
-      mt.setEnd(x2);
-      matchText = buffer.substring(x1, x2);
-      mt.setTextMatch(matchText);
-      for (Integer vocabID : vocabIDList) {
-        Vocab v = vocabIDMap.get(vocabID);
-        mt.addVocab(v);
-      }
-      matches.add(mt);
-    }
+			// create and populate the VocabMatch
+			mt = new VocabMatch();
+			mt.setStart(x1);
+			mt.setEnd(x2);
+			matchText = buffer.substring(x1, x2);
+			mt.setTextMatch(matchText);
+			for (Integer vocabID : vocabIDList) {
+				Vocab v = vocabIDMap.get(vocabID);
+				mt.addVocab(v);
+			}
+			matches.add(mt);
+		}
 
-    return matches;
+		return matches;
 
-  }
+	}
 
-  public void cleanup() {
-    MatcherFactory.shutdown(this);
-  }
+	public void cleanup() {
+		MatcherFactory.shutdown(this);
+	}
 }

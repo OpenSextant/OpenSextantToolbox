@@ -32,44 +32,46 @@ import org.opensextant.geodesy.UTM;
 
 /**
  * *.
+ * 
  * @author ubaldino
  */
 public class UTMParser {
 
-  /**
-   * Log object private static final Logger LOGGER = LoggerFactory.getLogger(UTMParser.class);
-   */
-  public static final char UTM_NORTH = 'N';
-  public static final char UTM_SOUTH = 'S';
+	/**
+	 * Log object private static final Logger LOGGER =
+	 * LoggerFactory.getLogger(UTMParser.class);
+	 */
+	public static final char UTM_NORTH = 'N';
+	public static final char UTM_SOUTH = 'S';
 
-  private UTMParser() {
-  }
+	private UTMParser() {
+	}
 
-  public static UTM parseUTM(Map<String, String> elements) {
+	public static UTM parseUTM(Map<String, String> elements) {
 
-    String z = elements.get("UTMZone");
-    String z1 = elements.get("UTMZoneZZ"); // 0-5\d
-    String z2 = elements.get("UTMZoneZ"); // \d
-    if (z == null) {
-      z = z1 != null ? z1 : z2;
-    }
-    if (z == null) {
-      return null;
-    }
-    int zz = Integer.parseInt(z);
-    String b = elements.get("UTMBand");
-    if (b == null) {
-      return null;
-    }
-    // TODO: is 'n' valid for UTM band?
-    char h = b.charAt(0);
-    if (h != UTM_NORTH && h != UTM_SOUTH) {
-      h = UTM.getHemisphere(h);
-    }
-    String easting = elements.get("UTMEasting");
-    String northing = elements.get("UTMNorthing");
-    Integer eastingValue = Integer.parseInt(easting);
-    Integer northingValue = Integer.parseInt(northing);
-    return new UTM(zz, h, eastingValue.doubleValue(), northingValue.doubleValue());
-  }
+		String z = elements.get("UTMZone");
+		String z1 = elements.get("UTMZoneZZ"); // 0-5\d
+		String z2 = elements.get("UTMZoneZ"); // \d
+		if (z == null) {
+			z = z1 != null ? z1 : z2;
+		}
+		if (z == null) {
+			return null;
+		}
+		int zz = Integer.parseInt(z);
+		String b = elements.get("UTMBand");
+		if (b == null) {
+			return null;
+		}
+		// TODO: is 'n' valid for UTM band?
+		char h = b.charAt(0);
+		if (h != UTM_NORTH && h != UTM_SOUTH) {
+			h = UTM.getHemisphere(h);
+		}
+		String easting = elements.get("UTMEasting");
+		String northing = elements.get("UTMNorthing");
+		Integer eastingValue = Integer.parseInt(easting);
+		Integer northingValue = Integer.parseInt(northing);
+		return new UTM(zz, h, eastingValue.doubleValue(), northingValue.doubleValue());
+	}
 }

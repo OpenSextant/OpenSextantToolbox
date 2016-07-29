@@ -5,50 +5,50 @@ import java.util.List;
 
 public class VocabMatch {
 
-  /** The vocabulary match as it appeared in the document. */
-  private String textMatch;
+	/** The vocabulary match as it appeared in the document. */
+	private String textMatch;
 
-  /** The location this was found in the document. */
-  private long start;
-  private long end;
+	/** The location this was found in the document. */
+	private long start;
+	private long end;
 
-  /** The vocab entries this has been matched to. */
-  private List<Vocab> vocabs = new ArrayList<Vocab>();
+	/** The vocab entries this has been matched to. */
+	private List<Vocab> vocabs = new ArrayList<Vocab>();
 
-  public String getTextMatch() {
-    return textMatch;
-  }
+	public String getTextMatch() {
+		return textMatch;
+	}
 
-  public void setTextMatch(String textMatch) {
-    this.textMatch = textMatch;
-  }
+	public void setTextMatch(String textMatch) {
+		this.textMatch = textMatch;
+	}
 
-  public long getStart() {
-    return start;
-  }
+	public long getStart() {
+		return start;
+	}
 
-  public void setStart(long start) {
-    this.start = start;
-  }
+	public void setStart(long start) {
+		this.start = start;
+	}
 
-  public long getEnd() {
-    return end;
-  }
+	public long getEnd() {
+		return end;
+	}
 
-  public void setEnd(long end) {
-    this.end = end;
-  }
+	public void setEnd(long end) {
+		this.end = end;
+	}
 
-  public List<Vocab> getVocabs() {
-    return vocabs;
-  }
+	public List<Vocab> getVocabs() {
+		return vocabs;
+	}
 
-  public void setVocabs(List<Vocab> vocabs) {
-    this.vocabs = vocabs;
-  }
+	public void setVocabs(List<Vocab> vocabs) {
+		this.vocabs = vocabs;
+	}
 
-  public void addVocab(Vocab v) {
-    this.vocabs.add(v);
-  }
+	public void addVocab(Vocab v) {
+		this.vocabs.add(v);
+	}
 
 }

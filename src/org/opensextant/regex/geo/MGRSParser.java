@@ -41,181 +41,185 @@ import org.slf4j.LoggerFactory;
 
 /**
  * *.
+ * 
  * @author ubaldino
  */
 public class MGRSParser {
 
-  /** Log object. */
-  private static final Logger LOGGER = LoggerFactory.getLogger(MGRSParser.class);
+	/** Log object. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MGRSParser.class);
 
-  private static DateFormat df1 = new java.text.SimpleDateFormat("ddMMMyyyy");
-  private static DateFormat df2 = new java.text.SimpleDateFormat("ddMMMyy");
-  static final Pattern DELWS = Pattern.compile("\\s+");
+	private static DateFormat df1 = new java.text.SimpleDateFormat("ddMMMyyyy");
+	private static DateFormat df2 = new java.text.SimpleDateFormat("ddMMMyy");
+	static final Pattern DELWS = Pattern.compile("\\s+");
 
-  static {
-    // turn off lenient date parsing
-    df1.setLenient(false);
-    df2.setLenient(false);
-  }
+	static {
+		// turn off lenient date parsing
+		df1.setLenient(false);
+		df2.setLenient(false);
+	}
 
-  private MGRSParser() {
-  }
+	private MGRSParser() {
+	}
 
-  public static List<MGRS> parseMGRS(Map<String, String> elements) {
+	public static List<MGRS> parseMGRS(Map<String, String> elements) {
 
-    // get all of the pieces
-    String zone = elements.get("MGRSZone");
-    String quad = elements.get("MGRSQuad");
-    String en = elements.get("Easting_Northing");
+		// get all of the pieces
+		String zone = elements.get("MGRSZone");
+		String quad = elements.get("MGRSQuad");
+		String en = elements.get("Easting_Northing");
 
-    // the results
-    List<MGRS> mgrs = new ArrayList<MGRS>();
+		// the results
+		List<MGRS> mgrs = new ArrayList<MGRS>();
 
-    // have all the pieces?
-    if (zone == null || quad == null || en == null) {
-      return mgrs;
-    }
+		// have all the pieces?
+		if (zone == null || quad == null || en == null) {
+			return mgrs;
+		}
 
-    // look for alternate interpretations
-    List<String> variants = findVariants(zone, quad, en);
+		// look for alternate interpretations
+		List<String> variants = findVariants(zone, quad, en);
 
-    // get the MGRS for each possibility and add to results
-    for (String var : variants) {
-      if (!badMGRS(var)) {
-        MGRS tmp = null;
-        try {
-          tmp = new MGRS(var);
-        } catch (IllegalArgumentException e) {
-          LOGGER.warn("Could not parse MGRS:" + var, e);
-        }
-        if (tmp != null) {
-          mgrs.add(tmp);
-        }
-      }
-    }
+		// get the MGRS for each possibility and add to results
+		for (String var : variants) {
+			if (!badMGRS(var)) {
+				MGRS tmp = null;
+				try {
+					tmp = new MGRS(var);
+				} catch (IllegalArgumentException e) {
+					LOGGER.warn("Could not parse MGRS:" + var, e);
+				}
+				if (tmp != null) {
+					mgrs.add(tmp);
+				}
+			}
+		}
 
-    return mgrs;
-  }
+		return mgrs;
+	}
 
-  private static List<String> findVariants(String zn, String quad, String eastNorth) {
-    List<String> vars = new ArrayList<String>();
+	private static List<String> findVariants(String zn, String quad, String eastNorth) {
+		List<String> vars = new ArrayList<String>();
 
-    // form the whole string
-    String text = deleteWhitespace(zn + quad + eastNorth);
+		// form the whole string
+		String text = deleteWhitespace(zn + quad + eastNorth);
 
-    vars.add(text);
+		vars.add(text);
 
-    return vars;
+		return vars;
 
-  }
+	}
 
-  /** MGRS instances which should be rejected. */
-  private static boolean badMGRS(String txt) {
-    // reject these patterns
-    // 23 JAN 1900 - date
-    // 23 JAN 73 - date
+	/** MGRS instances which should be rejected. */
+	private static boolean badMGRS(String txt) {
+		// reject these patterns
+		// 23 JAN 1900 - date
+		// 23 JAN 73 - date
 
-    // TODO what about these?
-    // 20PER1000 - ratio
-    // 18DEG20 - part of an obscure lat/lon
+		// TODO what about these?
+		// 20PER1000 - ratio
+		// 18DEG20 - part of an obscure lat/lon
 
-    // remove whitespace
-    String tmp = txt.replaceAll("\\s", "");
-    Date dt = null;
+		// remove whitespace
+		String tmp = txt.replaceAll("\\s", "");
+		Date dt = null;
 
-    try {
-      dt = df1.parse(tmp);
-    } catch (ParseException e) {
-      LOGGER.debug(tmp + " looks like a date not an MGRS" );
-    }
+		try {
+			dt = df1.parse(tmp);
+		} catch (ParseException e) {
+			LOGGER.debug(tmp + " looks like a date not an MGRS");
+		}
 
-    if (dt != null) {
-      LOGGER.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
-      return true;
-    }
+		if (dt != null) {
+			LOGGER.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
+			return true;
+		}
 
-    try {
-      dt = df2.parse(tmp);
-    } catch (ParseException e) {
-      LOGGER.debug(tmp + " looks like a date not an MGRS" );
-    }
+		try {
+			dt = df2.parse(tmp);
+		} catch (ParseException e) {
+			LOGGER.debug(tmp + " looks like a date not an MGRS");
+		}
 
-    if (dt != null) {
-      LOGGER.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
-      return true;
-    }
+		if (dt != null) {
+			LOGGER.info("Rejecting " + txt + " as bad MGRS: Looks like a date");
+			return true;
+		}
 
-    LOGGER.debug("Accepting " + txt + " as good MGRS");
+		LOGGER.debug("Accepting " + txt + " as good MGRS");
 
-    return false;
-  }
+		return false;
+	}
 
-  protected static int parseInt(String x) {
+	protected static int parseInt(String x) {
 
-    try {
-      return Integer.parseInt(x);
-    } catch (NumberFormatException e) {
-      LOGGER.error("Could parse integer:", e);
-      return -1;
-    }
+		try {
+			return Integer.parseInt(x);
+		} catch (NumberFormatException e) {
+			LOGGER.error("Could parse integer:", e);
+			return -1;
+		}
 
-  }
+	}
 
-  public static String deleteWhitespace(String t) {
-    Matcher m = DELWS.matcher(t);
-    if (m != null) {
-      return m.replaceAll("");
-    }
-    return t;
-  }
+	public static String deleteWhitespace(String t) {
+		Matcher m = DELWS.matcher(t);
+		if (m != null) {
+			return m.replaceAll("");
+		}
+		return t;
+	}
 
-  /**
-   * Counts all digits in text.
-   * @param txt
-   * @return
-   */
-  public static int countDigits(String txt) {
-    if (txt == null) {
-      return 0;
-    }
-    int digits = 0;
-    for (char c : txt.toCharArray()) {
-      if (Character.isDigit(c)) {
-        ++digits;
-      }
-    }
-    return digits;
-  }
+	/**
+	 * Counts all digits in text.
+	 * 
+	 * @param txt
+	 * @return
+	 */
+	public static int countDigits(String txt) {
+		if (txt == null) {
+			return 0;
+		}
+		int digits = 0;
+		for (char c : txt.toCharArray()) {
+			if (Character.isDigit(c)) {
+				++digits;
+			}
+		}
+		return digits;
+	}
 
-  /**
-   * Counts all digits in text.
-   * @param txt
-   * @return
-   */
-  public static int countWhiteSpace(String txt) {
-    if (txt == null) {
-      return 0;
-    }
-    int ws = 0;
-    for (char c : txt.toCharArray()) {
-      // isWhitespaceChar(c)?
-      if (Character.isWhitespace(c)) {
-        ++ws;
-      }
-    }
-    return ws;
-  }
+	/**
+	 * Counts all digits in text.
+	 * 
+	 * @param txt
+	 * @return
+	 */
+	public static int countWhiteSpace(String txt) {
+		if (txt == null) {
+			return 0;
+		}
+		int ws = 0;
+		for (char c : txt.toCharArray()) {
+			// isWhitespaceChar(c)?
+			if (Character.isWhitespace(c)) {
+				++ws;
+			}
+		}
+		return ws;
+	}
 
-  /**
-   * Minimize whitespace.
-   * @param t
-   * @return String
-   */
-  public static String squeezeWhitespace(String t) {
-    Matcher m = DELWS.matcher(t);
-    if (m != null) {
-      return m.replaceAll(" ");
-    }
-    return t;
-  }
+	/**
+	 * Minimize whitespace.
+	 * 
+	 * @param t
+	 * @return String
+	 */
+	public static String squeezeWhitespace(String t) {
+		Matcher m = DELWS.matcher(t);
+		if (m != null) {
+			return m.replaceAll(" ");
+		}
+		return t;
+	}
 }

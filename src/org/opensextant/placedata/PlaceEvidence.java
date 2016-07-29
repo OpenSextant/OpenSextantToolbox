@@ -26,170 +26,178 @@ import java.io.Serializable;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * A PlaceEvidence represents a fragment of evidence about a Place. Its intended purpose is to represent evidence about
- * a Place's identity which has been extracted from a document. This evidence is used to help disambiguate (distinguish
- * among) places which have the same or similar names. It is intentionally very similar to the Place class to facilitate
- * comparisons with that class. *
+ * A PlaceEvidence represents a fragment of evidence about a Place. Its intended
+ * purpose is to represent evidence about a Place's identity which has been
+ * extracted from a document. This evidence is used to help disambiguate
+ * (distinguish among) places which have the same or similar names. It is
+ * intentionally very similar to the Place class to facilitate comparisons with
+ * that class. *
  */
 public class PlaceEvidence implements Comparable<Object>, Serializable {
-  /**
-   * SCOPE - Where did this evidence come from wrt to the PlaceCandidate it is part of?
-   * <ul>
-   * <li>APRIORI - derived from the gazetteer only, not from any information in the document</li>
-   * <li>LOCAL - directly associated with this instance of PC</li>
-   * <li>COREF - associated with another (related) PC in the document</li>
-   * <li>MERGED - came from the merger of multiple PlaceEvidences (future use)</li>
-   * <li>DOCUMENT - in the same document but has no other direct association</li>
-   * </ul>
-   */
-  public enum Scope {
-    APRIORI, LOCAL, COREF, MERGED, DOCUMENT
-  }
+	/**
+	 * SCOPE - Where did this evidence come from wrt to the PlaceCandidate it is
+	 * part of?
+	 * <ul>
+	 * <li>APRIORI - derived from the gazetteer only, not from any information
+	 * in the document</li>
+	 * <li>LOCAL - directly associated with this instance of PC</li>
+	 * <li>COREF - associated with another (related) PC in the document</li>
+	 * <li>MERGED - came from the merger of multiple PlaceEvidences (future use)
+	 * </li>
+	 * <li>DOCUMENT - in the same document but has no other direct association
+	 * </li>
+	 * </ul>
+	 */
+	public enum Scope {
+		APRIORI, LOCAL, COREF, MERGED, DOCUMENT
+	}
 
-  private static final long serialVersionUID = 2389068012345L;
-  /** The geospatial data, the actual evidence found. */
-  private String placeName;
-  private String countryCode;
-  private String admin1;
-  private String featureClass;
-  private String featureCode;
-  private transient Geocoord geocoord;
-  /** The rule which found the evidence. */
-  private String rule;
-  /** The scope from which this evidence came. */
-  private Scope scope = Scope.LOCAL;
-  /** The strength of the evidence. */
-  private Double weight;
+	private static final long serialVersionUID = 2389068012345L;
+	/** The geospatial data, the actual evidence found. */
+	private String placeName;
+	private String countryCode;
+	private String admin1;
+	private String featureClass;
+	private String featureCode;
+	private transient Geocoord geocoord;
+	/** The rule which found the evidence. */
+	private String rule;
+	/** The scope from which this evidence came. */
+	private Scope scope = Scope.LOCAL;
+	/** The strength of the evidence. */
+	private Double weight;
 
-  public PlaceEvidence() {
-  }
+	public PlaceEvidence() {
+	}
 
-  /** Copy constructor. */
-  public PlaceEvidence(PlaceEvidence old) {
-    this();
-    setAdmin1(old.getAdmin1());
-    setCountryCode(old.getCountryCode());
-    setFeatureClass(old.getFeatureClass());
-    setFeatureCode(old.getFeatureCode());
-    setGeocoord(old.getGeocoord());
-    setPlaceName(old.getPlaceName());
-    setRule(old.getRule());
-    setScope(old.getScope());
-    setWeight(old.getWeight());
-  }
+	/** Copy constructor. */
+	public PlaceEvidence(PlaceEvidence old) {
+		this();
+		setAdmin1(old.getAdmin1());
+		setCountryCode(old.getCountryCode());
+		setFeatureClass(old.getFeatureClass());
+		setFeatureCode(old.getFeatureCode());
+		setGeocoord(old.getGeocoord());
+		setPlaceName(old.getPlaceName());
+		setRule(old.getRule());
+		setScope(old.getScope());
+		setWeight(old.getWeight());
+	}
 
-  /** Compare to other evidence by strength. */
-  @Override
-  public int compareTo(Object other) {
-    if (!(other instanceof PlaceEvidence)) {
-      return 0;
-    }
-    PlaceEvidence tmp = (PlaceEvidence) other;
-    return this.weight.compareTo(tmp.weight);
-  }
+	/** Compare to other evidence by strength. */
+	@Override
+	public int compareTo(Object other) {
+		if (!(other instanceof PlaceEvidence)) {
+			return 0;
+		}
+		PlaceEvidence tmp = (PlaceEvidence) other;
+		return this.weight.compareTo(tmp.weight);
+	}
 
-  @Override
-  public boolean equals(Object other) {
-    if (!(other instanceof PlaceEvidence)) {
-      return false;
-    }
-    if(other == this){
-      return true;
-    }
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof PlaceEvidence)) {
+			return false;
+		}
+		if (other == this) {
+			return true;
+		}
 
-    PlaceEvidence tmp = (PlaceEvidence) other;
+		PlaceEvidence tmp = (PlaceEvidence) other;
 
-    return this.weight == tmp.weight;
-  }
+		return this.weight == tmp.weight;
+	}
 
-  /**
-   * (non-Javadoc)
-   * @see java.lang.Object#hashCode()
-   */
-  @Override
-  public int hashCode() {
-    return new HashCodeBuilder(17, 31).
-        append(weight).
-        toHashCode();
-  }
+	/**
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(17, 31).append(weight).toHashCode();
+	}
 
-  /** The getters and setters. */
-  public String getPlaceName() {
-    return placeName;
-  }
+	/** The getters and setters. */
+	public String getPlaceName() {
+		return placeName;
+	}
 
-  public void setPlaceName(String placeName) {
-    this.placeName = placeName;
-  }
+	public void setPlaceName(String placeName) {
+		this.placeName = placeName;
+	}
 
-  public String getCountryCode() {
-    return countryCode;
-  }
+	public String getCountryCode() {
+		return countryCode;
+	}
 
-  public void setCountryCode(String countryCode) {
-    this.countryCode = countryCode;
-  }
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
 
-  public String getAdmin1() {
-    return admin1;
-  }
+	public String getAdmin1() {
+		return admin1;
+	}
 
-  public void setAdmin1(String admin1) {
-    this.admin1 = admin1;
-  }
+	public void setAdmin1(String admin1) {
+		this.admin1 = admin1;
+	}
 
-  public String getFeatureClass() {
-    return featureClass;
-  }
+	public String getFeatureClass() {
+		return featureClass;
+	}
 
-  public void setFeatureClass(String featureClass) {
-    this.featureClass = featureClass;
-  }
+	public void setFeatureClass(String featureClass) {
+		this.featureClass = featureClass;
+	}
 
-  public String getFeatureCode() {
-    return featureCode;
-  }
+	public String getFeatureCode() {
+		return featureCode;
+	}
 
-  public void setFeatureCode(String featureCode) {
-    this.featureCode = featureCode;
-  }
+	public void setFeatureCode(String featureCode) {
+		this.featureCode = featureCode;
+	}
 
-  public Geocoord getGeocoord() {
-    return geocoord;
-  }
+	public Geocoord getGeocoord() {
+		return geocoord;
+	}
 
-  public void setGeocoord(Geocoord geocoord) {
-    this.geocoord = geocoord;
-  }
+	public void setGeocoord(Geocoord geocoord) {
+		this.geocoord = geocoord;
+	}
 
-  public Scope getScope() {
-    return scope;
-  }
+	public Scope getScope() {
+		return scope;
+	}
 
-  public void setScope(Scope scope) {
-    this.scope = scope;
-  }
+	public void setScope(Scope scope) {
+		this.scope = scope;
+	}
 
-  public String getRule() {
-    return rule;
-  }
+	public String getRule() {
+		return rule;
+	}
 
-  public void setRule(String rule) {
-    this.rule = rule;
-  }
+	public void setRule(String rule) {
+		this.rule = rule;
+	}
 
-  public Double getWeight() {
-    return weight;
-  }
+	public Double getWeight() {
+		return weight;
+	}
 
-  public void setWeight(Double weight) {
-    this.weight = weight;
-  }
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
 
-  /** Override toString to get a reasonable string label for this PlaceEvidence. */
-  @Override
-  public String toString() {
-    return this.rule + "-" + this.scope + "/" + this.weight + "(" + this.placeName + "," + this.admin1 + ","
-        + this.countryCode + ")";
-  }
+	/**
+	 * Override toString to get a reasonable string label for this
+	 * PlaceEvidence.
+	 */
+	@Override
+	public String toString() {
+		return this.rule + "-" + this.scope + "/" + this.weight + "(" + this.placeName + "," + this.admin1 + ","
+				+ this.countryCode + ")";
+	}
 }
