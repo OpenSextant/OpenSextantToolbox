@@ -30,8 +30,15 @@ public class OpenSextantServer {
 		// Create a new Component.
 		Component component = new Component();
 
-		// Add a new HTTP server listening on port 8182.
-		Server srvr = new Server(Protocol.HTTP, 8182);
+		// get port from environment variable
+		String port_env = System.getenv("PORT");
+		int port = 8182;
+		if(port_env != null) {
+			port = Integer.parseInt(port_env);
+		}
+
+		// Add a new HTTP server listening on port.
+		Server srvr = new Server(Protocol.HTTP, port);
 		component.getServers().add(srvr);
 
 		// get some server properties or defaults
