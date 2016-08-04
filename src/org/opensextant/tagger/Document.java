@@ -35,13 +35,12 @@ public class Document {
 		return matchList;
 	}
 
-	public void setMatchList(List<Match> matchList) {
-		this.matchList = matchList;
+	public void setMatchList(List<Match> list) {
+		this.matchList = list;
 	}
 
 	public void addMatch(Match match) {
 		this.matchList.add(match);
-
 	}
 
 	public String getSnippet(Match an, int size) {

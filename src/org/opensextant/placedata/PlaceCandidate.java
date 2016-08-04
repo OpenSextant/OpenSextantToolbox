@@ -335,11 +335,6 @@ public class PlaceCandidate extends Match implements Serializable {
 		}
 	}
 
-	@Override
-	public List<Object> getPayloads() {
-		return new ArrayList<Object>(this.getPlaces());
-	}
-
 	/** An overide of toString to get a meaningful representation of this PC. */
 	@Override
 	public String toString() {

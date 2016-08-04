@@ -11,7 +11,9 @@ public class Match {
 	protected long end;
 	protected String type = "";
 	protected String matchText = "";
-	private List<Object> payloads = new ArrayList<Object>();
+
+	private List<Map<String, Object>> payloads = new ArrayList<Map<String, Object>>();
+
 	protected Map<String, Object> features = new HashMap<String, Object>();
 
 	public Match(String type, String text, int start, int end) {
@@ -64,15 +66,19 @@ public class Match {
 		this.features = features;
 	}
 
-	public List<Object> getPayloads() {
+	public void addFeatures(Map<String, Object> features) {
+		this.features = features;
+	}
+
+	public List<Map<String, Object>> getPayloads() {
 		return payloads;
 	}
 
-	public void setPayloads(List<Object> payloads) {
+	public void setPayloads(List<Map<String, Object>> payloads) {
 		this.payloads = payloads;
 	}
 
-	public void addPayload(Object payload) {
+	public void addPayload(Map<String, Object> payload) {
 		this.payloads.add(payload);
 	}
 
