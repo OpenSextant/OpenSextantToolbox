@@ -65,11 +65,6 @@ Build file for OpenSextantToolbox.
 	<!--property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer.txt" /-->
 	<property name="csv.gaz" value="${resources.home}/resources/geoGazetteer/MergedGazetteer_SMALL.txt" />
 
-
-	<!--property name="fieldnames.gaz" value="id,place_id,name,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,conflate_key,name_bias,id_bias,name_type,name_type_system,partition" /-->
-	<property name="index.vocab" value="${resources.home}/resources/Vocabularies/vocab.def" />
-	<!--property name="fieldnames.vocab" value="id,phrase,category,taxonomy" /-->
-
 	<!-- Properties for example code -->
 
 	<!-- Classpath to run example code which uses GATE -->
@@ -224,7 +219,6 @@ Build file for OpenSextantToolbox.
 		<antcall target="clean.gaz" />
 		<antcall target="create.solr.home" />
 		<antcall target="load.gazetteer" />
-		<!--antcall target="load.vocabulary.index" /-->
 	</target>
 
 	<!-- create the empty solr home directory -->
@@ -243,24 +237,9 @@ Build file for OpenSextantToolbox.
 			<jvmarg value="-Xmx3G" />
 			<jvmarg value="-Dlog4j.configuration=file:${basedir}/etc/log4j.properties" />
 			<jvmarg value="-Dsolr.home=${solr.home}" />
-			<arg value="gazetteer" />
-			<arg value="CSV" />
 			<arg value="${csv.gaz}" />
 		</java>
 	</target>
-
-	<!-- Load the vocabulary data into Solr (from a vocab index file)-->
-	<!--target name="load.vocabulary.index">
-		<java classname="org.opensextant.matching.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
-			<jvmarg value="-Xmx3G" />
-			<jvmarg value="-XX:MaxPermSize=256m" />
-			<jvmarg value="-Dlog4j.configuration=file:${basedir}/etc/log4j.properties" />
-			<jvmarg value="-Dsolr.home=${solr.home}" />
-			<arg value="vocabulary" />
-			<arg value="INDEX" />
-			<arg value="${index.vocab}" />
-		</java>
-	</target-->
 
 	<!-- create JavaDoc directory -->
 	<target name="javadoc.prepare">
@@ -380,7 +359,6 @@ Build file for OpenSextantToolbox.
 		<antcall target="example.geotagger" />
 		<antcall target="example.generalPurposeTagger" />
 		<antcall target="example.placeNameMatcher" />
-		<!--antcall target="example.vocabMatcher" /-->
 		<antcall target="example.placeNameSearch" />
 		<antcall target="example.dateRegexMatcher" />
 		<antcall target="example.geoRegexMatcher" />
@@ -430,20 +408,6 @@ Build file for OpenSextantToolbox.
 		</java>
 	</target>
 
-	<target name="example.vocabMatcher">
-		<echo>--------------------------------------------------</echo>
-		<echo>Running the vocabulary  Matcher Example</echo>
-		<echo>--------------------------------------------------</echo>
-		<!-- run the matcher example -->
-		<java classname="org.opensextant.examples.VocabMatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
-			<jvmarg value="-Xmx500M" />
-			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<!--jvmarg value="-Dsolr.home=${release.dir}/solr" /-->
-			<env key="solr.home" value="${release.dir}/solr" />
-			<arg value="${test.testdocs.dir}/test.txt" />
-			<!--arg value="${release.dir}/solr" /-->
-		</java>
-	</target>
 
 	<target name="example.placeNameSearch">
 		<echo>--------------------------------------------------</echo>

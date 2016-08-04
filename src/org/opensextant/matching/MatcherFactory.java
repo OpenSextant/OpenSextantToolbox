@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -23,7 +21,6 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.DateUtil;
 import org.apache.solr.core.CoreContainer;
 import org.opensextant.placedata.Place;
-import org.opensextant.vocab.Vocab;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,15 +44,13 @@ public class MatcherFactory {
 
 	/** The solr servers which are the heart of the MatcherFactory. */
 	private static SolrClient solrServerGeo;
-	private static SolrClient solrServerVocab;
 
 	/**
-	 * All of the Matchers,Searchers and VocabMatchers the Factory has created
+	 * All of the Matchers,Searchers  the Factory has created
 	 * weak references so they can be GC'ed.
 	 */
 	static Map<PlacenameMatcher, Boolean> matchers = new WeakHashMap<PlacenameMatcher, Boolean>();
 	static Map<PlacenameSearcher, Boolean> searchers = new WeakHashMap<PlacenameSearcher, Boolean>();
-	static Map<VocabMatcher, Boolean> vocabers = new WeakHashMap<VocabMatcher, Boolean>();
 
 	/** The fields of the geo match and query response. */
 	private static String gazetteerFieldNames = "id,place_id,name,name_expanded,lat,lon,geo,feat_class,feat_code,"
@@ -70,13 +65,9 @@ public class MatcherFactory {
 			+ "FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,"
 			+ "name_bias,id_bias,name_type,name_type_system,partition,search_only";
 
-	/** The fixed fields of the vocab match and response. */
-	private static String vocabFieldNames = "id,phrase,category,taxonomy";
-
-	/** The initial parameters for matchers and the searchers and vocabers. */
+	/** The initial parameters for matchers and the searchers */
 	private static ModifiableSolrParams matchParams = new ModifiableSolrParams();
 	private static ModifiableSolrParams searchParams = new ModifiableSolrParams();
-	private static ModifiableSolrParams vocabParams = new ModifiableSolrParams();
 
 	/**
 	 * Mapping from gazetteer codes to hierachical expression used on the Place
@@ -105,15 +96,6 @@ public class MatcherFactory {
 		searchParams.set(CommonParams.Q, "*:*");
 		searchParams.set(CommonParams.FL, gazetteerFieldNames + ",score");
 		searchParams.set(CommonParams.ROWS, 100000);
-
-		vocabParams.set(CommonParams.QT, MATCH_REQUESTHANDLER);
-		vocabParams.set(CommonParams.FL, vocabFieldNames);
-		vocabParams.set("tagsLimit", 100000);
-		vocabParams.set(CommonParams.ROWS, 100000);
-		vocabParams.set("subTags", false);
-		vocabParams.set("matchText", false);
-		vocabParams.set("overlaps", "LONGEST_DOMINANT_RIGHT");
-		vocabParams.set("field", "phrase4matching");
 
 	}
 
@@ -155,7 +137,6 @@ public class MatcherFactory {
 			isConfigured = false;
 			isStarted = false;
 			solrServerGeo = null;
-			solrServerVocab = null;
 		}
 
 		// get value for home
@@ -201,24 +182,20 @@ public class MatcherFactory {
 			HttpSolrClient server = new HttpSolrClient(homeLocation);
 			server.setAllowCompression(true);
 			solrServerGeo = server;
-			solrServerVocab = server;
+
 		} else { // must be local, use EmbeddedSolrServer
 
 			CoreContainer solrContainer = new CoreContainer(homeLocation);
 
 			solrContainer.load();
 			EmbeddedSolrServer serverGeo = new EmbeddedSolrServer(solrContainer, "gazetteer");
-			EmbeddedSolrServer serverVocab = new EmbeddedSolrServer(solrContainer, "vocabulary");
 			solrServerGeo = serverGeo;
-			solrServerVocab = serverVocab;
 		}
 
 		// see if solr servers are really there
 		SolrPingResponse pingGeo;
-		SolrPingResponse pingVocab;
 		try {
 			pingGeo = solrServerGeo.ping();
-			pingVocab = solrServerVocab.ping();
 		} catch (SolrServerException e) {
 			LOGGER.error("Solr Server didn't respond to ping from MatcherFactory", e);
 			isStarted = false;
@@ -235,15 +212,6 @@ public class MatcherFactory {
 		} else {
 			LOGGER.error("Solr Server (Geo) responded with error code from ping from MatcherFactory. Got code:"
 					+ pingGeo.getStatus());
-			isStarted = false;
-		}
-
-		// started and got good ping
-		if (pingVocab.getStatus() == 0) {
-			isStarted = true;
-		} else {
-			LOGGER.error("Solr Server (Vocab) responded with error code from ping from MatcherFactory. Got code:"
-					+ pingVocab.getStatus());
 			isStarted = false;
 		}
 
@@ -397,48 +365,6 @@ public class MatcherFactory {
 	}
 
 	/**
-	 * Get a VocabMatcher.
-	 * 
-	 * @return a VocabMatcher
-	 */
-	public static VocabMatcher getVocabMatcher() {
-
-		// if started/configed etc
-		if (isConfigured) {
-
-			if (isStarted) {
-				VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
-				vocabers.put(tmp, true);
-				return tmp;
-			} else {
-				// configured but not started
-				start();
-				LOGGER.debug("Autostarting MatcherFactory");
-				VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
-				vocabers.put(tmp, true);
-				return tmp;
-			}
-		} else {
-			// not configured
-			// try default config
-			LOGGER.debug("Trying default config and autostarting Matcher Factory");
-			config("");
-			if (isConfigured) {
-				LOGGER.debug("Default config worked. Try to start");
-				start();
-				VocabMatcher tmp = new VocabMatcher(solrServerVocab, vocabParams);
-				vocabers.put(tmp, true);
-				return tmp;
-			} else {
-				LOGGER.error("MatcherFactory not configured and default config did'nt work");
-				return null;
-			}
-
-		}
-
-	}
-
-	/**
 	 * @param mtcher
 	 *            the matcher which is requesting the shutdown
 	 */
@@ -458,11 +384,6 @@ public class MatcherFactory {
 		MatcherFactory.shutdown(false);
 	}
 
-	protected static void shutdown(VocabMatcher vocabMatcher) {
-		vocabers.remove(vocabMatcher);
-		MatcherFactory.shutdown(false);
-	}
-
 	/**
 	 * Shutdown the MatcherFactory.
 	 * 
@@ -477,9 +398,6 @@ public class MatcherFactory {
 				if (solrServerGeo != null) {
 					solrServerGeo.close();
 				}
-				if (solrServerVocab != null) {
-					solrServerVocab.close();
-				}
 			} catch (IOException e) {
 				LOGGER.error("Error trying close MatcherFactory" + e.getMessage());
 			}
@@ -488,10 +406,6 @@ public class MatcherFactory {
 			try {
 				if (solrServerGeo != null && !factoryInUse()) {
 					solrServerGeo.close();
-					isStarted = false;
-				}
-				if (solrServerVocab != null && !factoryInUse()) {
-					solrServerVocab.close();
 					isStarted = false;
 				}
 			} catch (IOException e) {
@@ -597,16 +511,8 @@ public class MatcherFactory {
 		return gazetteerFieldNamesLoader;
 	}
 
-	protected static String getVocabFieldNames() {
-		return vocabFieldNames;
-	}
-
 	protected static SolrClient getSolrServerGeo() {
 		return solrServerGeo;
-	}
-
-	protected static SolrClient getSolrServerVocab() {
-		return solrServerVocab;
 	}
 
 	/**
@@ -781,39 +687,6 @@ public class MatcherFactory {
 		place.setIdBias(getDouble(gazEntry, "id_bias"));
 
 		return place;
-	}
-
-	protected static Vocab createVocab(SolrDocument solrDoc) {
-		Vocab v = new Vocab();
-		// get and set the fixed attributes
-		v.setId(getString(solrDoc, "id"));
-		v.setVocabMatch(getString(solrDoc, "phrase"));
-		// TODO add "collection" to schema and loader
-		v.setCollection("Generic");
-		v.setCategory(internString(getString(solrDoc, "category")));
-		v.setTaxonomy(internString(getString(solrDoc, "taxonomy")));
-
-		// set any other atttributes from the solrdoc into the vocabMatches
-		// attributes HashMap
-		String[] pieces = vocabFieldNames.split(",");
-		List<String> handled = new ArrayList<String>();
-		for (String s : pieces) {
-			handled.add(s);
-		}
-
-		Map<String, Object> tmpMap = solrDoc.getFieldValueMap();
-		Map<String, Object> others = new HashMap<String, Object>();
-
-		for (String s : tmpMap.keySet()) {
-			if (!handled.contains(s)) {
-				others.put(s, tmpMap.get(s));
-			}
-
-		}
-
-		v.setAttributes(others);
-
-		return v;
 	}
 
 }
