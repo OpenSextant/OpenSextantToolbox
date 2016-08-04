@@ -46,11 +46,11 @@ import org.opensextant.tagger.Match;
 public class PlaceCandidate extends Match implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public String getPlaceName(){
+	public String getPlaceName() {
 		return this.getMatchText();
 	}
 
-	public void setPlaceName(String name){
+	public void setPlaceName(String name) {
 		this.setMatchText(name);
 	}
 
@@ -120,7 +120,6 @@ public class PlaceCandidate extends Match implements Serializable {
 	public boolean isPlace() {
 		return getPlaceConfidenceScore() > 0.0;
 	}
-
 
 	/**
 	 * Get a ranked list of places.
@@ -336,10 +335,16 @@ public class PlaceCandidate extends Match implements Serializable {
 		}
 	}
 
+	@Override
+	public List<Object> getPayloads() {
+		return new ArrayList<Object>(this.getPlaces());
+	}
+
 	/** An overide of toString to get a meaningful representation of this PC. */
 	@Override
 	public String toString() {
-		String tmp = this.getMatchText() + "(" + getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")" + "\n";
+		String tmp = this.getMatchText() + "(" + getPlaceConfidenceScore() + "/" + this.scoredPlaces.size() + ")"
+				+ "\n";
 		tmp = tmp + "Rules=" + this.rules + "\n";
 		tmp = tmp + "Evidence=" + this.evidence + "\n";
 		sort();

@@ -249,7 +249,7 @@ public class DocumentProcessorPool {
 					tmpAnno.getFeatures().put(k, v);
 				}
 			}
-			db.addAnno(tmpAnno);
+			db.addMatch(tmpAnno);
 
 		}
 

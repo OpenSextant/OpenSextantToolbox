@@ -7,12 +7,12 @@ public class Document {
 
 	private String title;
 	private String content;
-	private List<Match> annoList;
+	private List<Match> matchList;
 
 	public Document() {
 		this.title = "";
 		this.content = "";
-		annoList = new ArrayList<Match>();
+		matchList = new ArrayList<Match>();
 	}
 
 	public String getTitle() {
@@ -31,16 +31,16 @@ public class Document {
 		this.content = content;
 	}
 
-	public List<Match> getAnnoList() {
-		return annoList;
+	public List<Match> getMatchList() {
+		return matchList;
 	}
 
-	public void setAnnoList(List<Match> annoList) {
-		this.annoList = annoList;
+	public void setMatchList(List<Match> matchList) {
+		this.matchList = matchList;
 	}
 
-	public void addAnno(Match tmpAnno) {
-		this.annoList.add(tmpAnno);
+	public void addMatch(Match match) {
+		this.matchList.add(match);
 
 	}
 
