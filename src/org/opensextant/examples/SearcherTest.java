@@ -75,9 +75,10 @@ public class SearcherTest {
 		List<Place> placesFound;
 
 		// parameters used in the sample searches
-		String genericQuery = "source:ADHOC";
+		// all independent countries with "united" in their name
+		String genericQuery = "feat_code:PCLI AND name:united";
 
-		String nameQuery = "Kabul";
+		String nameQuery = "Kuwait";
 		Double lat = 34.51667;
 		Double lon = 69.18333;
 		Double distance = 50.0; // kilometers

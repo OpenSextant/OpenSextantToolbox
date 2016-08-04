@@ -19,16 +19,25 @@
  See the License for the specific language governing permissions and
  limitations under the License.
  */
-package org.opensextant.matching;
+package org.opensextant.utils;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
+import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.SolrResponseBase;
+import org.apache.solr.client.solrj.response.schema.SchemaRepresentation;
+import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase;
+import org.apache.solr.core.CoreContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +48,10 @@ public class DataLoader {
 
 	/** Log object. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(DataLoader.class);
+
+	static SolrClient solrClient;
+
+	private static String coreName = "gazetteer";
 
 	/** Some common params. */
 	static {
@@ -57,25 +70,23 @@ public class DataLoader {
 
 	public static void main(String[] args) throws Exception {
 
-		if (args.length < 1 || args.length > 2) {
+		if (args.length != 2) {
 			usage();
 		}
 
-		String csvFilePath = args[0];
-		String solrhome = "";
-		if (args.length == 2) {
-			solrhome = args[1];
-		}
+		String solrHome = args[0];
+		String csvFilePath = args[1];
 
-		// get a SolrServer
-		SolrClient solrServer = getSolrServer(solrhome);
+		CoreContainer solrContainer = new CoreContainer(solrHome);
+		solrContainer.load();
+		solrClient = new EmbeddedSolrServer(solrContainer, coreName);
 
 		try {
 
 			// set the fieldnames param for the selected schema
 			final ModifiableSolrParams params = new ModifiableSolrParams(loadParams);
 
-			params.set("fieldnames", MatcherFactory.getGazetteerFieldNamesLoader());
+			params.set("fieldnames", getFieldNames(coreName));
 
 			// build the update request
 			final ContentStreamUpdateRequest updateRequest = new ContentStreamUpdateRequest(requestHandler);
@@ -89,7 +100,7 @@ public class DataLoader {
 			// make the call
 			SolrResponseBase response = null;
 			try {
-				response = updateRequest.process(solrServer);
+				response = updateRequest.process(solrClient);
 				// see what happened
 				printResponse(response);
 			} catch (Exception e) {
@@ -98,14 +109,12 @@ public class DataLoader {
 
 		} finally {
 			// cleanup
-			solrServer.close();
+			solrClient.close();
 		}
 	}
 
 	private static void usage() {
-		String tmp = "DataLoader  <inputfilepath> <solrhome> where\n";
-		tmp = tmp + " <inputfilepath> = CSV file to be loaded\n";
-		tmp = tmp + " <solrhome> = path to solr home (optional)\n";
+		String tmp = "DataLoader <solrhome> <inputfilepath> ";
 
 		LOGGER.info(tmp);
 	}
@@ -114,17 +123,10 @@ public class DataLoader {
 		LOGGER.info(response.toString());
 	}
 
-	private static SolrClient getSolrServer(String solrhome) {
+	private static String getFieldNames(String coreName) {
 
-		MatcherFactory.config(solrhome);
-		MatcherFactory.start();
-
-		SolrClient svr = null;
-
-		svr = MatcherFactory.getSolrServerGeo();
-
-		return svr;
-
+		return "id,place_id,name,name_expanded,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,name_bias,id_bias,name_type,name_type_system,partition,search_only";
+		
 	}
 
 }

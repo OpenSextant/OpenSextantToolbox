@@ -41,6 +41,10 @@ public class OpenSextantServer {
 		Server srvr = new Server(Protocol.HTTP, port);
 		component.getServers().add(srvr);
 
+		// get and set solr home
+		String solrHome = prop.getProperty("os.service.solr.home", "./solr");
+		System.setProperty("solr.home", solrHome);
+		
 		// get some server properties or defaults
 		String minThreads = prop.getProperty("os.service.server.minThreads", "1");
 		String maxThreads = prop.getProperty("os.service.server.maxThreads", "10");

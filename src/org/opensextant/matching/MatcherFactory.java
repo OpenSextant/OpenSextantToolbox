@@ -49,7 +49,6 @@ public class MatcherFactory {
 	 * All of the Matchers,Searchers  the Factory has created
 	 * weak references so they can be GC'ed.
 	 */
-	static Map<PlacenameMatcher, Boolean> matchers = new WeakHashMap<PlacenameMatcher, Boolean>();
 	static Map<PlacenameSearcher, Boolean> searchers = new WeakHashMap<PlacenameSearcher, Boolean>();
 
 	/** The fields of the geo match and query response. */
@@ -66,7 +65,6 @@ public class MatcherFactory {
 			+ "name_bias,id_bias,name_type,name_type_system,partition,search_only";
 
 	/** The initial parameters for matchers and the searchers */
-	private static ModifiableSolrParams matchParams = new ModifiableSolrParams();
 	private static ModifiableSolrParams searchParams = new ModifiableSolrParams();
 
 	/**
@@ -83,16 +81,6 @@ public class MatcherFactory {
 
 	/** Set the base config for the matching and searching params. */
 	static {
-		matchParams.set(CommonParams.QT, MATCH_REQUESTHANDLER);
-		matchParams.set(CommonParams.FL, gazetteerFieldNames);
-		matchParams.set("tagsLimit", 100000);
-		matchParams.set(CommonParams.ROWS, 100000);
-		matchParams.set("subTags", false);
-		matchParams.set("matchText", false);
-		matchParams.set("overlaps", "LONGEST_DOMINANT_RIGHT");
-		matchParams.set("field", "name4matching");
-		matchParams.set(CommonParams.FQ, "search_only:false");
-
 		searchParams.set(CommonParams.Q, "*:*");
 		searchParams.set(CommonParams.FL, gazetteerFieldNames + ",score");
 		searchParams.set(CommonParams.ROWS, 100000);
@@ -283,46 +271,6 @@ public class MatcherFactory {
 	}
 
 	/**
-	 * Get a PlacenameMatcher.
-	 * 
-	 * @return a PlacenameMatcher
-	 */
-	public static PlacenameMatcher getMatcher() {
-
-		// if started/configed etc
-		if (isConfigured) {
-
-			if (isStarted) {
-				PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
-				matchers.put(tmp, true);
-				return tmp;
-			} else {
-				// configured but not started
-				start();
-				LOGGER.debug("Autostarting MatcherFactory");
-				PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
-				matchers.put(tmp, true);
-				return tmp;
-			}
-		} else {
-			// not configured
-			// try default config
-			LOGGER.debug("Trying default config and autostarting Matcher Factory");
-			config("");
-			if (isConfigured) {
-				LOGGER.debug("Default config worked. Try to start");
-				start();
-				PlacenameMatcher tmp = new PlacenameMatcher(solrServerGeo, matchParams);
-				matchers.put(tmp, true);
-				return tmp;
-			} else {
-				LOGGER.error("MatcherFactory not configured and default config didn't work");
-				return null;
-			}
-		}
-	}
-
-	/**
 	 * Get a PlacenameSearcher.
 	 * 
 	 * @return a PlacenameSearcher
@@ -362,15 +310,6 @@ public class MatcherFactory {
 
 		}
 
-	}
-
-	/**
-	 * @param mtcher
-	 *            the matcher which is requesting the shutdown
-	 */
-	protected static void shutdown(PlacenameMatcher mtcher) {
-		matchers.remove(mtcher);
-		MatcherFactory.shutdown(false);
 	}
 
 	/**
@@ -416,7 +355,7 @@ public class MatcherFactory {
 	}
 
 	private static boolean factoryInUse() {
-		return !matchers.isEmpty() || !searchers.isEmpty();
+		return false; 
 	}
 
 	/**

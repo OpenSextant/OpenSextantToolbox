@@ -19,7 +19,7 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.phonetic;
+package org.opensextant.utils;
 
 import java.lang.Character.UnicodeScript;
 import java.text.Normalizer;

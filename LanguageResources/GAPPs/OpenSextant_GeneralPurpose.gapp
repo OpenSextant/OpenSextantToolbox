@@ -592,8 +592,8 @@
                 </entry>
               </localMap>
             </runtimeParams>
-            <resourceType>org.opensextant.toolbox.NaiveTaggerSolrPR</resourceType>
-            <resourceName>NaiveTaggerSolr</resourceName>
+            <resourceType>org.opensextant.toolbox.GeoTaggerPR</resourceType>
+            <resourceName>GeoGazetteerTagger</resourceName>
             <initParams class="gate.util.persistence.MapPersistence">
               <mapType>gate.util.SimpleFeatureMapImpl</mapType>
               <localMap>
@@ -602,7 +602,7 @@
                   <boolean>false</boolean>
                 </entry>
                 <entry>
-                  <string>gazHome</string>
+                  <string>solrHome</string>
                   <string></string>
                 </entry>
               </localMap>

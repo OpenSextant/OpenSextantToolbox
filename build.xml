@@ -233,10 +233,10 @@ Build file for OpenSextantToolbox.
 	<!-- Load the gazetteer data into Solr -->
 	<!-- NOTE: this is the step that takes a long time -->
 	<target name="load.gazetteer">
-		<java classname="org.opensextant.matching.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.utils.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx3G" />
 			<jvmarg value="-Dlog4j.configuration=file:${basedir}/etc/log4j.properties" />
-			<jvmarg value="-Dsolr.home=${solr.home}" />
+			<arg value="${solr.home}" />
 			<arg value="${csv.gaz}" />
 		</java>
 	</target>
@@ -358,7 +358,6 @@ Build file for OpenSextantToolbox.
 	<target name="run.examples">
 		<antcall target="example.geotagger" />
 		<antcall target="example.generalPurposeTagger" />
-		<antcall target="example.placeNameMatcher" />
 		<antcall target="example.placeNameSearch" />
 		<antcall target="example.dateRegexMatcher" />
 		<antcall target="example.geoRegexMatcher" />
@@ -369,12 +368,12 @@ Build file for OpenSextantToolbox.
 		<echo>Running the Geotagger Example</echo>
 		<echo>-----------------------------------------------</echo>
 		<!-- run the geotagger example-->
-		<java classname="org.opensextant.examples.GeotaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx2G" />
-			<jvmarg value="-Dgate.home=${release.dir}" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}/solr" />
-			<arg value="${test.gapp.geotagger}" />
+			<jvmarg value="-Dsolr.home=${release.dir}/solr" />
+			<arg value="geo" />
+			<arg value="${release.dir}/etc/service-config.properties" />
 			<arg value="${test.testdocs.dir}" />
 		</java>
 	</target>
@@ -384,27 +383,13 @@ Build file for OpenSextantToolbox.
 		<echo>Running the General Purpose Entity Extractor Example</echo>
 		<echo>-------------------------------------------------------------------------------</echo>
 		<!-- run the general purpose tagger example-->
-		<java classname="org.opensextant.examples.GeneralPurposeTaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx2G" />
-			<jvmarg value="-Dgate.home=${release.dir}" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}/solr" />
-			<arg value="${test.gapp.generalPurpose}" />
+			<jvmarg value="-Dsolr.home=${release.dir}/solr" />
+			<arg value="general" />
+			<arg value="${release.dir}/etc/service-config.properties" />
 			<arg value="${test.testdocs.dir}" />
-		</java>
-	</target>
-
-	<target name="example.placeNameMatcher">
-		<echo>--------------------------------------------------</echo>
-		<echo>Running the place name Matcher Example</echo>
-		<echo>--------------------------------------------------</echo>
-		<!-- run the matcher example -->
-		<java classname="org.opensextant.examples.MatcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
-			<jvmarg value="-Xmx500M" />
-			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}/solr" />
-			<!--arg value="${release.dir}/Gazetteer/solr" /-->
-			<arg value="${test.matcher.file}" />
 		</java>
 	</target>
 
@@ -418,7 +403,6 @@ Build file for OpenSextantToolbox.
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<env key="solr.home" value="${release.dir}/solr" />
-			<!--arg value="${release.dir}/Gazetteer/solr" /-->
 		</java>
 	</target>
 	<target name="example.dateRegexMatcher">

@@ -26,10 +26,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.opensextant.phonetic.PhoneticUtils;
 import org.opensextant.placedata.PlaceCandidate;
 import org.opensextant.placedata.PlaceEvidence;
 import org.opensextant.placedata.PlaceEvidence.Scope;
+import org.opensextant.utils.PhoneticUtils;
 
 /**
  * The Cantilever calculates an aggregate is-place confidence score for

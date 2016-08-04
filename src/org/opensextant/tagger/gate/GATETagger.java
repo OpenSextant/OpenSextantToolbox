@@ -46,7 +46,9 @@ public class GATETagger implements Tagger {
 
 		String gappHomeString = prop.getProperty("os.service.gapp.home");
 		File gappHome = new File(gappHomeString);
-
+		LOGGER.debug("Trying Gate Home  " + gateHome.getAbsolutePath());
+		LOGGER.debug("Trying GAPP Home  " + gappHome.getAbsolutePath());
+		
 		if (!Gate.isInitialised()) {
 			Gate.setGateHome(gateHome);
 			Gate.setUserConfigFile(new File(gateHome, "user-gate.xml"));
