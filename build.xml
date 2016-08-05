@@ -356,9 +356,9 @@ Build file for OpenSextantToolbox.
 
 	<!-- run some simple examples -->
 	<target name="run.examples">
+		<antcall target="example.solrtagger" />
 		<antcall target="example.geotagger" />
 		<antcall target="example.generalPurposeTagger" />
-		<antcall target="example.placeNameSearch" />
 		<antcall target="example.dateRegexMatcher" />
 		<antcall target="example.geoRegexMatcher" />
 	</target>
@@ -368,10 +368,9 @@ Build file for OpenSextantToolbox.
 		<echo>Running the Geotagger Example</echo>
 		<echo>-----------------------------------------------</echo>
 		<!-- run the geotagger example-->
-		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${release.dir}">
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<jvmarg value="-Dsolr.home=${release.dir}/solr" />
 			<arg value="geo" />
 			<arg value="${release.dir}/etc/service-config.properties" />
 			<arg value="${test.testdocs.dir}" />
@@ -383,28 +382,30 @@ Build file for OpenSextantToolbox.
 		<echo>Running the General Purpose Entity Extractor Example</echo>
 		<echo>-------------------------------------------------------------------------------</echo>
 		<!-- run the general purpose tagger example-->
-		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${release.dir}">
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<jvmarg value="-Dsolr.home=${release.dir}/solr" />
 			<arg value="general" />
 			<arg value="${release.dir}/etc/service-config.properties" />
 			<arg value="${test.testdocs.dir}" />
 		</java>
 	</target>
 
-
-	<target name="example.placeNameSearch">
-		<echo>--------------------------------------------------</echo>
-		<echo>Running the Solr Searcher Example</echo>
-		<echo>--------------------------------------------------</echo>
-		<!-- run the searcher example -->
-		<java classname="org.opensextant.examples.SearcherTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
-			<jvmarg value="-Xmx500M" />
+	<target name="example.solrtagger">
+		<echo>-----------------------------------------------</echo>
+		<echo>Running the SOLR tagger Example</echo>
+		<echo>-----------------------------------------------</echo>
+		<!-- run the solr tagger example-->
+		<java classname="org.opensextant.examples.SolrTaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<env key="solr.home" value="${release.dir}/solr" />
+			<arg value="${release.dir}/solr" />
+			<arg value="gazetteer" />
+			<arg value="name4Matching" />
+			<arg value="name" />
 		</java>
 	</target>
+	
 	<target name="example.dateRegexMatcher">
 		<echo>--------------------------------------------------</echo>
 		<echo>Running the Date Regex Matcher Example</echo>
@@ -431,31 +432,6 @@ Build file for OpenSextantToolbox.
 			<arg value="${test.patterns.results}/geoResults.txt" />
 		</java>
 	</target>
-
-
-	<target name="example.serviceClient">
-		<echo />
-		<echo>--------------------------------------------------</echo>
-		<echo>Running the Service Client Example</echo>
-		<echo>--------------------------------------------------</echo>
-		<!-- run the geocoord regex example -->
-		<java classname="org.opensextant.service.processing.ServiceDriver" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
-			<!-- add some memory -->
-			<jvmarg value="-Xmx500M" />
-			<!-- point to the log config file -->
-			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
-			<!-- directory containing the test doc -->
-			<arg value="${test.testdocs.dir}" />
-			<!-- host of the extractor service -->
-			<arg value="localhost" />
-			<!-- number of submitter threads-->
-			<arg value="12" />
-		</java>
-
-	</target>
-
-
-
 
 	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
 	<!-- NOTE: this target presumes a release has been built but doesnt trigger one -->

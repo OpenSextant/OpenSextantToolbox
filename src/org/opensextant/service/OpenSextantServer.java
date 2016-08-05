@@ -33,7 +33,7 @@ public class OpenSextantServer {
 		// get port from environment variable
 		String port_env = System.getenv("PORT");
 		int port = 8182;
-		if(port_env != null) {
+		if (port_env != null) {
 			port = Integer.parseInt(port_env);
 		}
 
@@ -44,7 +44,7 @@ public class OpenSextantServer {
 		// get and set solr home
 		String solrHome = prop.getProperty("os.service.solr.home", "./solr");
 		System.setProperty("solr.home", solrHome);
-		
+
 		// get some server properties or defaults
 		String minThreads = prop.getProperty("os.service.server.minThreads", "1");
 		String maxThreads = prop.getProperty("os.service.server.maxThreads", "10");

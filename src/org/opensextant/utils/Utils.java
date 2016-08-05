@@ -1,6 +1,8 @@
 package org.opensextant.utils;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +90,14 @@ public class Utils {
 		}
 		return in;
 	}
+
+	public static String convertFile(File file) {
+		return "";
+	};
+
+	public static String convertURL(URL url) {
+		return "";
+	};
 
 	/**
 	 * Get a String object from a record.

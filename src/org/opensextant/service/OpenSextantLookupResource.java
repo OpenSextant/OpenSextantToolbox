@@ -3,12 +3,11 @@ package org.opensextant.service;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
-import org.opensextant.matching.MatcherFactory;
-import org.opensextant.matching.PlacenameSearcher;
 import org.opensextant.placedata.Place;
+import org.opensextant.tagger.TaggerPool;
+import org.opensextant.tagger.solr.GeoSolrTagger;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
-import org.restlet.data.Reference;
 import org.restlet.ext.jackson.JacksonRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
@@ -24,6 +23,17 @@ public class OpenSextantLookupResource extends ServerResource {
 	/** Log object. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantLookupResource.class);
 
+	/** The pool from which the document processor is pulled. */
+	TaggerPool dpPool;
+	String taggerType = "geogazetteer";
+
+	@Override
+	protected void doInit() {
+		super.doInit();
+		// get a reference to the pool in the Application
+		dpPool = ((OpenSextantApplication) getApplication()).getPool();
+	}
+
 	@Get
 	public Representation doGet() {
 
@@ -35,19 +45,26 @@ public class OpenSextantLookupResource extends ServerResource {
 		String country = (String) attrs.get("country");
 		String rawQuery = (String) attrs.get("query");
 
-		PlacenameSearcher s = MatcherFactory.getSearcher();
-		String query;
+		LOGGER.debug("Got a request:" + attrs);
 
-		if (rawQuery == null) {
-			query = "name:" + placeName;
-			if (country != null) {
-				query = query + " AND cc:" + country;
+		GeoSolrTagger tagger = null;
+		if (dpPool.getProcessNames().contains(taggerType)) {
+			tagger = (GeoSolrTagger) dpPool.getTagger(taggerType);
+			if (tagger == null) {
+				LOGGER.error("Could not get a " + taggerType + " Gazetteer");
+				return new StringRepresentation("Could not get a " + taggerType + " Gazetteer");
 			}
+
 		} else {
-			query = Reference.decode(rawQuery);
+			dpPool.returnTagger(tagger);
+			LOGGER.error("Could not get a " + taggerType + " Gazetteer");
+			return new StringRepresentation("Could not get a " + taggerType + " Gazetteer");
 		}
 
-		List<Place> placesFound = s.searchByQueryString(query);
+		List<Place> placesFound = tagger.geoQueryByName(placeName, false);
+
+		dpPool.returnTagger(tagger);
+
 		LOGGER.info("Found " + placesFound.size() + " places");
 
 		if ("json".equalsIgnoreCase(format)) {

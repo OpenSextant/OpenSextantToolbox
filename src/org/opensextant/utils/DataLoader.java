@@ -22,18 +22,11 @@
 package org.opensextant.utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
-import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.SolrResponseBase;
-import org.apache.solr.client.solrj.response.schema.SchemaRepresentation;
-import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.ContentStreamBase;
@@ -126,7 +119,7 @@ public class DataLoader {
 	private static String getFieldNames(String coreName) {
 
 		return "id,place_id,name,name_expanded,lat,lon,feat_class,feat_code,FIPS_cc,cc,ISO3_cc,adm1,adm2,adm3,adm4,adm5,source,src_place_id,src_name_id,script,name_bias,id_bias,name_type,name_type_system,partition,search_only";
-		
+
 	}
 
 }

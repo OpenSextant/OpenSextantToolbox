@@ -18,6 +18,8 @@ public interface Tagger {
 
 	List<Match> match(URL content);
 
+	String getTaggerType();
+
 	void cleanup();
 
 }

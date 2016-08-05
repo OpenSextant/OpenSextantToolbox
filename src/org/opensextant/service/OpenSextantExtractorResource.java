@@ -22,9 +22,9 @@ import org.geojson.FeatureCollection;
 import org.geojson.Point;
 import org.opensextant.placedata.Geocoord;
 import org.opensextant.placedata.Place;
-import org.opensextant.service.processing.DocumentProcessorPool;
 import org.opensextant.tagger.Document;
 import org.opensextant.tagger.Match;
+import org.opensextant.tagger.TaggerPool;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.ext.fileupload.RestletFileUpload;
@@ -55,7 +55,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 	}
 
 	/** The pool from which the document processor is pulled. */
-	DocumentProcessorPool dpPool;
+	TaggerPool dpPool;
 
 	@Override
 	protected void doInit() {
@@ -178,7 +178,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 	private Representation extract(String extractType, String resultFormat, String content) {
 
 		if (dpPool.getProcessNames().contains(extractType)) {
-			Document result = dpPool.process(extractType, content);
+			Document result = dpPool.tag(extractType, content);
 
 			return convertResult(result, resultFormat);
 		} else {
@@ -189,7 +189,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 	private Representation extract(String extractType, String resultFormat, URL content) {
 
 		if (dpPool.getProcessNames().contains(extractType)) {
-			Document doc = dpPool.process(extractType, content);
+			Document doc = dpPool.tag(extractType, content);
 
 			// clean up temp file if used
 			if ("file".equalsIgnoreCase(content.getProtocol())) {

@@ -80,6 +80,10 @@ public class GeoTaggerPR extends AbstractLanguageAnalyser implements ProcessingR
 	public Resource init() throws ResourceInstantiationException {
 		super.init();
 
+		solrHome = System.getProperty("solr.home");
+
+		LOGGER.info("GeoTaggerPR is using " + solrHome + " as SOLR home");
+
 		matcher = new GeoSolrTagger(solrHome);
 
 		if (matcher == null) {

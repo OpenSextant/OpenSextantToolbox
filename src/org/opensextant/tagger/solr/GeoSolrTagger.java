@@ -1,11 +1,17 @@
 package org.opensextant.tagger.solr;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocument;
+import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.CommonParams;
+import org.apache.solr.common.params.ModifiableSolrParams;
 import org.opensextant.placedata.Place;
 import org.opensextant.placedata.PlaceCandidate;
 import org.opensextant.tagger.Match;
@@ -18,7 +24,8 @@ public class GeoSolrTagger extends SolrTagger {
 	private static final Logger LOGGER = LoggerFactory.getLogger(GeoSolrTagger.class);
 
 	private static String coreName = "gazetteer";
-	private static String fieldName = "name4matching";
+	private static String matchFieldName = "name4matching";
+	private static String searchFieldName = "name";
 	/**
 	 * Mapping from gazetteer codes to hierachical expression used on the Place
 	 * object.
@@ -42,7 +49,7 @@ public class GeoSolrTagger extends SolrTagger {
 	private boolean tagAbbreviations = false;
 
 	public GeoSolrTagger(String solrHome) {
-		super(solrHome, coreName, fieldName);
+		super(solrHome, coreName, matchFieldName, searchFieldName);
 		this.matchParams.set(CommonParams.FQ, "search_only:false");
 	}
 
@@ -59,6 +66,66 @@ public class GeoSolrTagger extends SolrTagger {
 			}
 		}
 		return pcs;
+	}
+
+	public List<Place> geoQuery(String query) {
+		ModifiableSolrParams srchParams = new ModifiableSolrParams(searchParams);
+		srchParams.set("q", query);
+		return search(srchParams);
+	}
+
+	public List<Place> geoQueryByName(String placeName, boolean fuzzy) {
+		ModifiableSolrParams srchParams = new ModifiableSolrParams(searchParams);
+
+		String query = "";
+
+		if (!fuzzy) {
+			query = searchFieldName + ":\"" + placeName + "\"";
+		} else {
+
+			String[] pieces = placeName.split("\\s");
+
+			query = searchFieldName + ":" + pieces[0] + "~80";
+
+			for (int i = 1; i < pieces.length; i++) {
+				query = query + " AND " + searchFieldName + ":" + pieces[i] + "~80";
+			}
+
+		}
+
+		// srchParams.set("defType", "edismax");
+
+		srchParams.set("q", query);
+		return search(srchParams);
+	}
+
+	public boolean isTagAbbreviations() {
+		return tagAbbreviations;
+	}
+
+	public void setTagAbbreviations(boolean tagAbbreviations) {
+		this.tagAbbreviations = tagAbbreviations;
+	}
+
+	private List<Place> search(ModifiableSolrParams prms) {
+
+		List<Place> places = new ArrayList<Place>();
+
+		QueryResponse response = null;
+		try {
+			response = solrClient.query(prms);
+			if (response != null) {
+				SolrDocumentList docList = response.getResults();
+				for (SolrDocument d : docList) {
+
+					places.add(convertToPlace(d.getFieldValueMap()));
+				}
+			}
+		} catch (SolrServerException | IOException e) {
+			LOGGER.error("Got exception when processing query.", e);
+			return places;
+		}
+		return places;
 	}
 
 	private PlaceCandidate convertToPlaceCandidate(Match match) {
@@ -102,15 +169,7 @@ public class GeoSolrTagger extends SolrTagger {
 
 	}
 
-	public boolean isTagAbbreviations() {
-		return tagAbbreviations;
-	}
-
-	public void setTagAbbreviations(boolean tagAbbreviations) {
-		this.tagAbbreviations = tagAbbreviations;
-	}
-
-	protected Place convertToPlace(Map<String, Object> placeFeatures) {
+	private Place convertToPlace(Map<String, Object> placeFeatures) {
 		// create the basic Place
 		Place place = new Place((String) placeFeatures.get("place_id"), (String) placeFeatures.get("name"));
 
@@ -154,6 +213,12 @@ public class GeoSolrTagger extends SolrTagger {
 		place.setIdBias((Float) placeFeatures.get("id_bias"));
 
 		return place;
+	}
+
+	@Override
+	public String getTaggerType() {
+
+		return "geogazetteer";
 	}
 
 }

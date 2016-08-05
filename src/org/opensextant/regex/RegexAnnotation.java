@@ -4,7 +4,7 @@ import org.opensextant.tagger.Match;
 
 public class RegexAnnotation extends Match {
 
-	private String rule ="";
+	private String rule = "";
 	private boolean valid = true;
 
 	public RegexAnnotation(String type, String text, int start, int end) {

@@ -2,7 +2,7 @@ package org.opensextant.service;
 
 import java.util.Properties;
 
-import org.opensextant.service.processing.DocumentProcessorPool;
+import org.opensextant.tagger.TaggerPool;
 import org.restlet.Application;
 import org.restlet.Restlet;
 import org.restlet.routing.Router;
@@ -15,7 +15,7 @@ public class OpenSextantApplication extends Application {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OpenSextantApplication.class);
 
 	/** The pool of document processors. */
-	DocumentProcessorPool dpPool;
+	TaggerPool dpPool;
 
 	/** Properties. */
 	Properties prop;
@@ -29,12 +29,12 @@ public class OpenSextantApplication extends Application {
 
 		// initialize the pool with settings in the property file
 		LOGGER.info("Initializing pool of extractors");
-		dpPool = new DocumentProcessorPool(this.prop);
+		dpPool = new TaggerPool(this.prop);
 		LOGGER.info("Warming up extractor pool");
 		// warm up the pool
-		String content = "We drove to Kabul.";
+		String content = "We drove to London.";
 		for (String p : dpPool.getProcessNames()) {
-			dpPool.process(p, content);
+			dpPool.tag(p, content);
 		}
 
 		LOGGER.info(dpPool.toString());
@@ -68,7 +68,7 @@ public class OpenSextantApplication extends Application {
 	}
 
 	/** Accessor for the pool. */
-	public DocumentProcessorPool getPool() {
+	public TaggerPool getPool() {
 		return this.dpPool;
 	}
 

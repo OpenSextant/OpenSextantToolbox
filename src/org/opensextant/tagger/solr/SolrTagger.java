@@ -19,18 +19,19 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.apache.solr.common.util.NamedList;
 import org.apache.solr.core.CoreContainer;
 import org.opensextant.tagger.Document;
+import org.opensextant.tagger.Gazetteer;
 import org.opensextant.tagger.Match;
 import org.opensextant.tagger.Tagger;
 import org.opensextant.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SolrTagger implements Tagger {
+public class SolrTagger implements Tagger, Gazetteer {
 
 	/** Log object. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(SolrTagger.class);
 
-	private static EmbeddedSolrServer solrClient;
+	protected static EmbeddedSolrServer solrClient;
 
 	private SolrTaggerRequest tagRequest;
 	private Map<Integer, Map<String, Object>> idMap = new HashMap<Integer, Map<String, Object>>(100);
@@ -42,7 +43,9 @@ public class SolrTagger implements Tagger {
 	private static final String MATCH_REQUESTHANDLER = "/tag";
 	private static final String SEARCH_FIELD = "name";
 
-	public SolrTagger(String solrHome, String coreName, String matchField) {
+	private String taggerType = "";
+
+	public SolrTagger(String solrHome, String coreName, String matchField, String searchField) {
 
 		if (solrHome == null || solrHome.isEmpty()) {
 			LOGGER.info("No value given for Solr home. Trying system property");
@@ -73,9 +76,10 @@ public class SolrTagger implements Tagger {
 
 		searchParams.set(CommonParams.Q, "*:*");
 		searchParams.set(CommonParams.FL, "* score");
-		searchParams.set(CommonParams.DF, SEARCH_FIELD);
+		searchParams.set(CommonParams.DF, searchField);
 		searchParams.set(CommonParams.ROWS, 100000);
 
+		taggerType = coreName;
 	}
 
 	public void setCoreName(String name, String matchField) {
@@ -175,12 +179,60 @@ public class SolrTagger implements Tagger {
 		return null;
 	}
 
+	@Override
+	public List<Map<String, Object>> query(String query) {
+		ModifiableSolrParams srchParams = new ModifiableSolrParams(searchParams);
+		srchParams.set("q", query);
+		return search(srchParams);
+	}
+
+	@Override
+	public List<Map<String, Object>> queryByName(String name, boolean fuzzy) {
+		ModifiableSolrParams srchParams = new ModifiableSolrParams(searchParams);
+		String query = "name:";
+		if (fuzzy) {
+			query = query + name + "~0.80";
+		} else {
+			query = query + "\"" + name + "\"";
+		}
+
+		srchParams.set("defType", "edismax");
+
+		srchParams.set("q", query);
+		return search(srchParams);
+	}
+
 	public void cleanup() {
 		try {
 			SolrTagger.solrClient.close();
 		} catch (IOException e) {
 			LOGGER.error("Error closing Solr Matcher:", e);
 		}
+	}
+
+	private List<Map<String, Object>> search(ModifiableSolrParams prms) {
+
+		List<Map<String, Object>> places = new ArrayList<Map<String, Object>>();
+
+		QueryResponse response = null;
+		try {
+			response = solrClient.query(prms);
+			if (response != null) {
+				SolrDocumentList docList = response.getResults();
+				for (SolrDocument d : docList) {
+					places.add(d.getFieldValueMap());
+				}
+			}
+		} catch (SolrServerException | IOException e) {
+			LOGGER.error("Got exception when processing query.", e);
+			return places;
+		}
+		return places;
+	}
+
+	@Override
+	public String getTaggerType() {
+		return taggerType;
 	}
 
 }

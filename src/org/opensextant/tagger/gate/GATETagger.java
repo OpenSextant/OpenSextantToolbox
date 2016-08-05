@@ -39,7 +39,9 @@ public class GATETagger implements Tagger {
 	/** Log object. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(GATETagger.class);
 
-	public GATETagger(String appName, Properties prop) {
+	String taggerType = "";
+
+	public GATETagger(String type, Properties prop) {
 
 		String gateHomeString = prop.getProperty("os.service.gate.home");
 		File gateHome = new File(gateHomeString);
@@ -48,7 +50,7 @@ public class GATETagger implements Tagger {
 		File gappHome = new File(gappHomeString);
 		LOGGER.debug("Trying Gate Home  " + gateHome.getAbsolutePath());
 		LOGGER.debug("Trying GAPP Home  " + gappHome.getAbsolutePath());
-		
+
 		if (!Gate.isInitialised()) {
 			Gate.setGateHome(gateHome);
 			Gate.setUserConfigFile(new File(gateHome, "user-gate.xml"));
@@ -61,7 +63,11 @@ public class GATETagger implements Tagger {
 			}
 		}
 
-		String gapp = prop.getProperty("os.service.app." + appName + ".gapp");
+		String solrHome = prop.getProperty("os.service.solr.home");
+		System.setProperty("solr.home", solrHome);
+
+		taggerType = type;
+		String gapp = prop.getProperty("os.service.app." + type + ".gapp");
 
 		File gappFile = new File(gappHome, gapp);
 
@@ -77,13 +83,6 @@ public class GATETagger implements Tagger {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.opensextant.service.processing.DocumentProcessor#process(java.lang.
-	 * String)
-	 */
 	@Override
 	public Document tag(String content) {
 		gate.Document gateDoc = null;
@@ -149,6 +148,11 @@ public class GATETagger implements Tagger {
 		}
 	}
 
+	@Override
+	public String getTaggerType() {
+		return this.taggerType;
+	}
+
 	private Document process(gate.Document doc) {
 
 		if (corpus == null) {
@@ -169,6 +173,7 @@ public class GATETagger implements Tagger {
 			} catch (ExecutionException e) {
 				LOGGER.error("Couldnt execute document processing", e);
 			}
+
 		} finally {
 			controller.setCorpus(null);
 			corpus.clear();

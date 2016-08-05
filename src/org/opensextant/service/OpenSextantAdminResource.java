@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.json.JSONException;
 import org.json.JSONStringer;
-import org.opensextant.service.processing.DocumentProcessorPool;
+import org.opensextant.tagger.TaggerPool;
 import org.restlet.Component;
 import org.restlet.Request;
 import org.restlet.ext.jackson.JacksonRepresentation;
@@ -58,7 +58,7 @@ public class OpenSextantAdminResource extends ServerResource {
 		}
 
 		if ("health".equalsIgnoreCase(op)) {
-			DocumentProcessorPool dpPool = ((OpenSextantApplication) getApplication()).getPool();
+			TaggerPool dpPool = ((OpenSextantApplication) getApplication()).getPool();
 			Map<String, Integer> avail = dpPool.available();
 
 			long failCount = dpPool.getDocsFailedCount();
