@@ -29,11 +29,11 @@ public class SolrTaggerExample {
 
 		for (Match match : matches) {
 			System.out.println(match.getMatchText());
-			List<Map<String, Object>> payloads = match.getPayloads();
-			System.out.println("Found " + matches.size() + " matches with " + payloads.size() + " payloads");
+			Map<String, Object> features = match.getFeatures();
+			System.out.println("Found " + matches.size() + " with " + features.size() + " features");
 
-			for (Object pay : payloads) {
-				System.out.println("\t" + pay);
+			for (String pay : features.keySet()) {
+				System.out.println("\t" + pay + "\t" +  features.get(pay));
 			}
 		}
 

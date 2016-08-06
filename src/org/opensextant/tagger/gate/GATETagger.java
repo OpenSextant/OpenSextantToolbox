@@ -204,23 +204,23 @@ public class GATETagger implements Tagger {
 			match.setType(type);
 			match.setMatchText(Utils.cleanStringFor(doc, a));
 
-			Map<String, Object> feature = new HashMap<String, Object>();
+			Map<String, Object> features = new HashMap<String, Object>();
 
 			FeatureMap fm = a.getFeatures();
 
 			/* special handling for PLACEs */
 			if ("PLACE".equalsIgnoreCase(type)) {
-				feature.put("place", fm.get("bestPlace"));
-				feature.put("hierarchy", fm.get("hierarchy"));
+				features.put("place", fm.get("bestPlace"));
+				features.put("hierarchy", fm.get("hierarchy"));
 			} else {
 				for (Entry<Object, Object> e : fm.entrySet()) {
 					String k = (String) e.getKey();
 					Object v = e.getValue();
-					feature.put(k, v);
+					features.put(k, v);
 				}
 			}
 
-			match.addPayload(feature);
+			match.setFeatures(features);
 
 			db.addMatch(match);
 

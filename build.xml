@@ -356,9 +356,9 @@ Build file for OpenSextantToolbox.
 
 	<!-- run some simple examples -->
 	<target name="run.examples">
-		<antcall target="example.solrtagger" />
 		<antcall target="example.geotagger" />
 		<antcall target="example.generalPurposeTagger" />
+		<antcall target="example.solrtagger" />
 		<antcall target="example.dateRegexMatcher" />
 		<antcall target="example.geoRegexMatcher" />
 	</target>

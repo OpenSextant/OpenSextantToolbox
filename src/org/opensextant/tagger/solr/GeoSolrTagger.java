@@ -128,6 +128,7 @@ public class GeoSolrTagger extends SolrTagger {
 		return places;
 	}
 
+
 	private PlaceCandidate convertToPlaceCandidate(Match match) {
 
 		PlaceCandidate pc = new PlaceCandidate();
@@ -139,9 +140,10 @@ public class GeoSolrTagger extends SolrTagger {
 		pc.setType(match.getType());
 
 		double nameBias = 0.0;
-		for (Map<String, Object> payloads : match.getPayloads()) {
+		 List<Map<String, Object>> docs = (List<Map<String, Object>>) match.getFeatures().get(DOCS_FEATURENAME);
+		for (Map<String, Object> doc : docs ) {
 
-			Place place = convertToPlace(payloads);
+			Place place = convertToPlace(doc);
 
 			// don't tag abbreviations
 			if (!this.tagAbbreviations && place.isAbbreviation()) {

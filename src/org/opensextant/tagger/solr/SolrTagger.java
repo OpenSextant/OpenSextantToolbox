@@ -42,6 +42,7 @@ public class SolrTagger implements Tagger, Gazetteer {
 	/** The matching request handler. */
 	private static final String MATCH_REQUESTHANDLER = "/tag";
 	private static final String SEARCH_FIELD = "name";
+	protected static final String DOCS_FEATURENAME =  "matchingDocuments";
 
 	private String taggerType = "";
 
@@ -156,10 +157,12 @@ public class SolrTagger implements Tagger, Gazetteer {
 			match.setStart(x1);
 			match.setEnd(x2);
 			match.setMatchText(content.substring(x1, x2));
+			List<Map<String, Object>> matchingDocs = new ArrayList<Map<String, Object>>();
 			for (Integer id : idList) {
 				Map<String, Object> fields = idMap.get(id);
-				match.addPayload(fields);
+				matchingDocs.add(fields);
 			}
+			match.addFeature(DOCS_FEATURENAME, matchingDocs);
 			matches.add(match);
 		}
 

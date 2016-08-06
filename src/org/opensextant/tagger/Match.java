@@ -1,8 +1,6 @@
 package org.opensextant.tagger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Match {
@@ -11,8 +9,6 @@ public class Match {
 	protected long end;
 	protected String type = "";
 	protected String matchText = "";
-
-	private List<Map<String, Object>> payloads = new ArrayList<Map<String, Object>>();
 
 	protected Map<String, Object> features = new HashMap<String, Object>();
 
@@ -66,20 +62,8 @@ public class Match {
 		this.features = features;
 	}
 
-	public void addFeatures(Map<String, Object> features) {
-		this.features = features;
-	}
-
-	public List<Map<String, Object>> getPayloads() {
-		return payloads;
-	}
-
-	public void setPayloads(List<Map<String, Object>> payloads) {
-		this.payloads = payloads;
-	}
-
-	public void addPayload(Map<String, Object> payload) {
-		this.payloads.add(payload);
+	public void addFeature(String featureName, Object featureValue) {
+		this.features.put(featureName, featureValue);
 	}
 
 	public String toString() {
