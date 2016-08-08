@@ -22,7 +22,7 @@ import org.opensextant.tagger.Document;
 import org.opensextant.tagger.Gazetteer;
 import org.opensextant.tagger.Match;
 import org.opensextant.tagger.Tagger;
-import org.opensextant.utils.Utils;
+import org.opensextant.tagger.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package org.opensextant.utils;
+package org.opensextant.tagger.utils;
 
 import java.io.IOException;
 import java.util.ArrayList;

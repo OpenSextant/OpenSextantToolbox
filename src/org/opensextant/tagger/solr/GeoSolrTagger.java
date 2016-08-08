@@ -15,7 +15,7 @@ import org.apache.solr.common.params.ModifiableSolrParams;
 import org.opensextant.tagger.Match;
 import org.opensextant.tagger.geo.Place;
 import org.opensextant.tagger.geo.PlaceCandidate;
-import org.opensextant.utils.Utils;
+import org.opensextant.tagger.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

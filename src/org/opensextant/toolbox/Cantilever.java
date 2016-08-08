@@ -29,7 +29,7 @@ import java.util.Map;
 import org.opensextant.tagger.geo.PlaceCandidate;
 import org.opensextant.tagger.geo.PlaceEvidence;
 import org.opensextant.tagger.geo.PlaceEvidence.Scope;
-import org.opensextant.utils.PhoneticUtils;
+import org.opensextant.tagger.utils.PhoneticUtils;
 
 /**
  * The Cantilever calculates an aggregate is-place confidence score for

@@ -225,7 +225,7 @@ Build file for OpenSextantToolbox.
 	<!-- Load the gazetteer data into Solr -->
 	<!-- NOTE: this is the step that takes a long time -->
 	<target name="load.gazetteer">
-		<java classname="org.opensextant.utils.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.tagger.utils.DataLoader" classpathref="solr.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx3G" />
 			<jvmarg value="-Dlog4j.configuration=file:${basedir}/etc/log4j.properties" />
 			<arg value="${solr.home}" />

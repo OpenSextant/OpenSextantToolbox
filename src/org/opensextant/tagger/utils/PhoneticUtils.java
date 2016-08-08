@@ -19,7 +19,7 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.utils;
+package org.opensextant.tagger.utils;
 
 import java.lang.Character.UnicodeScript;
 import java.text.Normalizer;
