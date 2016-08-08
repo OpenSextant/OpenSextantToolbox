@@ -352,7 +352,7 @@ Build file for OpenSextantToolbox.
 		<echo>Running the Geotagger Example</echo>
 		<echo>-----------------------------------------------</echo>
 		<!-- run the geotagger example-->
-		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${release.dir}">
+		<java classname="org.opensextant.tagger.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${release.dir}">
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<arg value="geo" />
@@ -366,7 +366,7 @@ Build file for OpenSextantToolbox.
 		<echo>Running the General Purpose Entity Extractor Example</echo>
 		<echo>-------------------------------------------------------------------------------</echo>
 		<!-- run the general purpose tagger example-->
-		<java classname="org.opensextant.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${release.dir}">
+		<java classname="org.opensextant.tagger.examples.TaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${release.dir}">
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<arg value="general" />
@@ -380,7 +380,7 @@ Build file for OpenSextantToolbox.
 		<echo>Running the SOLR tagger Example</echo>
 		<echo>-----------------------------------------------</echo>
 		<!-- run the solr tagger example-->
-		<java classname="org.opensextant.examples.SolrTaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.tagger.examples.SolrTaggerExample" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx2G" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<arg value="${release.dir}/solr" />
@@ -395,7 +395,7 @@ Build file for OpenSextantToolbox.
 		<echo>Running the Date Regex Matcher Example</echo>
 		<echo>--------------------------------------------------</echo>
 		<!-- run the date regex example -->
-		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.tagger.examples.RegexTest" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<arg value="${test.dateTest.file}" />
@@ -408,7 +408,7 @@ Build file for OpenSextantToolbox.
 		<echo>Running the Geocoord Regex Matcher Example</echo>
 		<echo>--------------------------------------------------</echo>
 		<!-- run the geocoord regex example -->
-		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.tagger.examples.RegexTest" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<arg value="${test.geoTest.file}" />

@@ -1,4 +1,4 @@
-package org.opensextant.service;
+package org.opensextant.tagger.service;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +20,11 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
 import org.geojson.Point;
-import org.opensextant.placedata.Geocoord;
-import org.opensextant.placedata.Place;
 import org.opensextant.tagger.Document;
 import org.opensextant.tagger.Match;
 import org.opensextant.tagger.TaggerPool;
+import org.opensextant.tagger.geo.Geocoord;
+import org.opensextant.tagger.geo.Place;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.ext.fileupload.RestletFileUpload;

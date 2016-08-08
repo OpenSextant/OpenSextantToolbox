@@ -23,7 +23,7 @@ package org.opensextant.toolbox;
 
 import java.util.List;
 
-import org.opensextant.placedata.PlaceCandidate;
+import org.opensextant.tagger.geo.PlaceCandidate;
 import org.opensextant.tagger.solr.GeoSolrTagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

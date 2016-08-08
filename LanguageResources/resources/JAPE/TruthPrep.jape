@@ -32,7 +32,7 @@
 
 
 Imports: {
-import org.opensextant.placedata.Place;
+import org.opensextant.tagger.geo.Place;
 import static gate.Utils.*;
 }
 

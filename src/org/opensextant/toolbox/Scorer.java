@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.opensextant.placedata.Geocoord;
-import org.opensextant.placedata.Place;
-import org.opensextant.placedata.PlaceCandidate;
-import org.opensextant.placedata.PlaceEvidence;
+import org.opensextant.tagger.geo.Geocoord;
+import org.opensextant.tagger.geo.Place;
+import org.opensextant.tagger.geo.PlaceCandidate;
+import org.opensextant.tagger.geo.PlaceEvidence;
 
 /**
  * The Scorer attempts to quantify (using a range between -1.0 and 1.0) the

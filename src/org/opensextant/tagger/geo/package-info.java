@@ -5,4 +5,4 @@
  * and evidence that pertains to place/not-place decisions. There is also a
  * class that represents points on the globe.
  */
-package org.opensextant.placedata;
+package org.opensextant.tagger.geo;

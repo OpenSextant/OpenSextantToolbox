@@ -27,8 +27,8 @@
 
 
 Imports: {
-import org.opensextant.placedata.PlaceCandidate;
-import org.opensextant.placedata.Geocoord;
+import org.opensextant.tagger.geo.PlaceCandidate;
+import org.opensextant.tagger.geo.Geocoord;
 }
 
 

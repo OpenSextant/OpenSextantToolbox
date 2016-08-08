@@ -26,9 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.opensextant.placedata.PlaceCandidate;
-import org.opensextant.placedata.PlaceEvidence;
-import org.opensextant.placedata.PlaceEvidence.Scope;
+import org.opensextant.tagger.geo.PlaceCandidate;
+import org.opensextant.tagger.geo.PlaceEvidence;
+import org.opensextant.tagger.geo.PlaceEvidence.Scope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

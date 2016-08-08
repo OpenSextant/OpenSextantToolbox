@@ -29,7 +29,7 @@
 // only to run if the document is determined to be "lower" case
 
 Imports: {
-import org.opensextant.placedata.PlaceCandidate;
+import org.opensextant.tagger.geo.PlaceCandidate;
 }
 
 

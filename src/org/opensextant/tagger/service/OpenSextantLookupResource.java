@@ -1,10 +1,10 @@
-package org.opensextant.service;
+package org.opensextant.tagger.service;
 
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
-import org.opensextant.placedata.Place;
 import org.opensextant.tagger.TaggerPool;
+import org.opensextant.tagger.geo.Place;
 import org.opensextant.tagger.solr.GeoSolrTagger;
 import org.restlet.Request;
 import org.restlet.data.MediaType;

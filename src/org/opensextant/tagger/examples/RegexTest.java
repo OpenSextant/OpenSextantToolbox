@@ -19,7 +19,7 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.examples;
+package org.opensextant.tagger.examples;
 
 import java.io.BufferedWriter;
 import java.io.File;

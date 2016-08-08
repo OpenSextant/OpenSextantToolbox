@@ -1,4 +1,4 @@
-package org.opensextant.service;
+package org.opensextant.tagger.service;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

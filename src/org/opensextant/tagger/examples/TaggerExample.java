@@ -1,4 +1,4 @@
-package org.opensextant.examples;
+package org.opensextant.tagger.examples;
 
 import java.io.File;
 import java.io.FileInputStream;

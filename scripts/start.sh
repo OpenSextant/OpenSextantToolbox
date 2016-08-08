@@ -5,4 +5,4 @@
 #export proxyhost=
 #export proxyport=
 
-java -Xmx8G -Dlog4j.configuration=file:./etc/log4j.properties -classpath ./lib/*: org.opensextant.service.OpenSextantServer ./etc/service-config.properties
+java -Xmx8G -Dlog4j.configuration=file:./etc/log4j.properties -classpath ./lib/*: org.opensextant.tagger.service.OpenSextantServer ./etc/service-config.properties

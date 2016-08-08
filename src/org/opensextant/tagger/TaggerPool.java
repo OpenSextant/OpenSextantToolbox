@@ -12,9 +12,9 @@ import java.util.concurrent.BlockingQueue;
 
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
-import org.opensextant.service.OpenSextantExtractorResource;
 import org.opensextant.tagger.gate.GATETagger;
 import org.opensextant.tagger.regex.RegexTagger;
+import org.opensextant.tagger.service.OpenSextantExtractorResource;
 import org.opensextant.tagger.solr.GeoSolrTagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

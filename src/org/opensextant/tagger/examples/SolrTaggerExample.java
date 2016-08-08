@@ -1,11 +1,11 @@
-package org.opensextant.examples;
+package org.opensextant.tagger.examples;
 
 import java.util.List;
 import java.util.Map;
 
-import org.opensextant.placedata.Place;
-import org.opensextant.placedata.PlaceCandidate;
 import org.opensextant.tagger.Match;
+import org.opensextant.tagger.geo.Place;
+import org.opensextant.tagger.geo.PlaceCandidate;
 import org.opensextant.tagger.solr.GeoSolrTagger;
 import org.opensextant.tagger.solr.SolrTagger;
 

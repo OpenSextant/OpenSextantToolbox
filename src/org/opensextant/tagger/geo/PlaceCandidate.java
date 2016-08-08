@@ -19,7 +19,7 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.placedata;
+package org.opensextant.tagger.geo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
