@@ -80,7 +80,7 @@ public class TaggerPool {
 				}
 
 				if (implType.equalsIgnoreCase("regex")) {
-					String patterns = prop.getProperty("os.service." +  taggerType + ".patterns" );
+					String patterns = prop.getProperty("os.service.app." +  taggerType + ".patterns" );
 					File patternFile = new File(patterns);
 					RegexTagger tagger = new RegexTagger(patternFile);
 					pool.add(tagger);

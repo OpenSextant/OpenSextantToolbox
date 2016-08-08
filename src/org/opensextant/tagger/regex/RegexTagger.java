@@ -52,7 +52,7 @@ public class RegexTagger implements Tagger {
 	/** Has this mather been sucessfully initialized. */
 	boolean isInited;
 	/** Log object. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(Matcher.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RegexTagger.class);
 
 	public RegexTagger(URL patternFile) {
 		initialize(patternFile);
@@ -285,7 +285,7 @@ public class RegexTagger implements Tagger {
 				try {
 					normer = (Normalizer) Class.forName(normClassName).newInstance();
 				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-					LOGGER.warn("Could not instantiate a " + normClassName + " normalizer. Using no-op normalizer");
+					LOGGER.warn("Could not instantiate a " + normClassName + " normalizer. Using no-op normalizer",e);
 				}
 
 				r.setNormalizer(normer);
@@ -308,7 +308,7 @@ public class RegexTagger implements Tagger {
 				PostProcessor pstr = (PostProcessor) Class.forName(post).newInstance();
 				posters.put(pstr, posterClassnames.get(post));
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				LOGGER.warn("Could not instantiate a " + post + " post-processor. Using no-op post-processor");
+				LOGGER.warn("Could not instantiate a " + post + " post-processor. Using no-op post-processor",e);
 			}
 
 		}
