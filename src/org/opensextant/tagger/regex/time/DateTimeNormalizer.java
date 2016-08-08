@@ -9,12 +9,12 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.opensextant.tagger.regex.Normalizer;
-import org.opensextant.tagger.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.RegexMatch;
 import org.opensextant.tagger.regex.RegexRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DateTimeNormalizer2 implements Normalizer {
+public class DateTimeNormalizer implements Normalizer {
 
 	/** Enum representing the specificity of the date time reference. */
 	public enum TimeResolution {
@@ -54,10 +54,10 @@ public class DateTimeNormalizer2 implements Normalizer {
 	}
 
 	/** Log object. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(DateTimeNormalizer2.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DateTimeNormalizer.class);
 
 	@Override
-	public void normalize(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
+	public void normalize(RegexMatch anno, RegexRule r, MatchResult matchResult) {
 
 		if ("Date".equalsIgnoreCase(anno.getType())) {
 			normalizeDate(anno, r, matchResult);
@@ -73,7 +73,7 @@ public class DateTimeNormalizer2 implements Normalizer {
 
 	}
 
-	public void normalizeDate(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
+	public void normalizeDate(RegexMatch anno, RegexRule r, MatchResult matchResult) {
 
 		Map<String, Object> normalizedResults = anno.getFeatures();
 		Map<String, String> elementsFound = new HashMap<String, String>();
@@ -183,7 +183,7 @@ public class DateTimeNormalizer2 implements Normalizer {
 		return;
 	}
 
-	private void normalizeTime(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
+	private void normalizeTime(RegexMatch anno, RegexRule r, MatchResult matchResult) {
 		Map<String, Object> normalizedResults = anno.getFeatures();
 		Map<String, String> elementsFound = new HashMap<String, String>();
 		int numGroups = matchResult.groupCount();
@@ -202,7 +202,7 @@ public class DateTimeNormalizer2 implements Normalizer {
 		return;
 	}
 
-	private void normalizeDay(RegexAnnotation anno, RegexRule r, MatchResult matchResult) {
+	private void normalizeDay(RegexMatch anno, RegexRule r, MatchResult matchResult) {
 		Map<String, Object> normalizedResults = anno.getFeatures();
 		Map<String, String> elementsFound = new HashMap<String, String>();
 		int numGroups = matchResult.groupCount();

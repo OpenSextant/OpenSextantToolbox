@@ -14,13 +14,13 @@ public class DebugPostProcessor extends PostProcessorBase {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DebugPostProcessor.class);
 
 	@Override
-	public Comparator<RegexAnnotation> getComparator() {
+	public Comparator<RegexMatch> getComparator() {
 		return new PositionComparator();
 	}
 
 	@Override
-	public List<RegexAnnotation> decide(List<RegexAnnotation> inters) {
-		List<RegexAnnotation> keepers = new ArrayList<RegexAnnotation>();
+	public List<RegexMatch> decide(List<RegexMatch> inters) {
+		List<RegexMatch> keepers = new ArrayList<RegexMatch>();
 
 		if (inters != null && !inters.isEmpty()) {
 			// sort the annotations by document order
@@ -29,7 +29,7 @@ public class DebugPostProcessor extends PostProcessorBase {
 			// build up a message showing the alternative annotations
 			StringBuilder tmp = new StringBuilder();
 			tmp.append("Must decide amongst these ").append(inters.size()).append(" annotations\n");
-			for (RegexAnnotation a : inters) {
+			for (RegexMatch a : inters) {
 				tmp.append("\t").append(a).append("\n");
 			}
 			tmp.append("-------\n");

@@ -2,12 +2,12 @@ package org.opensextant.tagger.regex;
 
 import org.opensextant.tagger.Match;
 
-public class RegexAnnotation extends Match {
+public class RegexMatch extends Match {
 
 	private String rule = "";
 	private boolean valid = true;
 
-	public RegexAnnotation(String type, String text, int start, int end) {
+	public RegexMatch(String type, String text, int start, int end) {
 		this.start = start;
 		this.end = end;
 		this.type = type;
@@ -30,7 +30,7 @@ public class RegexAnnotation extends Match {
 		this.valid = valid;
 	}
 
-	public boolean interactsWith(RegexAnnotation other) {
+	public boolean interactsWith(RegexMatch other) {
 
 		long s1 = this.start;
 		long e1 = this.end;

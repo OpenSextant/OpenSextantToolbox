@@ -24,7 +24,7 @@ package org.opensextant.tagger.regex.geo;
 import java.util.Comparator;
 
 import org.opensextant.tagger.regex.PostProcessorBase;
-import org.opensextant.tagger.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.RegexMatch;
 
 /**
  * The Class GeoPostProcessor.<br>
@@ -32,10 +32,10 @@ import org.opensextant.tagger.regex.RegexAnnotation;
  * the "best" Geocoord annotation, where "best" means the Geocoord annotation
  * with the most likely interpretation as determined by the GeocoordComparator .
  */
-public class GeoPostProcessor extends PostProcessorBase {
+public class GeocoordPostProcessor extends PostProcessorBase {
 
 	@Override
-	public Comparator<RegexAnnotation> getComparator() {
+	public Comparator<RegexMatch> getComparator() {
 		return new GeocoordComparator();
 	}
 

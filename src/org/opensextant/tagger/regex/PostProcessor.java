@@ -44,6 +44,6 @@ public interface PostProcessor {
 	 *            the types of RegexAnnotations to process (implementation
 	 *            specific)
 	 */
-	void postProcess(List<RegexAnnotation> annos, Set<String> types);
+	void postProcess(List<RegexMatch> annos, Set<String> types);
 
 }

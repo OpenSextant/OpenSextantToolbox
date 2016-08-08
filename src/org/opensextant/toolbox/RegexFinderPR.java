@@ -24,7 +24,7 @@ package org.opensextant.toolbox;
 import java.net.URL;
 import java.util.List;
 
-import org.opensextant.tagger.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.RegexMatch;
 import org.opensextant.tagger.regex.RegexMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,9 +85,9 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
 		// get the text of the document
 		String text = getDocument().getContent().toString();
 		// find the matches via the regex matcher
-		List<RegexAnnotation> matches = reger.match(text);
+		List<RegexMatch> matches = reger.match(text);
 		// loop over all the results
-		for (RegexAnnotation a : matches) {
+		for (RegexMatch a : matches) {
 			// fill in all the annotation features
 			FeatureMap feats = Factory.newFeatureMap();
 			feats.putAll(a.getFeatures());

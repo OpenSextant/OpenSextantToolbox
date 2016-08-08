@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +29,8 @@ public class RegexMatcher {
 
 	/** The postprocessors to apply. */
 	Map<PostProcessor, Set<String>> posters = new HashMap<PostProcessor, Set<String>>();
+
+	boolean debug = false;
 
 	/**
 	 * Future stuff: named groups useful? String namedGroup =
@@ -52,10 +55,10 @@ public class RegexMatcher {
 		initialize(patternFile);
 	}
 
-	public List<RegexAnnotation> match(String input) {
+	public List<RegexMatch> match(String input) {
 
 		// The matches to return
-		List<RegexAnnotation> matches = new ArrayList<RegexAnnotation>();
+		List<RegexMatch> matches = new ArrayList<RegexMatch>();
 
 		if (!isInited) {
 			LOGGER.error("Tried to use RegexMatcher without initializing first");
@@ -69,11 +72,16 @@ public class RegexMatcher {
 			Matcher matcher = r.getPattern().matcher(input);
 			while (matcher.find()) {
 				// for each hit from the regex, create a RegexAnnotation
-				RegexAnnotation tmp = new RegexAnnotation(t, matcher.group(0), matcher.start(), matcher.end());
+				RegexMatch tmp = new RegexMatch(t, matcher.group(0), matcher.start(), matcher.end());
 				// if the a normalizer has been specified,
 				if (normer != null) {
 					normer.normalize(tmp, r, matcher.toMatchResult());
 				}
+
+				if (this.debug) {
+					this.addDebug(tmp, r, matcher.toMatchResult());
+				}
+
 				// check to see if the normalizer declared the match invalid
 				if (tmp.isValid()) {
 					// add the "hierarchy" and "isEntity" features
@@ -98,6 +106,7 @@ public class RegexMatcher {
 	}
 
 	public void initialize(URL patFile) {
+
 		// the #DEFINE statements as name and regex
 		Map<String, String> defines = new HashMap<String, String>();
 
@@ -170,6 +179,8 @@ public class RegexMatcher {
 					posterClassnames.put(posterName, new HashSet<String>());
 				}
 				posterClassnames.get(posterName).add(type);
+			} else if (line.startsWith("#DEBUG")) {
+				this.debug = true;
 			}
 
 			// Ignore everything else
@@ -219,29 +230,17 @@ public class RegexMatcher {
 			// resolve and attach the normalizer object
 			if (normalizerClassnames.containsKey(r.getEntityType())) {
 				String normClassName = normalizerClassnames.get(r.getEntityType());
-				Normalizer normer;
+				Normalizer normer = null;
+
 				try {
 					normer = (Normalizer) Class.forName(normClassName).newInstance();
-				} catch (InstantiationException e) {
-					normer = new NoOpNormalizer();
-					LOGGER.error("Cannot instantiate a " + normClassName + ", using a No Op normalizer instead.", e);
-				} catch (IllegalAccessException e) {
-					normer = new NoOpNormalizer();
-					LOGGER.error(
-							"Cannot access a " + normClassName + " to create one, using a No Op normalizer instead.",
-							e);
-				} catch (ClassNotFoundException e) {
-					normer = new NoOpNormalizer();
-					LOGGER.error("Normalizer Class " + normClassName + " not found,using a No Op normalizer instead.",
-							e);
-				} catch (java.lang.ClassCastException e) {
-					normer = new NoOpNormalizer();
-					LOGGER.error("Class " + normClassName + " is not a Normalizer,using a No Op normalizer instead.",
-							e);
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					LOGGER.warn("Could not instantiate a " + normClassName + " normalizer. Using no-op normalizer");
 				}
+
 				r.setNormalizer(normer);
-			} else { // nothing in file use NoOpNormalzer
-				r.setNormalizer(new NoOpNormalizer());
+			} else { // nothing in file no-op
+				r.setNormalizer(null);
 			}
 			// resolve and attach the taxonomic string object
 			if (taxos.containsKey(r.getEntityType())) {
@@ -253,23 +252,20 @@ public class RegexMatcher {
 
 		// create the postprocessors
 
-		for (String p : posterClassnames.keySet()) {
-			PostProcessor pstr;
+		for (String post : posterClassnames.keySet()) {
 
 			try {
-				pstr = (PostProcessor) Class.forName(p).newInstance();
-			} catch (InstantiationException e) {
-				pstr = new NoOpPostProcessor();
-				LOGGER.error("Cannot instantiate a " + p + ", using a No Op PostProcessor instead.", e);
-			} catch (IllegalAccessException e) {
-				pstr = new NoOpPostProcessor();
-				LOGGER.error("Cannot access a " + p + ", using a No Op PostProcessor instead.", e);
-			} catch (ClassNotFoundException e) {
-				pstr = new NoOpPostProcessor();
-				LOGGER.error("Class " + p + " is not a PostProcessor, using a No Op PostProcessor instead.", e);
+				PostProcessor pstr = (PostProcessor) Class.forName(post).newInstance();
+				posters.put(pstr, posterClassnames.get(post));
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				LOGGER.warn("Could not instantiate a " + post + " post-processor. Using no-op post-processor");
 			}
 
-			posters.put(pstr, posterClassnames.get(p));
+		}
+
+		if (this.debug) {
+			PostProcessor pstr = new DebugPostProcessor();
+			posters.put(pstr, types);
 		}
 
 		isInited = true;
@@ -291,6 +287,25 @@ public class RegexMatcher {
 
 	public Set<String> getTypes() {
 		return types;
+	}
+
+	private void addDebug(RegexMatch anno, RegexRule r, MatchResult matchResult) {
+
+		Map<String, Object> annoFeatures = anno.getFeatures();
+
+		int numGroups = matchResult.groupCount();
+
+		for (int i = 0; i < numGroups + 1; i++) {
+			// Future: create sub-annotations?
+
+			String elemenValue = matchResult.group(i);
+			String elemName = r.getElementMap().get(i);
+			annoFeatures.put("debug-" + elemName, elemenValue);
+		}
+
+		annoFeatures.put("debug-entityType", r.getEntityType());
+		annoFeatures.put("debug-ruleFamily", r.getRuleFamily());
+		annoFeatures.put("debug-ruleName", r.getRuleName());
 	}
 
 }

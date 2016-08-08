@@ -2,9 +2,9 @@ package org.opensextant.tagger.regex;
 
 import java.util.Comparator;
 
-public class PositionComparator implements Comparator<RegexAnnotation> {
+public class PositionComparator implements Comparator<RegexMatch> {
 
-	public int compare(RegexAnnotation a1, RegexAnnotation a2) {
+	public int compare(RegexMatch a1, RegexMatch a2) {
 		int result;
 
 		// compare start
