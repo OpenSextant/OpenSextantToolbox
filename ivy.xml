@@ -36,14 +36,29 @@
 			<!-- big and not needed -->
 			<exclude name="lucene-analyzers-kuromoji" />
 			<exclude name="lucene-analyzers-morfologik" />
-			<exclude org = "org.eclipse.jetty.orbit" name="javax.servlet" />
+			<exclude org="org.eclipse.jetty.orbit" name="javax.servlet" />
 		</dependency>
-	
-		<!--  Restlet stuff used by the opensextant REST service -->
-		<dependency org="org.restlet.jse" name="org.restlet" rev="2.2.3"  conf="Standalone->*"/>
-		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.2.3"  conf="Standalone->*"/>
+
+		<!-- Restlet stuff used by the opensextant REST service -->
+		<dependency org="org.restlet.jse" name="org.restlet" rev="2.2.3" conf="Standalone->*" />
+		<dependency org="org.restlet.jse" name="org.restlet.ext.fileupload" rev="2.2.3" conf="Standalone->*" />
 		<dependency org="org.restlet.jse" name="org.restlet.ext.json" rev="2.2.3" conf="Standalone->*" />
-		<dependency org="org.restlet.jse" name="org.restlet.ext.jackson" rev="2.2.3"  conf="Standalone->*"/>
+		<dependency org="org.restlet.jse" name="org.restlet.ext.jackson" rev="2.2.3" conf="Standalone->*" />
+
+
+		<!-- Tika is used in the tagger pool for file/url conversion -->
+		<dependency org="org.apache.tika" name="tika-parsers" rev="1.7"
+			conf="Standalone->*">
+			<exclude org="edu.ucar" module="netcdf" />
+			<exclude org="asm" module="asm" />
+			<exclude org="org.ow2.asm" module="asm-debug-all" />
+			<exclude org="org.gagravarr" module="vorbis-java-tika" />
+			<exclude org="org.gagravarr" module="vorbis-java-core" />
+			<exclude org="com.googlecode.mp4parser" module="isoparser" />
+			<exclude org="net.sourceforge.jmatio" module="jmatio" />
+			<exclude org="com.pff" module="java-libpst" />
+			<exclude org="com.drewnoakes" module="metadata-extractor" />
+		</dependency>
 
 		<!-- JTS is used for geospatial stuff in Solr -->
 		<dependency org="com.vividsolutions" name="jts" rev="1.13"
@@ -78,8 +93,8 @@
 		<dependency org="org.codehaus.jackson" name="jackson-mapper-asl"
 			rev="1.9.13" conf="Standalone->*" />
 
-		<!--  GeoJSON beans used in the REST server -->
-		<dependency org="de.grundid.opendatalab" name="geojson-jackson" rev="1.1" conf="Standalone->*"/>
+		<!-- GeoJSON beans used in the REST server -->
+		<dependency org="de.grundid.opendatalab" name="geojson-jackson" rev="1.1" conf="Standalone->*" />
 
 		<!-- all the logging stuff -->
 		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.5"

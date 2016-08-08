@@ -91,14 +91,6 @@ public class Utils {
 		return in;
 	}
 
-	public static String convertFile(File file) {
-		return "";
-	};
-
-	public static String convertURL(URL url) {
-		return "";
-	};
-
 	/**
 	 * Get a String object from a record.
 	 */

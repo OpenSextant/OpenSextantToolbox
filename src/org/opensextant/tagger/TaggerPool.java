@@ -1,6 +1,7 @@
 package org.opensextant.tagger;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,10 +10,11 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
 import org.opensextant.service.OpenSextantExtractorResource;
 import org.opensextant.tagger.gate.GATETagger;
 import org.opensextant.tagger.solr.GeoSolrTagger;
-import org.opensextant.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,7 @@ public class TaggerPool {
 	private Map<String, BlockingQueue<Tagger>> poolMap = new HashMap<String, BlockingQueue<Tagger>>();
 	private long docsProcessedCount;
 	private long docsFailedCount;
+	private Tika tika = new Tika();
 
 	/** Log object. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(TaggerPool.class);
@@ -113,17 +116,25 @@ public class TaggerPool {
 	}
 
 	public Document tag(String taggerType, File file) {
-
-		String content = Utils.convertFile(file);
-
-		return tag(taggerType, content);
+		String content;
+		try {
+			content = tika.parseToString(file);
+			return tag(taggerType, content);
+		} catch (IOException | TikaException e) {
+			LOGGER.error("Problem when translating document from file " + file.getName(), e);
+		}
+		return new Document();
 	}
 
 	public Document tag(String taggerType, URL url) {
-
-		String content = Utils.convertURL(url);
-
-		return tag(taggerType, content);
+		String content;
+		try {
+			content = tika.parseToString(url);
+			return tag(taggerType, content);
+		} catch (IOException | TikaException e) {
+			LOGGER.error("Problem when translating document from URL" + url, e);
+		}
+		return new Document();
 	}
 
 	public void cleanup() {

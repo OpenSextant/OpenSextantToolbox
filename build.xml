@@ -43,8 +43,7 @@ Build file for OpenSextantToolbox.
 
 	<!-- Classpath for compiling -->
 	<path id="compile.classpath">
-		<fileset dir="${lib.dir}/GATE" includes="**/*.jar" />
-		<fileset dir="${lib.dir}/Standalone" includes="**/*.jar" />
+		<fileset dir="${lib.dir}" includes="*.jar" />
 	</path>
 
 	<!--Gazetteer URL and  version as tagged in Gazettteer Release -->
@@ -55,7 +54,7 @@ Build file for OpenSextantToolbox.
 	<!-- Classpath to run solr gazetteer loader -->
 	<path id="solr.runtime.classpath">
 		<fileset dir="${build.dir}" includes="opensextant.jar" />
-		<fileset dir="${lib.dir}/Standalone" includes="**/*.jar" />
+		<fileset dir="${lib.dir}" includes="*.jar" />
 	</path>
 
 	<!-- Properties for creating/loading the Solr gazetteer -->
@@ -72,12 +71,6 @@ Build file for OpenSextantToolbox.
 		<fileset dir="${release.dir}/lib" includes="**/*.jar" />
 	</path>
 
-	<!-- classpath to run the components that don't need Gate -->
-	<path id="examples.runtime.standalone.classpath">
-		<fileset dir="${release.dir}/lib" includes="*.jar" />
-	</path>
-
-
 	<!-- location of the test data -->
 	<property name="test.testdocs.dir" location="${release.dir}/LanguageResources/TestData/testDocs" />
 	<property name="test.matcher.file" location="${release.dir}/LanguageResources/TestData/MatcherTestData/matcherTest.txt" />
@@ -86,9 +79,6 @@ Build file for OpenSextantToolbox.
 
 
 	<!-- location of the GAPP and pattern files -->
-	<property name="test.gapp.geotagger" location="${release.dir}/LanguageResources/GAPPs/OpenSextant_Geotagger.gapp" />
-	<property name="test.gapp.generalPurpose" location="${release.dir}/LanguageResources/GAPPs/OpenSextant_GeneralPurpose.gapp" />
-
 	<property name="test.patterns.date" location="${release.dir}/LanguageResources/resources/patterns/datetime_patterns2.cfg" />
 	<property name="test.patterns.geo" location="${release.dir}/LanguageResources/resources/patterns/geocoord_regex.cfg" />
 
@@ -172,11 +162,13 @@ Build file for OpenSextantToolbox.
 
 	<!-- get all the ivy defined dependencies and the gazetteer -->
 	<target name="getDependencies" depends="clean">
-		<ivy:retrieve pattern="${ivy.lib.dir}/[conf]/[artifact].[ext]" />
+		<ivy:retrieve pattern="${ivy.lib.dir}/[artifact].[ext]" />
 		<ivy:report todir="${build.dir}/ivy-report" graph="true" />
 		<antcall target="getGazetteer" />
 	</target>
 
+
+	
 	<target name="check-gazetteer">
 		<available file="${build.dir}/${gaz.file.name}" property="gaz.present" />
 	</target>
@@ -276,18 +268,10 @@ Build file for OpenSextantToolbox.
 
 	<!-- copy over jars to the release directory -->
 	<target name="release.libs" depends="">
-
 		<copy todir="${release.dir}/lib">
 			<fileset file="${core.jar.location}" />
-			<fileset dir="${basedir}/lib/Standalone" />
+			<fileset dir="${lib.dir}" />
 		</copy>
-
-		<copy todir="${release.dir}/lib/GATE">
-			<fileset dir="${basedir}/lib/GATE">
-				<include name="*.jar" />
-			</fileset>
-		</copy>
-
 	</target>
 
 	<!-- copy over the plugin to the release directory -->
@@ -411,7 +395,7 @@ Build file for OpenSextantToolbox.
 		<echo>Running the Date Regex Matcher Example</echo>
 		<echo>--------------------------------------------------</echo>
 		<!-- run the date regex example -->
-		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<arg value="${test.dateTest.file}" />
@@ -424,7 +408,7 @@ Build file for OpenSextantToolbox.
 		<echo>Running the Geocoord Regex Matcher Example</echo>
 		<echo>--------------------------------------------------</echo>
 		<!-- run the geocoord regex example -->
-		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.standalone.classpath" fork="yes" dir="${basedir}">
+		<java classname="org.opensextant.examples.RegexTest" classpathref="examples.runtime.classpath" fork="yes" dir="${basedir}">
 			<jvmarg value="-Xmx500M" />
 			<jvmarg value="-Dlog4j.configuration=file:${release.dir}/etc/log4j.properties" />
 			<arg value="${test.geoTest.file}" />
@@ -433,18 +417,27 @@ Build file for OpenSextantToolbox.
 		</java>
 	</target>
 
-	<!-- deploy OpenSextantToolbox to a local GATE installation to test -->
+	
+	
+<!-- The stuff below is only used to deploy the plugin to a locally installed copy of GATE -->	
+	
 	<!-- NOTE: this target presumes a release has been built but doesnt trigger one -->
-	<target name="toolbox.deploy" depends="">
+	
+	<!-- get all the ivy defined dependencies for the plugin (excludes GATE) -->
+	<target name="getDependenciesPlugin" depends="">
+		<ivy:retrieve pattern="${build.dir}/plugin_libs/[artifact].[ext]" conf="Standalone"/>
+		<ivy:report todir="${build.dir}/ivy-report" graph="true" />
+	</target>
+	
+	<target name="toolbox.deploy" depends="getDependenciesPlugin">
 		<delete dir="${toolbox.plugin.dir}" />
 		<!-- unzip the toolbox plugin zip into GATE_HOME/plugins -->
 		<unzip src="${build.dir}/opensextant-toolbox-plugin.zip" dest="${gate.plugin.dir}" />
 
 		<!-- copy over the other jars libs from release -->
 		<copy todir="${toolbox.plugin.dir}/lib_extra">
-			<fileset dir="${lib.dir}/Standalone">
+			<fileset dir="${build.dir}/plugin_libs">
 				<include name="*.jar" />
-				<exclude name="**/GATE/**" />
 			</fileset>
 			<fileset file="${build.dir}/opensextant.jar" />
 		</copy>

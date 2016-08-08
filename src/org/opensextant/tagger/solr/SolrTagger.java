@@ -157,6 +157,7 @@ public class SolrTagger implements Tagger, Gazetteer {
 			match.setStart(x1);
 			match.setEnd(x2);
 			match.setMatchText(content.substring(x1, x2));
+			match.setType(this.taggerType);
 			List<Map<String, Object>> matchingDocs = new ArrayList<Map<String, Object>>();
 			for (Integer id : idList) {
 				Map<String, Object> fields = idMap.get(id);
