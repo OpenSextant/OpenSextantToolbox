@@ -1,4 +1,4 @@
-package org.opensextant.regex.geo;
+package org.opensextant.tagger.regex.geo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,10 +10,10 @@ import org.opensextant.geodesy.Geodetic2DPoint;
 import org.opensextant.geodesy.MGRS;
 import org.opensextant.geodesy.UTM;
 import org.opensextant.placedata.Geocoord;
-import org.opensextant.regex.Normalizer;
-import org.opensextant.regex.RegexAnnotation;
-import org.opensextant.regex.RegexRule;
-import org.opensextant.regex.geo.OrdinateParser.AXIS;
+import org.opensextant.tagger.regex.Normalizer;
+import org.opensextant.tagger.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.RegexRule;
+import org.opensextant.tagger.regex.geo.OrdinateParser.AXIS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

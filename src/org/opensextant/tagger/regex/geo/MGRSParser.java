@@ -24,7 +24,7 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  */
-package org.opensextant.regex.geo;
+package org.opensextant.tagger.regex.geo;
 
 import java.text.DateFormat;
 import java.text.ParseException;

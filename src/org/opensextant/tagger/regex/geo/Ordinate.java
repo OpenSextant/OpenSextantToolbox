@@ -24,9 +24,9 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  */
-package org.opensextant.regex.geo;
+package org.opensextant.tagger.regex.geo;
 
-import org.opensextant.regex.geo.OrdinateParser.AXIS;
+import org.opensextant.tagger.regex.geo.OrdinateParser.AXIS;
 
 public final class Ordinate {
 

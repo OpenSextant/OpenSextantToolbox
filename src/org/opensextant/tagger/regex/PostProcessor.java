@@ -19,7 +19,7 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.regex;
+package org.opensextant.tagger.regex;
 
 import java.util.List;
 import java.util.Set;

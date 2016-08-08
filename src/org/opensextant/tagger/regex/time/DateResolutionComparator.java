@@ -19,12 +19,12 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.regex.time;
+package org.opensextant.tagger.regex.time;
 
 import java.util.Comparator;
 
-import org.opensextant.regex.RegexAnnotation;
-import org.opensextant.regex.time.DateTimeNormalizer2.TimeResolution;
+import org.opensextant.tagger.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.time.DateTimeNormalizer2.TimeResolution;
 
 /**
  * The Class DateResolutionComparator.<br>

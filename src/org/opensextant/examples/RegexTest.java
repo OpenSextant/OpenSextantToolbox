@@ -36,8 +36,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.opensextant.regex.RegexAnnotation;
-import org.opensextant.regex.RegexMatcher;
+import org.opensextant.tagger.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.RegexMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

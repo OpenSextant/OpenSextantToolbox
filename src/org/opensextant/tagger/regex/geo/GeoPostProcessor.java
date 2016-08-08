@@ -19,25 +19,24 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.regex.time;
+package org.opensextant.tagger.regex.geo;
 
 import java.util.Comparator;
 
-import org.opensextant.regex.PostProcessorBase;
-import org.opensextant.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.PostProcessorBase;
+import org.opensextant.tagger.regex.RegexAnnotation;
 
 /**
- * The Class DateTimePostProcessor.<br>
+ * The Class GeoPostProcessor.<br>
  * This class extends PostProcessorBase to provide a PostProcessor that selects
- * the "best" Date annotation, where "best" means the Date annotation with the
- * highest (most specific) temporal resolution as determined by the
- * DateResolutionComparator.
+ * the "best" Geocoord annotation, where "best" means the Geocoord annotation
+ * with the most likely interpretation as determined by the GeocoordComparator .
  */
-public class DateTimePostProcessor extends PostProcessorBase {
+public class GeoPostProcessor extends PostProcessorBase {
 
 	@Override
 	public Comparator<RegexAnnotation> getComparator() {
-		return new DateResolutionComparator();
+		return new GeocoordComparator();
 	}
 
 }

@@ -24,54 +24,61 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  */
-package org.opensextant.regex.geo;
-
-import java.util.Map;
-
-import org.opensextant.geodesy.UTM;
+package org.opensextant.tagger.regex.geo;
 
 /**
  * *.
  * 
  * @author ubaldino
  */
-public class UTMParser {
+public class GeocoordPrecision {
+	/**
+	 * +/- # of Meters of error.
+	 */
+	private double precision;
+	/**
+	 * # of M/S/s digits in a D:M:S string for a lat or lon
+	 */
 
 	/**
-	 * Log object private static final Logger LOGGER =
-	 * LoggerFactory.getLogger(UTMParser.class);
+	 * # of decimal places in D.ddd... string for a lat or lon
 	 */
-	public static final char UTM_NORTH = 'N';
-	public static final char UTM_SOUTH = 'S';
 
-	private UTMParser() {
+	private int digits;
+
+	/**
+	 * @return the precision
+	 */
+	public double getPrecision() {
+		return precision;
 	}
 
-	public static UTM parseUTM(Map<String, String> elements) {
+	/**
+	 * @param precision
+	 *            the precision to set
+	 */
+	public void setPrecision(double precision) {
+		this.precision = precision;
+	}
 
-		String z = elements.get("UTMZone");
-		String z1 = elements.get("UTMZoneZZ"); // 0-5\d
-		String z2 = elements.get("UTMZoneZ"); // \d
-		if (z == null) {
-			z = z1 != null ? z1 : z2;
+	/**
+	 * @return the digits
+	 */
+	public int getDigits() {
+		return digits;
+	}
+
+	/**
+	 * Augment number of digits in precision -- choose the maximum amount if in
+	 * coord (a,b) if a has more digits of precision than b, use a's precision.
+	 * This is really only a matter of typos, where typist may have added 4
+	 * digits instead of 5, for example.
+	 * 
+	 * @param d
+	 */
+	public void setDigits(int d) {
+		if (d > digits) {
+			digits = d;
 		}
-		if (z == null) {
-			return null;
-		}
-		int zz = Integer.parseInt(z);
-		String b = elements.get("UTMBand");
-		if (b == null) {
-			return null;
-		}
-		// TODO: is 'n' valid for UTM band?
-		char h = b.charAt(0);
-		if (h != UTM_NORTH && h != UTM_SOUTH) {
-			h = UTM.getHemisphere(h);
-		}
-		String easting = elements.get("UTMEasting");
-		String northing = elements.get("UTMNorthing");
-		Integer eastingValue = Integer.parseInt(easting);
-		Integer northingValue = Integer.parseInt(northing);
-		return new UTM(zz, h, eastingValue.doubleValue(), northingValue.doubleValue());
 	}
 }

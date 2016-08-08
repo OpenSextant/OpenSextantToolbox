@@ -1,4 +1,4 @@
-package org.opensextant.regex.time;
+package org.opensextant.tagger.regex.time;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -8,9 +8,9 @@ import java.util.regex.MatchResult;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.opensextant.regex.Normalizer;
-import org.opensextant.regex.RegexAnnotation;
-import org.opensextant.regex.RegexRule;
+import org.opensextant.tagger.regex.Normalizer;
+import org.opensextant.tagger.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.RegexRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

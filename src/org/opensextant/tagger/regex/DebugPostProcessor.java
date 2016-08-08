@@ -1,4 +1,4 @@
-package org.opensextant.regex;
+package org.opensextant.tagger.regex;
 
 import java.util.ArrayList;
 import java.util.Collections;

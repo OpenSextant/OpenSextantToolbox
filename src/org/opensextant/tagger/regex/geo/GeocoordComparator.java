@@ -1,8 +1,8 @@
-package org.opensextant.regex.geo;
+package org.opensextant.tagger.regex.geo;
 
 import java.util.Comparator;
 
-import org.opensextant.regex.RegexAnnotation;
+import org.opensextant.tagger.regex.RegexAnnotation;
 
 public class GeocoordComparator implements Comparator<RegexAnnotation> {
 

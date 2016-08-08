@@ -19,7 +19,7 @@
  * (c) 2012 The MITRE Corporation. All Rights Reserved.
  * **************************************************************************
  **/
-package org.opensextant.regex;
+package org.opensextant.tagger.regex;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -115,7 +115,7 @@ public abstract class PostProcessorBase implements PostProcessor {
 	/**
 	 * (non-Javadoc)
 	 * 
-	 * @see org.opensextant.regex.PostProcessor#postProcess(java.util.List,
+	 * @see org.opensextant.tagger.regex.PostProcessor#postProcess(java.util.List,
 	 *      java.util.Set)
 	 */
 	@Override
