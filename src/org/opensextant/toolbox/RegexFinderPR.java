@@ -24,8 +24,8 @@ package org.opensextant.toolbox;
 import java.net.URL;
 import java.util.List;
 
-import org.opensextant.tagger.regex.RegexMatch;
-import org.opensextant.tagger.regex.RegexMatcher;
+import org.opensextant.tagger.Match;
+import org.opensextant.tagger.regex.RegexTagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ import gate.util.InvalidOffsetException;
 public class RegexFinderPR extends AbstractLanguageAnalyser implements ProcessingResource {
 	private static final long serialVersionUID = 1375472181851584128L;
 	/** The Regexmatcher object which does all of the work. */
-	private transient RegexMatcher reger;
+	private transient RegexTagger reger;
 	/** The annotationSet into which the dates will be written. */
 	private String outputAnnotationSet;
 	/** The file containing the patterns. */
@@ -61,7 +61,7 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
 	 */
 	private void initialize() {
 		// initialize the regex matcher
-		reger = new RegexMatcher(patternFile);
+		reger = new RegexTagger(patternFile);
 	}
 
 	/** End initialize. */
@@ -85,9 +85,9 @@ public class RegexFinderPR extends AbstractLanguageAnalyser implements Processin
 		// get the text of the document
 		String text = getDocument().getContent().toString();
 		// find the matches via the regex matcher
-		List<RegexMatch> matches = reger.match(text);
+		List<Match> matches = reger.match(text);
 		// loop over all the results
-		for (RegexMatch a : matches) {
+		for (Match a : matches) {
 			// fill in all the annotation features
 			FeatureMap feats = Factory.newFeatureMap();
 			feats.putAll(a.getFeatures());

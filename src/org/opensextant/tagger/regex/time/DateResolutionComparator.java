@@ -23,7 +23,7 @@ package org.opensextant.tagger.regex.time;
 
 import java.util.Comparator;
 
-import org.opensextant.tagger.regex.RegexMatch;
+import org.opensextant.tagger.Match;
 import org.opensextant.tagger.regex.time.DateTimeNormalizer.TimeResolution;
 
 /**
@@ -31,7 +31,7 @@ import org.opensextant.tagger.regex.time.DateTimeNormalizer.TimeResolution;
  * This comparator can be used to sort RegexAnnotation of type Date,Time and
  * DayOfTheMonth by their temporal resolution
  */
-public class DateResolutionComparator implements Comparator<RegexMatch> {
+public class DateResolutionComparator implements Comparator<Match> {
 
 	/**
 	 * (non-Javadoc)
@@ -39,7 +39,7 @@ public class DateResolutionComparator implements Comparator<RegexMatch> {
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public int compare(RegexMatch a1, RegexMatch a2) {
+	public int compare(Match a1, Match a2) {
 		int result;
 
 		String type1 = a1.getType();

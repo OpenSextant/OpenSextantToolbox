@@ -9,7 +9,9 @@ public class Match {
 	protected long end;
 	protected String type = "";
 	protected String matchText = "";
-
+	private String rule = "";
+	private boolean valid = true;
+	
 	protected Map<String, Object> features = new HashMap<String, Object>();
 
 	public Match(String type, String text, int start, int end) {
@@ -66,10 +68,38 @@ public class Match {
 		this.features.put(featureName, featureValue);
 	}
 
+
+
+	public String getRule() {
+		return rule;
+	}
+
+	public void setRule(String rule) {
+		this.rule = rule;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
+
+	public boolean interactsWith(Match other) {
+
+		long s1 = this.start;
+		long e1 = this.end;
+		long s2 = other.start;
+		long e2 = other.end;
+
+		return (s1 >= s2 || e1 >= s2) && (s2 >= s1 || e2 >= s1);
+	}
+
 	public String toString() {
 
 		return this.matchText + " (" + this.type + ")";
 
 	}
-
+	
 }

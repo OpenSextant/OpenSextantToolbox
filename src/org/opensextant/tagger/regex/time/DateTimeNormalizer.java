@@ -8,8 +8,8 @@ import java.util.regex.MatchResult;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.opensextant.tagger.Match;
 import org.opensextant.tagger.regex.Normalizer;
-import org.opensextant.tagger.regex.RegexMatch;
 import org.opensextant.tagger.regex.RegexRule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +57,7 @@ public class DateTimeNormalizer implements Normalizer {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DateTimeNormalizer.class);
 
 	@Override
-	public void normalize(RegexMatch anno, RegexRule r, MatchResult matchResult) {
+	public void normalize(Match anno, RegexRule r, MatchResult matchResult) {
 
 		if ("Date".equalsIgnoreCase(anno.getType())) {
 			normalizeDate(anno, r, matchResult);
@@ -73,7 +73,7 @@ public class DateTimeNormalizer implements Normalizer {
 
 	}
 
-	public void normalizeDate(RegexMatch anno, RegexRule r, MatchResult matchResult) {
+	public void normalizeDate(Match anno, RegexRule r, MatchResult matchResult) {
 
 		Map<String, Object> normalizedResults = anno.getFeatures();
 		Map<String, String> elementsFound = new HashMap<String, String>();
@@ -183,7 +183,7 @@ public class DateTimeNormalizer implements Normalizer {
 		return;
 	}
 
-	private void normalizeTime(RegexMatch anno, RegexRule r, MatchResult matchResult) {
+	private void normalizeTime(Match anno, RegexRule r, MatchResult matchResult) {
 		Map<String, Object> normalizedResults = anno.getFeatures();
 		Map<String, String> elementsFound = new HashMap<String, String>();
 		int numGroups = matchResult.groupCount();
@@ -202,7 +202,7 @@ public class DateTimeNormalizer implements Normalizer {
 		return;
 	}
 
-	private void normalizeDay(RegexMatch anno, RegexRule r, MatchResult matchResult) {
+	private void normalizeDay(Match anno, RegexRule r, MatchResult matchResult) {
 		Map<String, Object> normalizedResults = anno.getFeatures();
 		Map<String, String> elementsFound = new HashMap<String, String>();
 		int numGroups = matchResult.groupCount();

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.opensextant.tagger.Match;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,13 +15,13 @@ public class DebugPostProcessor extends PostProcessorBase {
 	private static final Logger LOGGER = LoggerFactory.getLogger(DebugPostProcessor.class);
 
 	@Override
-	public Comparator<RegexMatch> getComparator() {
+	public Comparator<Match> getComparator() {
 		return new PositionComparator();
 	}
 
 	@Override
-	public List<RegexMatch> decide(List<RegexMatch> inters) {
-		List<RegexMatch> keepers = new ArrayList<RegexMatch>();
+	public List<Match> decide(List<Match> inters) {
+		List<Match> keepers = new ArrayList<Match>();
 
 		if (inters != null && !inters.isEmpty()) {
 			// sort the annotations by document order
@@ -29,7 +30,7 @@ public class DebugPostProcessor extends PostProcessorBase {
 			// build up a message showing the alternative annotations
 			StringBuilder tmp = new StringBuilder();
 			tmp.append("Must decide amongst these ").append(inters.size()).append(" annotations\n");
-			for (RegexMatch a : inters) {
+			for (Match a : inters) {
 				tmp.append("\t").append(a).append("\n");
 			}
 			tmp.append("-------\n");

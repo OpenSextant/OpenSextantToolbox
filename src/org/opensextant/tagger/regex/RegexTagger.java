@@ -17,11 +17,16 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.tika.Tika;
+import org.apache.tika.exception.TikaException;
+import org.opensextant.tagger.Document;
+import org.opensextant.tagger.Match;
+import org.opensextant.tagger.Tagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RegexMatcher {
-	/** The rules used by this RegexMatcher. */
+public class RegexTagger implements Tagger {
+	/** The rules used by this Matcher. */
 	List<RegexRule> rules = new ArrayList<RegexRule>();
 
 	/** The list of entity type this matcher can find. */
@@ -29,6 +34,8 @@ public class RegexMatcher {
 
 	/** The postprocessors to apply. */
 	Map<PostProcessor, Set<String>> posters = new HashMap<PostProcessor, Set<String>>();
+
+	Tika tika = new Tika();
 
 	boolean debug = false;
 
@@ -45,34 +52,52 @@ public class RegexMatcher {
 	/** Has this mather been sucessfully initialized. */
 	boolean isInited;
 	/** Log object. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(RegexMatcher.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Matcher.class);
 
-	public RegexMatcher(URL patternFile) {
+	public RegexTagger(URL patternFile) {
 		initialize(patternFile);
 	}
 
-	public RegexMatcher(File patternFile) {
+	public RegexTagger(File patternFile) {
 		initialize(patternFile);
 	}
 
-	public List<RegexMatch> match(String input) {
+	public List<Match> match(String content) {
+		return this.tag(content).getMatchList();
+	}
+
+	@Override
+	public List<Match> match(File file) {
+		return this.tag(file).getMatchList();
+	}
+
+	@Override
+	public List<Match> match(URL url) {
+		return this.tag(url).getMatchList();
+	}
+
+	@Override
+	public Document tag(String content) {
+
+		Document doc = new Document();
+		doc.setContent(content);
 
 		// The matches to return
-		List<RegexMatch> matches = new ArrayList<RegexMatch>();
+		List<Match> matches = new ArrayList<Match>();
 
 		if (!isInited) {
-			LOGGER.error("Tried to use RegexMatcher without initializing first");
-			return matches;
+			LOGGER.error("Tried to use Matcher without initializing first");
+			return doc;
 		}
 
 		for (RegexRule r : rules) {
 			String t = r.getEntityType();
 			Normalizer normer = r.getNormalizer();
 			// Do the matching, looping over the rules
-			Matcher matcher = r.getPattern().matcher(input);
+			Matcher matcher = r.getPattern().matcher(content);
 			while (matcher.find()) {
 				// for each hit from the regex, create a RegexAnnotation
-				RegexMatch tmp = new RegexMatch(t, matcher.group(0), matcher.start(), matcher.end());
+				Match tmp = new Match(t, matcher.group(0), matcher.start(), matcher.end());
 				// if the a normalizer has been specified,
 				if (normer != null) {
 					normer.normalize(tmp, r, matcher.toMatchResult());
@@ -102,7 +127,32 @@ public class RegexMatcher {
 			p.postProcess(matches, posters.get(p));
 		}
 
-		return matches;
+		doc.setMatchList(matches);
+		return doc;
+	}
+
+	@Override
+	public Document tag(File file) {
+		String content;
+		try {
+			content = tika.parseToString(file);
+			return tag(content);
+		} catch (IOException | TikaException e) {
+			LOGGER.error("Problem when translating document from file " + file.getName(), e);
+		}
+		return new Document();
+	}
+
+	@Override
+	public Document tag(URL url) {
+		String content;
+		try {
+			content = tika.parseToString(url);
+			return tag(content);
+		} catch (IOException | TikaException e) {
+			LOGGER.error("Problem when translating document from URL " + url, e);
+		}
+		return new Document();
 	}
 
 	public void initialize(URL patFile) {
@@ -289,7 +339,19 @@ public class RegexMatcher {
 		return types;
 	}
 
-	private void addDebug(RegexMatch anno, RegexRule r, MatchResult matchResult) {
+	@Override
+	public String getTaggerType() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void cleanup() {
+		// TODO Auto-generated method stub
+
+	}
+
+	private void addDebug(Match anno, RegexRule r, MatchResult matchResult) {
 
 		Map<String, Object> annoFeatures = anno.getFeatures();
 

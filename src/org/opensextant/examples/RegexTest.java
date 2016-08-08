@@ -36,8 +36,8 @@ import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
-import org.opensextant.tagger.regex.RegexMatch;
-import org.opensextant.tagger.regex.RegexMatcher;
+import org.opensextant.tagger.Match;
+import org.opensextant.tagger.regex.RegexTagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +83,7 @@ public class RegexTest {
 		String resultFileName = args[2];
 
 		File testFile = new File(testFileName);
-		URL patternFile = null;
+		File patternFile = new File(patternFileName);
 		BufferedWriter resWriter = null;
 
 		// setup the output
@@ -107,15 +107,9 @@ public class RegexTest {
 			LOGGER.error("Couldnt write to " + resFile.getName() + ":" + e.getMessage(), e);
 		}
 
-		// get the pattern file as a URL
-		try {
-			patternFile = new File(patternFileName).toURI().toURL();
-		} catch (MalformedURLException e) {
-			LOGGER.error("Couldn't use pattern file " + patternFileName + ":" + e.getMessage(), e);
-		}
 
 		// initialize the regex matcher
-		RegexMatcher reger = new RegexMatcher(patternFile);
+		RegexTagger reger = new RegexTagger(patternFile);
 		LOGGER.info("Loaded " + reger.getRules().size() + " rules " + " for types " + reger.getTypes());
 		LOGGER.info("Writing results to " + resFile.getAbsolutePath());
 
@@ -146,7 +140,7 @@ public class RegexTest {
 			String testText = pieces[2];
 
 			// send the test text to regex matcher
-			List<RegexMatch> matches = reger.match(testText);
+			List<Match> matches = reger.match(testText);
 			// examine the results and return a line to be sent to the results
 			// file
 			String results = score(entityType, posOrNeg, testText, matches);
@@ -185,7 +179,7 @@ public class RegexTest {
 	 *            the annos
 	 * @return the string
 	 */
-	public static String score(String correctType, String posOrNeg, String testText, List<RegexMatch> matches) {
+	public static String score(String correctType, String posOrNeg, String testText, List<Match> matches) {
 
 		String assessment = "??";
 		int annoCount = matches.size();
@@ -196,7 +190,7 @@ public class RegexTest {
 
 		int maxMatchedLength = 0;
 
-		for (RegexMatch a : matches) {
+		for (Match a : matches) {
 			typesFound.add(a.getType());
 			rulesFired.add(a.getRule());
 			int matchLen = a.getMatchText().trim().length();

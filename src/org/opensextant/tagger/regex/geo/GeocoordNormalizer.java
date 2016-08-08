@@ -10,8 +10,8 @@ import org.opensextant.geodesy.Geodetic2DPoint;
 import org.opensextant.geodesy.MGRS;
 import org.opensextant.geodesy.UTM;
 import org.opensextant.placedata.Geocoord;
+import org.opensextant.tagger.Match;
 import org.opensextant.tagger.regex.Normalizer;
-import org.opensextant.tagger.regex.RegexMatch;
 import org.opensextant.tagger.regex.RegexRule;
 import org.opensextant.tagger.regex.geo.OrdinateParser.AXIS;
 import org.slf4j.Logger;
@@ -30,7 +30,7 @@ public class GeocoordNormalizer implements Normalizer {
 	private static final String UTM_FAMILY = "UTM";
 
 	@Override
-	public void normalize(RegexMatch anno, RegexRule r, MatchResult matchResult) {
+	public void normalize(Match anno, RegexRule r, MatchResult matchResult) {
 
 		Map<String, Object> annoFeatures = anno.getFeatures();
 		Map<String, String> elementsFound = new HashMap<String, String>();

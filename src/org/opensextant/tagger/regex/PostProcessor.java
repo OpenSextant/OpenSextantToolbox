@@ -24,11 +24,13 @@ package org.opensextant.tagger.regex;
 import java.util.List;
 import java.util.Set;
 
+import org.opensextant.tagger.Match;
+
 /**
  * The Interface PostProcessor. <br>
  * This interface provides the contract for any type of processing done to the
- * collection of RegexAnnotations which has been found by the RegexMatcher and
- * specified via the "#POST" element of a RegexMatcher configuration file.
+ * collection of RegexAnnotations which has been found by the Matcher and
+ * specified via the "#POST" element of a Matcher configuration file.
  */
 public interface PostProcessor {
 
@@ -44,6 +46,6 @@ public interface PostProcessor {
 	 *            the types of RegexAnnotations to process (implementation
 	 *            specific)
 	 */
-	void postProcess(List<RegexMatch> annos, Set<String> types);
+	void postProcess(List<Match> annos, Set<String> types);
 
 }

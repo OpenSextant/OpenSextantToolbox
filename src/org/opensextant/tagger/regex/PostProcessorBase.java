@@ -27,6 +27,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import org.opensextant.tagger.Match;
+
 /**
  * The Class PostProcessorBase.<br>
  * This abstract class provides a base class for PostProcessor implementations
@@ -50,15 +52,15 @@ public abstract class PostProcessorBase implements PostProcessor {
 	 *            the annotations to analyze for interactions
 	 * @return the list of lists of interacting annotations
 	 */
-	public List<List<RegexMatch>> findInteractions(List<RegexMatch> annos) {
+	public List<List<Match>> findInteractions(List<Match> annos) {
 
 		// the list of lists of interacting annos, to be returned
-		List<List<RegexMatch>> inters = new ArrayList<List<RegexMatch>>();
+		List<List<Match>> inters = new ArrayList<List<Match>>();
 
 		// null or empty list as input, no interactions, return list with one
 		// empty list
 		if (annos == null || annos.isEmpty()) {
-			inters.add(new ArrayList<RegexMatch>());
+			inters.add(new ArrayList<Match>());
 			return inters;
 		}
 
@@ -67,24 +69,24 @@ public abstract class PostProcessorBase implements PostProcessor {
 		Collections.sort(annos, new PositionComparator());
 
 		// the current group of interacting annos
-		List<RegexMatch> currentGroup = new ArrayList<RegexMatch>();
+		List<Match> currentGroup = new ArrayList<Match>();
 
 		// add the first anno to the current group to start
-		RegexMatch a = annos.get(0);
+		Match a = annos.get(0);
 		currentGroup.add(a);
 
 		// loop over all the rest of the annos
 		for (int i = 1; i < annos.size(); i++) {
 
 			// get the next anno to compare
-			RegexMatch b = annos.get(i);
+			Match b = annos.get(i);
 
 			if (!interactsWithGroup(currentGroup, b)) {// end of current group,
 														// b goes in next group
 				// add the current group to the list
 				inters.add(currentGroup);
 				// get a new group and add to list
-				currentGroup = new ArrayList<RegexMatch>();
+				currentGroup = new ArrayList<Match>();
 				inters.add(currentGroup);
 			}
 			currentGroup.add(b);
@@ -101,9 +103,9 @@ public abstract class PostProcessorBase implements PostProcessor {
 	}
 
 	/** Check for interactions between an annotation and an existing group. */
-	private boolean interactsWithGroup(List<RegexMatch> group, RegexMatch b) {
+	private boolean interactsWithGroup(List<Match> group, Match b) {
 
-		for (RegexMatch g : group) {
+		for (Match g : group) {
 			if (g.interactsWith(b)) {
 				return true;
 			}
@@ -119,7 +121,7 @@ public abstract class PostProcessorBase implements PostProcessor {
 	 *      java.util.Set)
 	 */
 	@Override
-	public void postProcess(List<RegexMatch> annos, Set<String> types) {
+	public void postProcess(List<Match> annos, Set<String> types) {
 
 		// null or empty input list, do nothing
 		if (annos == null || annos.isEmpty()) {
@@ -127,16 +129,16 @@ public abstract class PostProcessorBase implements PostProcessor {
 		}
 
 		// the subset of all annos to keeep
-		List<RegexMatch> keeperAnnos = new ArrayList<RegexMatch>();
+		List<Match> keeperAnnos = new ArrayList<Match>();
 
 		// the list of groups of interacting (overlapping,contained/containing)
 		// annos
-		List<List<RegexMatch>> interactors = findInteractions(annos);
+		List<List<Match>> interactors = findInteractions(annos);
 
 		// for each group of interacting annos decide which if any to keep
-		for (List<RegexMatch> inters : interactors) {
+		for (List<Match> inters : interactors) {
 			// pass to decision logic
-			List<RegexMatch> keepers = decide(inters);
+			List<Match> keepers = decide(inters);
 			// add returned list to annotations to kepp
 			keeperAnnos.addAll(keepers);
 		}
@@ -155,8 +157,8 @@ public abstract class PostProcessorBase implements PostProcessor {
 	 *            a list of interacting annotation
 	 * @return the list of annotations to keep
 	 */
-	public List<RegexMatch> decide(List<RegexMatch> inters) {
-		List<RegexMatch> keepers = new ArrayList<RegexMatch>();
+	public List<Match> decide(List<Match> inters) {
+		List<Match> keepers = new ArrayList<Match>();
 
 		if (inters != null && !inters.isEmpty()) {
 			// sort the annotations by temporal resolution
@@ -173,6 +175,6 @@ public abstract class PostProcessorBase implements PostProcessor {
 	 * 
 	 * @return the comparator to be used to sort
 	 */
-	public abstract Comparator<RegexMatch> getComparator();
+	public abstract Comparator<Match> getComparator();
 
 }

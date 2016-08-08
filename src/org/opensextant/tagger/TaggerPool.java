@@ -14,6 +14,7 @@ import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.opensextant.service.OpenSextantExtractorResource;
 import org.opensextant.tagger.gate.GATETagger;
+import org.opensextant.tagger.regex.RegexTagger;
 import org.opensextant.tagger.solr.GeoSolrTagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,13 @@ public class TaggerPool {
 					pool.add(tagger);
 				}
 
+				if (implType.equalsIgnoreCase("regex")) {
+					String patterns = prop.getProperty("os.service." +  taggerType + ".patterns" );
+					File patternFile = new File(patterns);
+					RegexTagger tagger = new RegexTagger(patternFile);
+					pool.add(tagger);
+				}
+				
 			}
 
 			poolMap.put(taggerType, pool);

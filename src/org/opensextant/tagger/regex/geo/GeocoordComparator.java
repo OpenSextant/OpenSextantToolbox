@@ -2,12 +2,12 @@ package org.opensextant.tagger.regex.geo;
 
 import java.util.Comparator;
 
-import org.opensextant.tagger.regex.RegexMatch;
+import org.opensextant.tagger.Match;
 
-public class GeocoordComparator implements Comparator<RegexMatch> {
+public class GeocoordComparator implements Comparator<Match> {
 
 	@Override
-	public int compare(RegexMatch o1, RegexMatch o2) {
+	public int compare(Match o1, Match o2) {
 
 		if (!"GEOCOORD".equalsIgnoreCase(o1.getType()) || !"GEOCOORD".equalsIgnoreCase(o2.getType())) {
 			return 0;

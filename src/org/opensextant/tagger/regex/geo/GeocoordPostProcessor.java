@@ -23,8 +23,8 @@ package org.opensextant.tagger.regex.geo;
 
 import java.util.Comparator;
 
+import org.opensextant.tagger.Match;
 import org.opensextant.tagger.regex.PostProcessorBase;
-import org.opensextant.tagger.regex.RegexMatch;
 
 /**
  * The Class GeoPostProcessor.<br>
@@ -35,7 +35,7 @@ import org.opensextant.tagger.regex.RegexMatch;
 public class GeocoordPostProcessor extends PostProcessorBase {
 
 	@Override
-	public Comparator<RegexMatch> getComparator() {
+	public Comparator<Match> getComparator() {
 		return new GeocoordComparator();
 	}
 
