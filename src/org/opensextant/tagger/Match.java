@@ -11,7 +11,7 @@ public class Match {
 	protected String matchText = "";
 	private String rule = "";
 	private boolean valid = true;
-	
+
 	protected Map<String, Object> features = new HashMap<String, Object>();
 
 	public Match(String type, String text, int start, int end) {
@@ -68,8 +68,6 @@ public class Match {
 		this.features.put(featureName, featureValue);
 	}
 
-
-
 	public String getRule() {
 		return rule;
 	}
@@ -101,5 +99,5 @@ public class Match {
 		return this.matchText + " (" + this.type + ")";
 
 	}
-	
+
 }

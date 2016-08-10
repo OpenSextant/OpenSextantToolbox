@@ -13,6 +13,7 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.opensextant.tagger.Document;
+import org.opensextant.tagger.Lexicon;
 import org.opensextant.tagger.Match;
 import org.opensextant.tagger.Tagger;
 import org.slf4j.Logger;
@@ -74,11 +75,11 @@ public class GATETagger implements Tagger {
 		try {
 			this.controller = (CorpusController) PersistenceManager.loadObjectFromFile(gappFile);
 		} catch (PersistenceException e) {
-			LOGGER.error("Couldn't load GAPP file" + gappFile.getName(), e);
+			LOGGER.error("Couldn't load GAPP file " + gappFile.getName(), e);
 		} catch (ResourceInstantiationException e) {
-			LOGGER.error("Couldn't load GAPP file" + gappFile.getName(), e);
+			LOGGER.error("Couldn't load GAPP file " + gappFile.getName(), e);
 		} catch (IOException e) {
-			LOGGER.error("Couldn't load GAPP file" + gappFile.getName(), e);
+			LOGGER.error("Couldn't load GAPP file " + gappFile.getName(), e);
 		}
 
 	}
@@ -90,7 +91,7 @@ public class GATETagger implements Tagger {
 		try {
 			gateDoc = Factory.newDocument(content);
 		} catch (ResourceInstantiationException e) {
-			LOGGER.error("Couldn't create new document from given string", e);
+			LOGGER.error("Couldn't create document from given string", e);
 		}
 
 		return process(gateDoc);
@@ -229,6 +230,17 @@ public class GATETagger implements Tagger {
 		// cleanup resources
 		Factory.deleteResource(doc);
 		return db;
+	}
+
+	@Override
+	public boolean hasLexicon() {
+		return false;
+	}
+
+	@Override
+	public Lexicon getLexicon() {
+		LOGGER.warn("GATETaggers do not have Lexicons");
+		return null;
 	}
 
 }

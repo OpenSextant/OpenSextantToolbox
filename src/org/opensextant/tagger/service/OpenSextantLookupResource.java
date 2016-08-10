@@ -1,11 +1,11 @@
 package org.opensextant.tagger.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
 
 import org.opensextant.tagger.TaggerPool;
 import org.opensextant.tagger.geo.Place;
-import org.opensextant.tagger.solr.GeoSolrTagger;
 import org.restlet.Request;
 import org.restlet.data.MediaType;
 import org.restlet.ext.jackson.JacksonRepresentation;
@@ -47,23 +47,13 @@ public class OpenSextantLookupResource extends ServerResource {
 
 		LOGGER.debug("Got a request:" + attrs);
 
-		GeoSolrTagger tagger = null;
-		if (dpPool.getProcessNames().contains(taggerType)) {
-			tagger = (GeoSolrTagger) dpPool.getTagger(taggerType);
-			if (tagger == null) {
-				LOGGER.error("Could not get a " + taggerType + " Gazetteer");
-				return new StringRepresentation("Could not get a " + taggerType + " Gazetteer");
-			}
+		List<Place> placesFound = new ArrayList<Place>();
 
+		if (dpPool.hasLexicon(taggerType)) {
+			placesFound = dpPool.getLexicon(taggerType).geoQueryByName(placeName,country, false);
 		} else {
-			dpPool.returnTagger(tagger);
-			LOGGER.error("Could not get a " + taggerType + " Gazetteer");
-			return new StringRepresentation("Could not get a " + taggerType + " Gazetteer");
+			LOGGER.warn("Could not get a Lexicon for a " + taggerType + " tagger.");
 		}
-
-		List<Place> placesFound = tagger.geoQueryByName(placeName, false);
-
-		dpPool.returnTagger(tagger);
 
 		LOGGER.info("Found " + placesFound.size() + " places");
 

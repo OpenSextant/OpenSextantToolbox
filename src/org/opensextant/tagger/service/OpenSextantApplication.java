@@ -33,7 +33,7 @@ public class OpenSextantApplication extends Application {
 		LOGGER.info("Warming up extractor pool");
 		// warm up the pool
 		String content = "We drove to London.";
-		for (String p : dpPool.getProcessNames()) {
+		for (String p : dpPool.getTaggerTypes()) {
 			dpPool.tag(p, content);
 		}
 

@@ -28,8 +28,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -107,10 +105,9 @@ public class RegexTest {
 			LOGGER.error("Couldnt write to " + resFile.getName() + ":" + e.getMessage(), e);
 		}
 
-
 		// initialize the regex matcher
 		RegexTagger reger = new RegexTagger(patternFile);
-		LOGGER.info("Loaded " + reger.getRules().size() + " rules " + " for types " + reger.getTypes());
+		LOGGER.info("Loaded " + reger.getRules().size() + " rules " + " for types " + reger.getEntityTypes());
 		LOGGER.info("Writing results to " + resFile.getAbsolutePath());
 
 		// loop over the lines of the test file

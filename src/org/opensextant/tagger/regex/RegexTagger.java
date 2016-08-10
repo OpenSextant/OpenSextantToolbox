@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
 import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.opensextant.tagger.Document;
+import org.opensextant.tagger.Lexicon;
 import org.opensextant.tagger.Match;
 import org.opensextant.tagger.Tagger;
 import org.slf4j.Logger;
@@ -30,7 +32,7 @@ public class RegexTagger implements Tagger {
 	List<RegexRule> rules = new ArrayList<RegexRule>();
 
 	/** The list of entity type this matcher can find. */
-	Set<String> types = new HashSet<String>();
+	Set<String> entityTypes = new HashSet<String>();
 
 	/** The postprocessors to apply. */
 	Map<PostProcessor, Set<String>> posters = new HashMap<PostProcessor, Set<String>>();
@@ -51,29 +53,204 @@ public class RegexTagger implements Tagger {
 
 	/** Has this mather been sucessfully initialized. */
 	boolean isInited;
+
+	private String taggerType;
+	
 	/** Log object. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(RegexTagger.class);
+
+	public RegexTagger(String taggerType, Properties props) {
+		String patternFilePath = props.getProperty("os.service.app." + taggerType +".patterns");
+		this.taggerType = taggerType;
+		initialize(new File (patternFilePath));
+	}
 
 	public RegexTagger(URL patternFile) {
 		initialize(patternFile);
 	}
 
 	public RegexTagger(File patternFile) {
-		initialize(patternFile);
+		try {
+			initialize(patternFile.toURI().toURL());
+		} catch (MalformedURLException e) {
+			LOGGER.error("Cannot initialize the Regex Tagger using pattern file  " + patternFile.getName(), e);
+		}
 	}
 
-	public List<Match> match(String content) {
-		return this.tag(content).getMatchList();
+	public void initialize(URL patFile) {
+	
+		// the #DEFINE statements as name and regex
+		Map<String, String> defines = new HashMap<String, String>();
+	
+		// the #NORM statements as entitytype and classname
+		Map<String, String> normalizerClassnames = new HashMap<String, String>();
+	
+		// the #POST statements as entitytype and classname
+		Map<String, Set<String>> posterClassnames = new HashMap<String, Set<String>>();
+	
+		// the #TAXO statements as entitytype and taxonomy string
+		Map<String, String> taxos = new HashMap<String, String>();
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(patFile.openStream(), "UTF-8"));
+		} catch (UnsupportedEncodingException e1) {
+			LOGGER.error("Error when opening pattern file", e1);
+			return;
+		} catch (IOException e1) {
+			LOGGER.error("Error when opening pattern file", e1);
+			return;
+		}
+	
+		String line = null;
+		String[] fields;
+		while (true) {
+			try {
+				line = reader.readLine();
+			} catch (IOException e) {
+				LOGGER.error("Error when reading pattern file.", e);
+				return;
+			}
+			if (line == null) {
+				break;
+			}
+			line = line.trim();
+			// Is it a define statement?
+			if (line.startsWith("#DEFINE")) {
+				// line should be
+				// #DEFINE<tab><defineName><tab><definePattern>
+				fields = line.split("[\t ]+", 3);
+				defines.put(fields[1].trim(), fields[2].trim());
+			} else if (line.startsWith("#RULE")) {// Is it a rule statement?
+				// line should be
+				// #RULE<tab><entityType><tab><rule_fam><tab><rule_name><tab><pattern>
+				fields = line.split("[\t ]+", 5);
+				String type = fields[1].trim();
+				String fam = fields[2].trim();
+				String ruleName = fields[3].trim();
+				String rulePattern = fields[4].trim();
+				RegexRule tmpRule = new RegexRule();
+				tmpRule.setEntityType(type);
+				tmpRule.setRuleFamily(fam);
+				tmpRule.setRuleName(ruleName);
+				tmpRule.setPatternString(rulePattern);
+				rules.add(tmpRule);
+				entityTypes.add(type);
+			} else if (line.startsWith("#NORM")) {
+				fields = line.split("[\t ]+", 3);
+				String type = fields[1].trim();
+				normalizerClassnames.put(type, fields[2].trim());
+			} else if (line.startsWith("#TAXO")) {
+				fields = line.split("[\t ]+", 3);
+				String type = fields[1].trim();
+				taxos.put(type, fields[2].trim());
+			} else if (line.startsWith("#POST")) {
+				fields = line.split("[\t ]+", 3);
+				String type = fields[1].trim();
+				String posterName = fields[2].trim();
+				if (!posterClassnames.containsKey(posterName)) {
+					posterClassnames.put(posterName, new HashSet<String>());
+				}
+				posterClassnames.get(posterName).add(type);
+			} else if (line.startsWith("#DEBUG")) {
+				this.debug = true;
+			}
+	
+			// Ignore everything else
+		} // end file read loop
+	
+		try {
+			if (reader != null) {
+				reader.close();
+			}
+		} catch (IOException e) {
+			LOGGER.error("Error when closing pattern file.", e);
+		}
+		// defines,rules and classes should be completely populated
+		// substitute all uses of DEFINE patterns within a RULE
+		// with the DEFINE pattern surrounded by a numbered capture group
+		for (RegexRule r : rules) {
+			String tmpRulePattern = r.getPatternString();
+			Matcher elementMatcher = elementPattern.matcher(tmpRulePattern);
+			// find all of the element definitions within the pattern
+			int groupNum = 1;
+			// add the entity type as the name for group 0 (whole match)
+			r.getElementMap().put(0, r.getEntityType());
+			// find and replace any DEFINEd patterns, keeping track of the group
+			// number
+			// first find any DEFINEd patterns and stick it and its group number
+			// into the
+			// rule element map
+			while (elementMatcher.find()) {
+				int elementStart = elementMatcher.start();
+				int elementEnd = elementMatcher.end();
+				String elementName = tmpRulePattern.substring(elementStart + 1, elementEnd - 1);
+				r.getElementMap().put(groupNum, elementName);
+				groupNum++;
+			}
+			// now, replace each of the DEFINEd patterns with its regex
+			// equivalent
+			// wrapped in ( ), so it becomes a numbered capture group
+			for (String tmpDefineName : defines.keySet()) {
+				String tmpDefinePattern = "(" + defines.get(tmpDefineName) + ")";
+				tmpDefineName = "<" + tmpDefineName + ">";
+				tmpRulePattern = tmpRulePattern.replace(tmpDefineName, tmpDefinePattern);
+			}
+			// set the modified pattern on the rule and create the Pattern from
+			// it
+			r.setModifedPatternString(tmpRulePattern);
+			r.setPattern(Pattern.compile(r.getModifedPatternString()));
+			// resolve and attach the normalizer object
+			if (normalizerClassnames.containsKey(r.getEntityType())) {
+				String normClassName = normalizerClassnames.get(r.getEntityType());
+				Normalizer normer = null;
+	
+				try {
+					normer = (Normalizer) Class.forName(normClassName).newInstance();
+				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+					LOGGER.warn("Could not instantiate a " + normClassName + " normalizer. Using no-op normalizer", e);
+				}
+	
+				r.setNormalizer(normer);
+			} else { // nothing in file no-op
+				r.setNormalizer(null);
+			}
+			// resolve and attach the taxonomic string object
+			if (taxos.containsKey(r.getEntityType())) {
+				r.setTaxo(taxos.get(r.getEntityType()));
+			} else { // nothing in file
+				r.setTaxo("");
+			}
+		} // end rule loop
+	
+		// create the postprocessors
+	
+		for (String post : posterClassnames.keySet()) {
+	
+			try {
+				PostProcessor pstr = (PostProcessor) Class.forName(post).newInstance();
+				posters.put(pstr, posterClassnames.get(post));
+			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+				LOGGER.warn("Could not instantiate a " + post + " post-processor. Using no-op post-processor", e);
+			}
+	
+		}
+	
+		if (this.debug) {
+			PostProcessor pstr = new DebugPostProcessor();
+			posters.put(pstr, entityTypes);
+		}
+	
+		isInited = true;
 	}
 
-	@Override
-	public List<Match> match(File file) {
-		return this.tag(file).getMatchList();
-	}
-
-	@Override
-	public List<Match> match(URL url) {
-		return this.tag(url).getMatchList();
+	/** End initialize. */
+	
+	public void initialize(File patFile) {
+		try {
+			initialize(patFile.toURI().toURL());
+		} catch (MalformedURLException e) {
+			LOGGER.error("Cannot initialize the matcher using pattern file  " + patFile.getName(), e);
+		}
 	}
 
 	@Override
@@ -155,200 +332,47 @@ public class RegexTagger implements Tagger {
 		return new Document();
 	}
 
-	public void initialize(URL patFile) {
-
-		// the #DEFINE statements as name and regex
-		Map<String, String> defines = new HashMap<String, String>();
-
-		// the #NORM statements as entitytype and classname
-		Map<String, String> normalizerClassnames = new HashMap<String, String>();
-
-		// the #POST statements as entitytype and classname
-		Map<String, Set<String>> posterClassnames = new HashMap<String, Set<String>>();
-
-		// the #TAXO statements as entitytype and taxonomy string
-		Map<String, String> taxos = new HashMap<String, String>();
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new InputStreamReader(patFile.openStream(), "UTF-8"));
-		} catch (UnsupportedEncodingException e1) {
-			LOGGER.error("Error when opening pattern file", e1);
-			return;
-		} catch (IOException e1) {
-			LOGGER.error("Error when opening pattern file", e1);
-			return;
-		}
-
-		String line = null;
-		String[] fields;
-		while (true) {
-			try {
-				line = reader.readLine();
-			} catch (IOException e) {
-				LOGGER.error("Error when reading pattern file.", e);
-				return;
-			}
-			if (line == null) {
-				break;
-			}
-			line = line.trim();
-			// Is it a define statement?
-			if (line.startsWith("#DEFINE")) {
-				// line should be
-				// #DEFINE<tab><defineName><tab><definePattern>
-				fields = line.split("[\t ]+", 3);
-				defines.put(fields[1].trim(), fields[2].trim());
-			} else if (line.startsWith("#RULE")) {// Is it a rule statement?
-				// line should be
-				// #RULE<tab><entityType><tab><rule_fam><tab><rule_name><tab><pattern>
-				fields = line.split("[\t ]+", 5);
-				String type = fields[1].trim();
-				String fam = fields[2].trim();
-				String ruleName = fields[3].trim();
-				String rulePattern = fields[4].trim();
-				RegexRule tmpRule = new RegexRule();
-				tmpRule.setEntityType(type);
-				tmpRule.setRuleFamily(fam);
-				tmpRule.setRuleName(ruleName);
-				tmpRule.setPatternString(rulePattern);
-				rules.add(tmpRule);
-				types.add(type);
-			} else if (line.startsWith("#NORM")) {
-				fields = line.split("[\t ]+", 3);
-				String type = fields[1].trim();
-				normalizerClassnames.put(type, fields[2].trim());
-			} else if (line.startsWith("#TAXO")) {
-				fields = line.split("[\t ]+", 3);
-				String type = fields[1].trim();
-				taxos.put(type, fields[2].trim());
-			} else if (line.startsWith("#POST")) {
-				fields = line.split("[\t ]+", 3);
-				String type = fields[1].trim();
-				String posterName = fields[2].trim();
-				if (!posterClassnames.containsKey(posterName)) {
-					posterClassnames.put(posterName, new HashSet<String>());
-				}
-				posterClassnames.get(posterName).add(type);
-			} else if (line.startsWith("#DEBUG")) {
-				this.debug = true;
-			}
-
-			// Ignore everything else
-		} // end file read loop
-
-		try {
-			if (reader != null) {
-				reader.close();
-			}
-		} catch (IOException e) {
-			LOGGER.error("Error when closing pattern file.", e);
-		}
-		// defines,rules and classes should be completely populated
-		// substitute all uses of DEFINE patterns within a RULE
-		// with the DEFINE pattern surrounded by a numbered capture group
-		for (RegexRule r : rules) {
-			String tmpRulePattern = r.getPatternString();
-			Matcher elementMatcher = elementPattern.matcher(tmpRulePattern);
-			// find all of the element definitions within the pattern
-			int groupNum = 1;
-			// add the entity type as the name for group 0 (whole match)
-			r.getElementMap().put(0, r.getEntityType());
-			// find and replace any DEFINEd patterns, keeping track of the group
-			// number
-			// first find any DEFINEd patterns and stick it and its group number
-			// into the
-			// rule element map
-			while (elementMatcher.find()) {
-				int elementStart = elementMatcher.start();
-				int elementEnd = elementMatcher.end();
-				String elementName = tmpRulePattern.substring(elementStart + 1, elementEnd - 1);
-				r.getElementMap().put(groupNum, elementName);
-				groupNum++;
-			}
-			// now, replace each of the DEFINEd patterns with its regex
-			// equivalent
-			// wrapped in ( ), so it becomes a numbered capture group
-			for (String tmpDefineName : defines.keySet()) {
-				String tmpDefinePattern = "(" + defines.get(tmpDefineName) + ")";
-				tmpDefineName = "<" + tmpDefineName + ">";
-				tmpRulePattern = tmpRulePattern.replace(tmpDefineName, tmpDefinePattern);
-			}
-			// set the modified pattern on the rule and create the Pattern from
-			// it
-			r.setModifedPatternString(tmpRulePattern);
-			r.setPattern(Pattern.compile(r.getModifedPatternString()));
-			// resolve and attach the normalizer object
-			if (normalizerClassnames.containsKey(r.getEntityType())) {
-				String normClassName = normalizerClassnames.get(r.getEntityType());
-				Normalizer normer = null;
-
-				try {
-					normer = (Normalizer) Class.forName(normClassName).newInstance();
-				} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-					LOGGER.warn("Could not instantiate a " + normClassName + " normalizer. Using no-op normalizer",e);
-				}
-
-				r.setNormalizer(normer);
-			} else { // nothing in file no-op
-				r.setNormalizer(null);
-			}
-			// resolve and attach the taxonomic string object
-			if (taxos.containsKey(r.getEntityType())) {
-				r.setTaxo(taxos.get(r.getEntityType()));
-			} else { // nothing in file
-				r.setTaxo("");
-			}
-		} // end rule loop
-
-		// create the postprocessors
-
-		for (String post : posterClassnames.keySet()) {
-
-			try {
-				PostProcessor pstr = (PostProcessor) Class.forName(post).newInstance();
-				posters.put(pstr, posterClassnames.get(post));
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				LOGGER.warn("Could not instantiate a " + post + " post-processor. Using no-op post-processor",e);
-			}
-
-		}
-
-		if (this.debug) {
-			PostProcessor pstr = new DebugPostProcessor();
-			posters.put(pstr, types);
-		}
-
-		isInited = true;
+	public List<Match> match(String content) {
+		return this.tag(content).getMatchList();
 	}
 
-	/** End initialize. */
+	@Override
+	public List<Match> match(File file) {
+		return this.tag(file).getMatchList();
+	}
 
-	public void initialize(File patFile) {
-		try {
-			initialize(patFile.toURI().toURL());
-		} catch (MalformedURLException e) {
-			LOGGER.error("Cannot initialize the matcher using pattern file  " + patFile.getName(), e);
-		}
+	@Override
+	public List<Match> match(URL url) {
+		return this.tag(url).getMatchList();
+	}
+
+	@Override
+	public String getTaggerType() {
+		return this.taggerType;
+	}
+
+	@Override
+	public boolean hasLexicon() {
+		return false;
+	}
+
+	@Override
+	public Lexicon getLexicon() {
+		LOGGER.warn("Regex Taggers do not have Lexicons");
+		return null;
+	}
+
+	@Override
+	public void cleanup() {
+	// Nothing to cleanup
 	}
 
 	public List<RegexRule> getRules() {
 		return rules;
 	}
 
-	public Set<String> getTypes() {
-		return types;
-	}
-
-	@Override
-	public String getTaggerType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void cleanup() {
-		// TODO Auto-generated method stub
-
+	public Set<String> getEntityTypes() {
+		return entityTypes;
 	}
 
 	private void addDebug(Match anno, RegexRule r, MatchResult matchResult) {

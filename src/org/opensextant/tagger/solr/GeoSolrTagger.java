@@ -1,17 +1,16 @@
 package org.opensextant.tagger.solr;
 
-import java.io.IOException;
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocument;
-import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.params.CommonParams;
-import org.apache.solr.common.params.ModifiableSolrParams;
+import org.opensextant.tagger.Document;
+import org.opensextant.tagger.Lexicon;
 import org.opensextant.tagger.Match;
 import org.opensextant.tagger.geo.Place;
 import org.opensextant.tagger.geo.PlaceCandidate;
@@ -53,11 +52,66 @@ public class GeoSolrTagger extends SolrTagger {
 		this.matchParams.set(CommonParams.FQ, "search_only:false");
 	}
 
-	public List<PlaceCandidate> geoMatch(String buffer) {
+	public GeoSolrTagger(String taggerType, Properties props) {
+		super(props.getProperty("os.service.solr.home"), coreName, matchFieldName, searchFieldName);
+	}
+
+	public Document geoTag(String content) {
+
+		List<Match> pcs = new ArrayList<Match>();
+
+		Document doc = super.tag(content);
+
+		for (Match match : doc.getMatchList()) {
+			PlaceCandidate pc = convertToPlaceCandidate(match);
+			if (pc != null) {
+				pcs.add(pc);
+			}
+		}
+
+		doc.setMatchList(pcs);
+		return doc;
+	}
+
+	public Document geoTag(File file) {
+
+		List<Match> pcs = new ArrayList<Match>();
+
+		Document doc = super.tag(file);
+
+		for (Match match : doc.getMatchList()) {
+			PlaceCandidate pc = convertToPlaceCandidate(match);
+			if (pc != null) {
+				pcs.add(pc);
+			}
+		}
+
+		doc.setMatchList(pcs);
+		return doc;
+	}
+
+	public Document geoTag(URL url) {
+
+		List<Match> pcs = new ArrayList<Match>();
+
+		Document doc = super.tag(url);
+
+		for (Match match : doc.getMatchList()) {
+			PlaceCandidate pc = convertToPlaceCandidate(match);
+			if (pc != null) {
+				pcs.add(pc);
+			}
+		}
+
+		doc.setMatchList(pcs);
+		return doc;
+	}
+
+	public List<PlaceCandidate> geoMatch(String content) {
 
 		List<PlaceCandidate> pcs = new ArrayList<PlaceCandidate>();
 
-		List<Match> matches = super.match(buffer);
+		List<Match> matches = super.match(content);
 
 		for (Match match : matches) {
 			PlaceCandidate pc = convertToPlaceCandidate(match);
@@ -65,38 +119,56 @@ public class GeoSolrTagger extends SolrTagger {
 				pcs.add(pc);
 			}
 		}
+
 		return pcs;
 	}
 
-	public List<Place> geoQuery(String query) {
-		ModifiableSolrParams srchParams = new ModifiableSolrParams(searchParams);
-		srchParams.set("q", query);
-		return search(srchParams);
-	}
+	public List<PlaceCandidate> geoMatch(File file) {
 
-	public List<Place> geoQueryByName(String placeName, boolean fuzzy) {
-		ModifiableSolrParams srchParams = new ModifiableSolrParams(searchParams);
+		List<PlaceCandidate> pcs = new ArrayList<PlaceCandidate>();
 
-		String query = "";
+		List<Match> matches = super.match(file);
 
-		if (!fuzzy) {
-			query = searchFieldName + ":\"" + placeName + "\"";
-		} else {
-
-			String[] pieces = placeName.split("\\s");
-
-			query = searchFieldName + ":" + pieces[0] + "~80";
-
-			for (int i = 1; i < pieces.length; i++) {
-				query = query + " AND " + searchFieldName + ":" + pieces[i] + "~80";
+		for (Match match : matches) {
+			PlaceCandidate pc = convertToPlaceCandidate(match);
+			if (pc != null) {
+				pcs.add(pc);
 			}
-
 		}
 
-		// srchParams.set("defType", "edismax");
+		return pcs;
+	}
 
-		srchParams.set("q", query);
-		return search(srchParams);
+	public List<PlaceCandidate> geoMatch(URL url) {
+
+		List<PlaceCandidate> pcs = new ArrayList<PlaceCandidate>();
+
+		List<Match> matches = super.match(url);
+
+		for (Match match : matches) {
+			PlaceCandidate pc = convertToPlaceCandidate(match);
+			if (pc != null) {
+				pcs.add(pc);
+			}
+		}
+
+		return pcs;
+	}
+
+	@Override
+	public String getTaggerType() {
+		return coreName;
+	}
+
+	@Override
+	public boolean hasLexicon() {
+		return true;
+	}
+
+	@Override
+	public Lexicon getLexicon() {
+		Lexicon lex = new SolrLexicon(solrClient, GeoSolrTagger.searchFieldName);
+		return lex;
 	}
 
 	public boolean isTagAbbreviations() {
@@ -106,28 +178,6 @@ public class GeoSolrTagger extends SolrTagger {
 	public void setTagAbbreviations(boolean tagAbbreviations) {
 		this.tagAbbreviations = tagAbbreviations;
 	}
-
-	private List<Place> search(ModifiableSolrParams prms) {
-
-		List<Place> places = new ArrayList<Place>();
-
-		QueryResponse response = null;
-		try {
-			response = solrClient.query(prms);
-			if (response != null) {
-				SolrDocumentList docList = response.getResults();
-				for (SolrDocument d : docList) {
-
-					places.add(convertToPlace(d.getFieldValueMap()));
-				}
-			}
-		} catch (SolrServerException | IOException e) {
-			LOGGER.error("Got exception when processing query.", e);
-			return places;
-		}
-		return places;
-	}
-
 
 	private PlaceCandidate convertToPlaceCandidate(Match match) {
 
@@ -140,8 +190,8 @@ public class GeoSolrTagger extends SolrTagger {
 		pc.setType(match.getType());
 
 		double nameBias = 0.0;
-		 List<Map<String, Object>> docs = (List<Map<String, Object>>) match.getFeatures().get(DOCS_FEATURENAME);
-		for (Map<String, Object> doc : docs ) {
+		List<Map<String, Object>> docs = (List<Map<String, Object>>) match.getFeatures().get(DOCS_FEATURENAME);
+		for (Map<String, Object> doc : docs) {
 
 			Place place = convertToPlace(doc);
 
@@ -171,7 +221,7 @@ public class GeoSolrTagger extends SolrTagger {
 
 	}
 
-	private Place convertToPlace(Map<String, Object> placeFeatures) {
+	protected static Place convertToPlace(Map<String, Object> placeFeatures) {
 		// create the basic Place
 		Place place = new Place((String) placeFeatures.get("place_id"), (String) placeFeatures.get("name"));
 
@@ -215,12 +265,6 @@ public class GeoSolrTagger extends SolrTagger {
 		place.setIdBias((Float) placeFeatures.get("id_bias"));
 
 		return place;
-	}
-
-	@Override
-	public String getTaggerType() {
-
-		return "geogazetteer";
 	}
 
 }

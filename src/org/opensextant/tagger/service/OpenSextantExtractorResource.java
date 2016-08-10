@@ -88,7 +88,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 
 		// return list of extraction types
 		if (type == null) {
-			Set<String> ret = this.dpPool.getProcessNames();
+			Set<String> ret = this.dpPool.getTaggerTypes();
 			return new JacksonRepresentation<Set<String>>(ret);
 		}
 
@@ -177,7 +177,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 
 	private Representation extract(String extractType, String resultFormat, String content) {
 
-		if (dpPool.getProcessNames().contains(extractType)) {
+		if (dpPool.getTaggerTypes().contains(extractType)) {
 			Document result = dpPool.tag(extractType, content);
 
 			return convertResult(result, resultFormat);
@@ -188,7 +188,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 
 	private Representation extract(String extractType, String resultFormat, URL content) {
 
-		if (dpPool.getProcessNames().contains(extractType)) {
+		if (dpPool.getTaggerTypes().contains(extractType)) {
 			Document doc = dpPool.tag(extractType, content);
 
 			// clean up temp file if used

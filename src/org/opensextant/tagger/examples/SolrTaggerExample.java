@@ -20,6 +20,7 @@ public class SolrTaggerExample {
 
 		String testSentence = "We drove to the London";
 		String testName = "al Kuwait";
+	
 
 		SolrTagger tagger = new SolrTagger(solrHome, coreName, matchField, searchField);
 		GeoSolrTagger geoTagger = new GeoSolrTagger(solrHome);
@@ -33,7 +34,7 @@ public class SolrTaggerExample {
 			System.out.println("Found " + matches.size() + " with " + features.size() + " features");
 
 			for (String pay : features.keySet()) {
-				System.out.println("\t" + pay + "\t" +  features.get(pay));
+				System.out.println("\t" + pay + "\t" + features.get(pay));
 			}
 		}
 
@@ -49,14 +50,13 @@ public class SolrTaggerExample {
 
 		// do a simple name search using both fuzzy and not fuzzy matching
 		System.out.println("Doing name search");
-		List<Place> places = geoTagger.geoQueryByName(testName, false);
-		System.out
-				.println("Found " + places.size() + " places using placename= \"" + testName + "\"" + " fuzzy= false ");
+		List<Place> places = geoTagger.getLexicon().geoQueryByName(testName,"", false);
+		System.out.println("Found " + places.size() + " places using placename= \"" + testName + "\"" + " fuzzy= false ");
 		for (Place p : places) {
 			System.out.println("\t" + p);
 		}
 
-		List<Place> fuzzyPlaces = geoTagger.geoQueryByName(testName, true);
+		List<Place> fuzzyPlaces = geoTagger.getLexicon().geoQueryByName(testName,"", true);
 		System.out.println(
 				"Found " + fuzzyPlaces.size() + " places using placename= \"" + testName + "\"" + " fuzzy= true ");
 		for (Place p : fuzzyPlaces) {

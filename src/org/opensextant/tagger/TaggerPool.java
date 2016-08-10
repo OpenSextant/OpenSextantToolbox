@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -14,8 +16,8 @@ import org.apache.tika.Tika;
 import org.apache.tika.exception.TikaException;
 import org.opensextant.tagger.gate.GATETagger;
 import org.opensextant.tagger.regex.RegexTagger;
-import org.opensextant.tagger.service.OpenSextantExtractorResource;
 import org.opensextant.tagger.solr.GeoSolrTagger;
+import org.opensextant.tagger.solr.SolrTagger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,67 +31,24 @@ public class TaggerPool {
 	/** Log object. */
 	private static final Logger LOGGER = LoggerFactory.getLogger(TaggerPool.class);
 
-	public TaggerPool(Properties prop) {
+	public TaggerPool(Properties props) {
 
-		String[] apps = prop.getProperty("os.service.appnames").split(",");
+		Set<String> taggerTypes = new HashSet<String>();
 
-		for (String app : apps) {
-			int poolSize = Integer.parseInt(prop.getProperty("os.service.app." + app + ".poolsize"));
-			String impl = prop.getProperty("os.service.app." + app + ".impl");
-			addTagger(app, impl, prop, poolSize);
-		}
-
-	}
-
-	public Tagger getTagger(String taggerType) {
-
-		Tagger tagger = null;
-		try {
-			tagger = poolMap.get(taggerType).take();
-		} catch (InterruptedException e) {
-			LOGGER.error("Couldn't get a processor from the pool", e);
-		}
-
-		if (tagger == null) {
-			LOGGER.error("Couldn't get a processor from the pool");
-		}
-
-		return tagger;
-	}
-
-	public void returnTagger(Tagger tagger) {
-		poolMap.get(tagger.getTaggerType()).add(tagger);
-	}
-
-	private void addTagger(String taggerType, String implType, Properties prop, int poolSize) {
-
-		if (poolSize > 0) {
-			ArrayBlockingQueue<Tagger> pool = new ArrayBlockingQueue<Tagger>(poolSize);
-
-			for (int i = 0; i < poolSize; i++) {
-
-				if (implType.equalsIgnoreCase("gate")) {
-					GATETagger tagger = new GATETagger(taggerType, prop);
-					pool.add(tagger);
-				}
-
-				if (implType.equalsIgnoreCase("geosolr")) {
-					String solrHome = prop.getProperty("os.service.solr.home");
-					GeoSolrTagger tagger = new GeoSolrTagger(solrHome);
-					pool.add(tagger);
-				}
-
-				if (implType.equalsIgnoreCase("regex")) {
-					String patterns = prop.getProperty("os.service.app." +  taggerType + ".patterns" );
-					File patternFile = new File(patterns);
-					RegexTagger tagger = new RegexTagger(patternFile);
-					pool.add(tagger);
-				}
-				
+		for (Object propName : props.keySet()) {
+			String name = (String) propName;
+			if (name.startsWith("os.service.app.")) {
+				String[] pieces = name.split("\\.");
+				taggerTypes.add(pieces[3]);
 			}
-
-			poolMap.put(taggerType, pool);
 		}
+
+		for (String taggerType : taggerTypes) {
+			String impl = props.getProperty("os.service.app." + taggerType + ".impl");
+			int poolSize = Integer.parseInt(props.getProperty("os.service.app." + taggerType + ".poolsize"));
+			addTaggerToPool(taggerType, impl, props, poolSize);
+		}
+
 	}
 
 	public Document tag(String taggerType, String content) {
@@ -145,6 +104,53 @@ public class TaggerPool {
 		return new Document();
 	}
 
+	public List<Match> match(String taggerType, String content) {
+		return this.tag(taggerType, content).getMatchList();
+	}
+
+	public List<Match> match(String taggerType, File content) {
+		return this.tag(taggerType, content).getMatchList();
+	}
+
+	public List<Match> match(String taggerType, URL content) {
+		return this.tag(taggerType, content).getMatchList();
+	}
+
+	public Set<String> getTaggerTypes() {
+		return poolMap.keySet();
+	}
+
+	public boolean hasLexicon(String taggerType) {
+		return (this.getLexicon(taggerType) != null);
+	}
+
+	public Lexicon getLexicon(String taggerType) {
+
+		Tagger tagger = null;
+
+		try {
+			tagger = poolMap.get(taggerType).take();
+		} catch (InterruptedException e) {
+			LOGGER.error("Couldn't get a processor from the pool", e);
+			return null;
+		}
+
+		if (tagger == null) {
+			LOGGER.error("Couldn't get a processor from the pool");
+			return null;
+		}
+
+		try {
+			return tagger.getLexicon();
+		} catch (Exception e) {
+			LOGGER.error("Failed to get Lexicon", e);
+		} finally {
+			poolMap.get(taggerType).add(tagger);
+		}
+
+		return null;
+	}
+
 	public void cleanup() {
 		for (String name : poolMap.keySet()) {
 			for (Tagger dp : poolMap.get(name)) {
@@ -153,37 +159,17 @@ public class TaggerPool {
 		}
 	}
 
-	public Set<String> getProcessNames() {
-		return poolMap.keySet();
-	}
-
-	public Set<String> getResultFormats() {
-		return OpenSextantExtractorResource.getFormats();
-	}
-
-	public int available(String taggerType) {
+	public int taggersAvailable(String taggerType) {
 		return poolMap.get(taggerType).size();
 	}
 
-	public Map<String, Integer> available() {
+	public Map<String, Integer> taggersAvailable() {
 		Map<String, Integer> avail = new HashMap<String, Integer>();
 		for (String taggerType : poolMap.keySet()) {
-			avail.put(taggerType, available(taggerType));
+			avail.put(taggerType, taggersAvailable(taggerType));
 		}
 
 		return avail;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder buff = new StringBuilder();
-		buff.append("Extractor\tNumber in pool\n");
-		for (String name : poolMap.keySet()) {
-			buff.append(name).append("\t");
-			buff.append(poolMap.get(name).size());
-			buff.append("\n");
-		}
-		return buff.toString();
 	}
 
 	/**
@@ -198,6 +184,51 @@ public class TaggerPool {
 	 */
 	public long getDocsFailedCount() {
 		return docsFailedCount;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder buff = new StringBuilder();
+		buff.append("Extractor\tNumber in pool\n");
+		for (String name : poolMap.keySet()) {
+			buff.append(name).append("\t");
+			buff.append(poolMap.get(name).size());
+			buff.append("\n");
+		}
+		return buff.toString();
+	}
+
+	private void addTaggerToPool(String taggerType, String implType, Properties prop, int poolSize) {
+
+		if (poolSize > 0) {
+			ArrayBlockingQueue<Tagger> pool = new ArrayBlockingQueue<Tagger>(poolSize);
+
+			for (int i = 0; i < poolSize; i++) {
+
+				if (implType.equalsIgnoreCase("gate")) {
+					GATETagger tagger = new GATETagger(taggerType, prop);
+					pool.add(tagger);
+				}
+
+				if (implType.equalsIgnoreCase("solr")) {
+					SolrTagger tagger = new SolrTagger(taggerType, prop);
+					pool.add(tagger);
+				}
+
+				if (implType.equalsIgnoreCase("geosolr")) {
+					GeoSolrTagger tagger = new GeoSolrTagger(taggerType, prop);
+					pool.add(tagger);
+				}
+
+				if (implType.equalsIgnoreCase("regex")) {
+					RegexTagger tagger = new RegexTagger(taggerType, prop);
+					pool.add(tagger);
+				}
+
+			}
+
+			poolMap.put(taggerType, pool);
+		}
 	}
 
 }

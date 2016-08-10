@@ -59,7 +59,7 @@ public class OpenSextantAdminResource extends ServerResource {
 
 		if ("health".equalsIgnoreCase(op)) {
 			TaggerPool dpPool = ((OpenSextantApplication) getApplication()).getPool();
-			Map<String, Integer> avail = dpPool.available();
+			Map<String, Integer> avail = dpPool.taggersAvailable();
 
 			long failCount = dpPool.getDocsFailedCount();
 			long procCount = dpPool.getDocsProcessedCount();

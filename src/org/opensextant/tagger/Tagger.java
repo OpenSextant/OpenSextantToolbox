@@ -20,6 +20,10 @@ public interface Tagger {
 
 	String getTaggerType();
 
+	boolean hasLexicon();
+	
+	Lexicon getLexicon();
+	
 	void cleanup();
 
 }
