@@ -337,12 +337,21 @@ Build file for OpenSextantToolbox.
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/log4j.properties" />
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/restletlog.properties" />
 		<copy todir="${release.dir}/etc" file="${basedir}/etc/service-config.properties" />
-		<copy todir="${release.dir}/scripts">
-			<fileset dir="${basedir}/scripts" />
-		</copy>
 		<copy todir="${release.dir}" file="${basedir}/gate/gate.xml" />
 		<copy todir="${release.dir}" file="${basedir}/gate/user-gate.xml" />
 		<copy todir="${release.dir}" file="${doc.dir}/README_DISTRO.txt" />
+	</target>
+
+	<!-- Copy over the scritps -->
+	<target name="release.scripts" unless="is-pcf-release">
+		<copy todir="${release.dir}/scripts">
+			<fileset dir="${basedir}/scripts" />
+		</copy>
+	</target>
+
+	<!-- Copy over the pcf compatable script to bin folder -->
+	<target name="release.bin" if="is-pcf-release">
+		<copy todir="${release.dir}/bin" file="${basedir}/scripts/opensextant-toolbox" />
 	</target>
 
 	<!-- Copy the gaz to the release folder-->
@@ -361,6 +370,8 @@ Build file for OpenSextantToolbox.
 		<antcall target="release.resources" />
 		<antcall target="release.gaz" />
 		<antcall target="release.misc" />
+		<antcall target="release.scripts" />
+		<antcall target="release.bin" />
 
 		<!-- delete existing release zip if there -->
 		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}.zip" />
@@ -369,6 +380,12 @@ Build file for OpenSextantToolbox.
 		<zip destfile="${basedir}/opensextant-toolbox-${version}.zip">
 			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}" />
 		</zip>
+	</target>
+
+	<!--  Build a full release in the "release" directory for cloud foundry -->
+	<target name="release-pcf">
+		<property name="is-pcf-release" value="" />
+		<antcall target="release" />
 	</target>
 
 	<target name="test" depends="release,run.examples" />

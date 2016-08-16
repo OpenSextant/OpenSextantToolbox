@@ -32,6 +32,12 @@ of GATE processing resources (plugins) which are assembled together to form a do
 
   `ant test` 
 
+* **To build a release and then deploy to CloudFoundry**
+
+  `ant release-pcf`
+
+  `cf push`
+
 NOTE: Since loading the gazetteer data into solr can take a while, for testing/impatience you can use a small version of gazetteer which is much faster to load than the full gazetteer. Change the  value of "csv.gaz" in OpenSextantToolbox's build.xml to point to either the full or small gazetteer.  This small gazetteer contains countries, national capaitals, province/states and some big cities.  Although it represents less than 1% of the full gazetteer, it actually produces decent results on generic news-like documents.
   
 
