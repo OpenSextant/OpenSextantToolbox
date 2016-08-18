@@ -32,9 +32,37 @@ of GATE processing resources (plugins) which are assembled together to form a do
 
   `ant test` 
 
-* **To build a release and then deploy to CloudFoundry**
+* **To build a release and then deploy to Cloud Foundry**
+
+  Because [Cloud Foundry has an application size limit of 1G](https://docs.cloudfoundry.org/devguide/deploy-apps/large-app-deploy.html) it is not advised to push a release that contains the full gazetteer. Instead, deploy Solr with the gazeteer data and configure OpenSextantToolbox to use the remote instance of Solr.
+
+  **Stand up Solr with gazetteer and vocabulary cores**
+
+  Install Solr 5.5.x. For the sake of these instructions, we use `SOLR_BASE` to refer to the root of your Solr installation.
+
+  Build the jars and load the gazetteer (which takes a while)
+
+  `ant buildWithGaz`
+
+  Copy /build/solr to somewhere reachable by Solr. This /solr directory created by OpenSextantToolbox will be used for `SOLR_HOME`. The Solr home directory (not to be confused with the Solr installation directory) is where Solr manages core directories with index files.
+
+  Make a /lib directory in `SOLR_HOME`
+
+  Copy /lib/Standalone/lucene-*.jar to `SOLR_HOME`/lib/
+
+  Copy /lib/Standalone/solr-text-tagger.jar to `SOLR_HOME`/lib/
+
+  Copy /lib/Standalone/jts.jar to `SOLR_INSTALL`/server/lib (for some reason the jts jar needs to be in the lib directory for solr install and not in the lib directory for the cores)
+
+  Start solr
+
+  `SOLR_HOME=[path to /solr created by OpenSextantToolbox] bin/solr start`
+
+  **Build OpenSextantToolbox without the gazetteer**
 
   `ant release-pcf`
+
+  Set `SOLR_BASE_URL` environment variable in manifest.yml then push to Cloud Foundry
 
   `cf push`
 
