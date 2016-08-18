@@ -8,7 +8,7 @@
 
 # Add default JVM options here. You can also use JAVA_OPTS and DIST_ZIP_APPLICATION_OPTS to pass JVM options to this script.
 DEFAULT_JVM_OPTS=""
-DIST_ZIP_APPLICATION_OPTS="-Dsolr.home=./solr -Dlog4j.configuration=file:./etc/log4j.properties"
+DIST_ZIP_APPLICATION_OPTS="-Dsolr.home=$SOLR_BASE_URL -Dlog4j.configuration=file:./etc/log4j.properties"
 
 APP_NAME="opensextant-toolbox"
 APP_BASE_NAME=`basename "$0"`

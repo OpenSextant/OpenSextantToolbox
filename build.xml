@@ -343,15 +343,10 @@ Build file for OpenSextantToolbox.
 	</target>
 
 	<!-- Copy over the scritps -->
-	<target name="release.scripts" unless="is-pcf-release">
+	<target name="release.scripts">
 		<copy todir="${release.dir}/scripts">
 			<fileset dir="${basedir}/scripts" />
 		</copy>
-	</target>
-
-	<!-- Copy over the pcf compatable script to bin folder -->
-	<target name="release.bin" if="is-pcf-release">
-		<copy todir="${release.dir}/bin" file="${basedir}/scripts/opensextant-toolbox" />
 	</target>
 
 	<!-- Copy the gaz to the release folder-->
@@ -371,7 +366,6 @@ Build file for OpenSextantToolbox.
 		<antcall target="release.gaz" />
 		<antcall target="release.misc" />
 		<antcall target="release.scripts" />
-		<antcall target="release.bin" />
 
 		<!-- delete existing release zip if there -->
 		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}.zip" />
@@ -382,10 +376,21 @@ Build file for OpenSextantToolbox.
 		</zip>
 	</target>
 
-	<!--  Build a full release in the "release" directory for cloud foundry -->
-	<target name="release-pcf">
-		<property name="is-pcf-release" value="" />
-		<antcall target="release" />
+	<!--  Build a release without the gazetteer in the "release" directory for cloud foundry -->
+	<target name="release-pcf" depends="build">
+		<antcall target="release.libs" />
+		<antcall target="release.plugin" />
+		<antcall target="release.resources" />
+		<antcall target="release.misc" />
+		<copy todir="${release.dir}/bin" file="${basedir}/scripts/opensextant-toolbox" />
+
+		<!-- delete existing release zip if there -->
+		<delete quiet="true" file="${basedir}/opensextant-toolbox-${version}-pcf.zip" />
+
+		<!-- zip up the finished release -->
+		<zip destfile="${basedir}/opensextant-toolbox-${version}-pcf.zip">
+			<zipfileset dir="${release.dir}" prefix="opensextant-toolbox-${version}-pcf" />
+		</zip>
 	</target>
 
 	<target name="test" depends="release,run.examples" />

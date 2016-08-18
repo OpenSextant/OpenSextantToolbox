@@ -3,6 +3,8 @@ applications:
 - name: opensextant-toolbox
   memory: 512M
   instances: 1
-  path: opensextant-toolbox-3.0.zip
+  path: opensextant-toolbox-3.0-pcf.zip
   buildpack: https://github.com/cloudfoundry/java-buildpack.git
   stack: cflinuxfs2
+  env:
+    SOLR_BASE_URL: http://localhost:8983/solr

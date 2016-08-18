@@ -198,9 +198,11 @@ public class MatcherFactory {
 
 		// if remote, use HttpSolrServer
 		if (isRemote) {
-			HttpSolrClient server = new HttpSolrClient(homeLocation);
+			HttpSolrClient server = new HttpSolrClient(homeLocation+"gazetteer");
 			server.setAllowCompression(true);
 			solrServerGeo = server;
+			server = new HttpSolrClient(homeLocation+"vocabulary");
+			server.setAllowCompression(true);
 			solrServerVocab = server;
 		} else { // must be local, use EmbeddedSolrServer
 
