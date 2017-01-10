@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentMap;
 
 import org.apache.commons.fileupload.FileItem;
@@ -49,6 +50,7 @@ public class OpenSextantExtractorResource extends ServerResource {
 	static Set<String> formats = new HashSet<String>();
 	static {
 		formats.add("json");
+		formats.add("extjson");
 		formats.add("geojson");
 		formats.add("xml");
 		formats.add("csv");
@@ -212,6 +214,31 @@ public class OpenSextantExtractorResource extends ServerResource {
 	}
 
 	private Representation convertResult(Document db, String resultFormat) {
+
+		if ("extjson".equalsIgnoreCase(resultFormat)) {
+			return new JacksonRepresentation<Document>(db);
+		}
+
+		// For the non-extended result formats we remove excess
+		// information, such as the alternative annotation
+		// "candidates", from each Match.
+		// This is done to keep the result succinct.
+		List<Match> featureList = new ArrayList<Match>();
+		for (Match a : db.getAnnoList()) {
+			Match m = new Match();
+
+			m.setStart(a.getStart());
+			m.setEnd(a.getEnd());
+			m.setType(a.getType());
+			m.setMatchText(a.getMatchText());
+
+			Map<String, Object> feats = a.getFeatures();
+			feats.remove("candidates");
+			m.setFeatures(feats);
+
+			featureList.add(m);
+		}
+		db.setAnnoList(featureList);
 
 		if ("json".equalsIgnoreCase(resultFormat)) {
 			return new JacksonRepresentation<Document>(db);
