@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.opensextant.placedata.PlaceCandidate;
 import org.opensextant.service.OpenSextantExtractorResource;
 import org.opensextant.tagger.Document;
 import org.opensextant.tagger.Match;
@@ -242,6 +243,9 @@ public class DocumentProcessorPool {
 			if ("PLACE".equalsIgnoreCase(type)) {
 				tmpAnno.getFeatures().put("place", fm.get("bestPlace"));
 				tmpAnno.getFeatures().put("hierarchy", fm.get("hierarchy"));
+
+				PlaceCandidate pc = (PlaceCandidate) fm.get("placeCandidate");
+				tmpAnno.getFeatures().put("candidates", pc.getPlaces());
 			} else {
 				for (Entry<Object, Object> e : fm.entrySet()) {
 					String k = (String) e.getKey();
